@@ -55,6 +55,23 @@ _ensure_dependencies() {
     command -v $TOMB 1>/dev/null 2>/dev/null || _die "tomb is not present"
 }
 
+_basename() { # From https://github.com/chilicuil/learn
+    [ -z "${1}" ] && return 1 || _basename__name="${1%%/}"
+    [ -z "${2}" ] || _basename__suffix="${2}"
+    case "${_basename__name}" in
+        /*|*/*) _basename__name="$(expr "${_basename__name}" : '.*/\([^/]*\)')" ;;
+    esac
+
+    if [ -n "${_basename__suffix}" ] && [ "${#_basename__name}" -gt "${#2}" ]; then
+        if [ X"$(printf "%s" "${_basename__name}" | cut -c"$((${#_basename__name} - ${#_basename__suffix} + 1))"-"${#_basename__name}")" \
+           = X"$(printf "%s" "${_basename__suffix}")" ]; then
+            _basename__name="$(printf "%s" "${_basename__name}" | cut -c1-"$((${#_basename__name} - ${#_basename__suffix}))")"
+        fi
+    fi
+
+    printf "%s" "${_basename__name}"
+}
+
 in_array() {
 	local needle=$1; shift
 	local item
@@ -147,10 +164,16 @@ cmd_open() {
 }
 
 cmd_close() {
+	TOMB_NAME=$(_basename "$TOMB_FILE")
+	
+	_tmp_create
+	_tomb close "$TOMB_NAME"
+	while read ii; do
+		_verbose "$ii"
+	done <$TMP
 	
 	return 0
 }
-
 
 cmd_tomb_create() {
 	TOMB_RECIPIENTS=($@)
