@@ -16,6 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+WIPE=(rm -f)
 TOMB="${PASSWORD_STORE_TOMB:-tomb}"
 TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/password}"
 TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/password.key}"
@@ -54,6 +55,18 @@ _verbose() { _alert "${@}"; }
 _ensure_dependencies() {
     command -v $TOMB 1>/dev/null 2>/dev/null || _die "tomb is not present"
 }
+
+# Cleanup anything sensitive before exiting.
+_endgame() {
+
+# Clear temporary files
+    for f in $TMPFILES; do
+        ${WIPE} "$f"
+    done
+    unset TMPFILES
+}
+
+trap _endgame EXIT
 
 _basename() { # From https://github.com/chilicuil/learn
     [ -z "${1}" ] && return 1 || _basename__name="${1%%/}"
