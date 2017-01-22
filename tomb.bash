@@ -18,6 +18,20 @@
 
 cmd_tomb_help() {
 	cat <<-_EOF
+	Usage:
+	    $PROGRAM tomb gpg-id...
+	    	Create and initialise a new password tomb.
+	    	Use gpg-id for encryption of both tomb and passwords
+	    $PROGRAM tomb <tomb_cmd> [ARG]
+	    	Wrapper to execute a tomb command for password tomb management.
+	    	If a required arguments is not present, this functions will detect
+	    	it and add the default value in pass-tomb as arguments.
+	    $PROGRAM tomb help
+	    	Print this help
+	    $PROGRAM open
+	    	Open a password tomb
+	    $PROGRAM close
+	    	Close a password tomb
 
 	More information may be found in the pass-tomb(1) man page.
 	_EOF
