@@ -16,6 +16,110 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+TOMB="${PASSWORD_STORE_TOMB:-tomb}"
+TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/password}"
+TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/password.key}"
+TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
+TOMB_COMMANDS=(	"dig" "forge" "lock" "open" "index" "search" "list" "close"
+				"slam" "resize" "passwd" "setkey" "engrave" "bury" "exhume")
+
+typeset -a TMPFILES
+TMPFILES=()
+
+#
+# Color Code
+#
+bold=$(tput bold)
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+reset=$(tput sgr0)
+
+#
+# Commons tools and functions
+#
+_title() { echo "${bold}${blue}::${reset} ${bold}${*}${reset}"; }
+_msg() { echo " ${*}"; }
+_alert() { echo " ${bold}${yellow}(*)${reset} ${*}"; }
+_warn() { echo " ${bold}${yellow}[W]${reset}${bold} Warning :${reset} ${*}"; }
+_success() { echo " ${bold}${green}(*) ${*}${reset}"; }
+_error() { echo " ${bold}${red}[*]${reset}${bold} Error :${reset} ${*}"; }
+_die() { _error "${@}" && exit 1; }
+_verbose() { _alert "${@}"; }
+
+# Check program dependencies
+#
+# pass tomb depends on tomb>2.3
+_ensure_dependencies() {
+    command -v $TOMB 1>/dev/null 2>/dev/null || _die "tomb is not present"
+}
+
+in_array() {
+	local needle=$1; shift
+	local item
+	for item in "${@}"; do
+		[[ ${item} == ${needle} ]] && return 0
+	done
+	return 1
+}
+
+# $@ is the list of all the recipient used to encrypt a tomb key
+is_valid_recipients() {
+    typeset -a recipients
+    local tmp
+    recipients=($@)   # 
+    
+	# All the keys ID must be valid (the public keys must be present in the database)
+    for gpg_id in ${recipients[@]}; do
+        tmp=$(gpg --list-keys "$gpg_id")
+        [[ $? != 0 ]] && {
+            _warn "$gpg_id is not a valid key ID."
+            return 1
+        }
+    done
+
+	# At least one private key must be present
+    for gpg_id in $recipients; do
+        tmp=$(gpg --list-secret-keys "$gpg_id")
+        [[ $? = 0 ]] && { 
+            return 0
+        }
+    done
+
+	return 1
+}
+
+_tomb() {
+	local cmd="$1"; shift
+	"$TOMB" -D "$cmd" "$@" 2> "$TMP"
+	[[ $? == 0 ]] || {
+		_die "Unable to $cmd the password tomb"
+	}
+}
+
+# Provide a random filename in shared memory
+_tmp_create() {
+	TMPPREFIX=/tmp
+	
+    tfile="${TMPPREFIX}/$RANDOM$RANDOM$RANDOM$RANDOM"   # Temporary file
+    umask 066
+    [[ $? == 0 ]] || {
+        _die "Fatal error setting the permission umask for temporary files"; }
+
+    [[ -r "$tfile" ]] && {
+        _die "Someone is messing up with us trying to hijack temporary files."; }
+
+    touch "$tfile"
+    [[ $? == 0 ]] || {
+        _die "Fatal error creating a temporary file: $tfile"; }
+
+    TMP="$tfile"
+    TMPFILES+=("$tfile")
+
+    return 0
+}
+
 cmd_tomb_help() {
 	cat <<-_EOF
 	Usage:
@@ -47,8 +151,29 @@ cmd_close() {
 	return 0
 }
 
+
 cmd_tomb_create() {
-	return 0
+	TOMB_RECIPIENTS=($@)
+	PASSWORD_STORE_SIGNING_KEY=${TOMB_RECIPIENTS[0]}
+	
+	# Sanity checks
+	check_sneaky_paths "$TOMB_FILE"
+	check_sneaky_paths "$TOMB_KEY"
+	{ is_valid_recipients $TOMB_RECIPIENTS ;} || { _die "You set an invalid GPG ID." ;}
+	[[ -e "$TOMB_KEY" ]] && _die "The tomb key $TOMB_KEY already exists. I won't overwrite it."
+	[[ -e "$TOMB_FILE" ]] && _die "The password tomb $TOMB_FILE already exists. I won't overwrite it."
+	[[ "$TOMB_SIZE" -lt 10 ]] && _die "A password tomb cannot be smaller than 10 mebibytes."
+	
+	# Create the password tomb
+	_tmp_create
+	_tomb dig "$TOMB_FILE" -s "$TOMB_SIZE"
+	_tomb forge "$TOMB_KEY" -r "$TOMB_RECIPIENTS"
+	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -r "$TOMB_RECIPIENTS"
+	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -r "$TOMB_RECIPIENTS" "$PREFIX"
+	sudo chown -R $USER:$USER "$PREFIX" || _die "Unable to set the permission on $PREFIX"
+	while read ii; do
+		_verbose "$ii"
+	done <$TMP
 }
 
 
@@ -59,8 +184,18 @@ tomb_cmd() {
 
 cmd_tomb() {
 
+	_ensure_dependencies  # Check dependencies are present or bail out
+	check_sneaky_paths "$1"
+	
+	if in_array "$1" ${TOMB_COMMANDS[@]}; then
+		tomb_cmd "$@"
+	elif [[ "$1" == "help" ]]; then
+		cmd_tomb_help
+	else
+		cmd_tomb_create "$1"
+	fi
 
-    return 0
+    return $?
 }
 
 [[ "$COMMAND" == "tomb" ]] && cmd_tomb "$@"
