@@ -223,6 +223,13 @@ cmd_tomb_create() {
 	while read ii; do
 		_verbose "$ii"
 	done <$TMP
+	
+	# Use the same recipients to initialise the password store
+	echo "${TOMB_RECIPIENTS/,/\n}" > "$PREFIX/.gpg-id"
+	
+	_success "Your password tomb as been created and openned in $PREFIX."
+	_success "You can now use pass normaly"
+	_success "When finish, close the password tomb using 'pass close'"
 }
 
 
