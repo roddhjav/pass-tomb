@@ -21,8 +21,6 @@ TOMB="${PASSWORD_STORE_TOMB:-tomb}"
 TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/password}"
 TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/password.key}"
 TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
-TOMB_COMMANDS=(	"dig" "forge" "lock" "open" "index" "search" "list" "close"
-				"slam" "resize" "passwd" "setkey" "engrave" "bury" "exhume")
 
 typeset -a TMPFILES
 TMPFILES=()
@@ -156,10 +154,6 @@ cmd_tomb_help() {
 	    $PROGRAM tomb gpg-id...
 	    	Create and initialise a new password tomb.
 	    	Use gpg-id for encryption of both tomb and passwords
-	    $PROGRAM tomb <tomb_cmd> [ARG]
-	    	Wrapper to execute a tomb command for password tomb management.
-	    	If a required arguments is not present, this functions will detect
-	    	it and add the default value in pass-tomb as arguments.
 	    $PROGRAM tomb help
 	    	Print this help
 	    $PROGRAM open
@@ -250,19 +244,12 @@ cmd_tomb_create() {
 }
 
 
-tomb_cmd() {
-	
-	return 0
-}
-
 cmd_tomb() {
 
 	_ensure_dependencies  # Check dependencies are present or bail out
 	check_sneaky_paths "$1"
 	
-	if in_array "$1" ${TOMB_COMMANDS[@]}; then
-		tomb_cmd "$@"
-	elif [[ "$1" == "help" ]]; then
+	if [[ "$1" == "help" ]]; then
 		cmd_tomb_help
 	else
 		cmd_tomb_create "$1"

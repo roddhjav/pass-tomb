@@ -9,10 +9,6 @@ manage your password repository in a tomb.
 		    pass tomb gpg-id...
 		    	Create and initialise a new password tomb.
 		    	Use gpg-id for encryption of both tomb and passwords
-		    pass tomb <tomb_cmd> [ARG]
-		    	Wrapper to execute a tomb command for password tomb management.
-		    	If a required arguments is not present, this functions will detect
-		    	it and add the default value in pass-tomb as arguments.
 		    pass tomb help
 		    	Print this help
 		    pass open
