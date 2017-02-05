@@ -168,7 +168,6 @@ cmd_tomb() {
 	local path="$1"; shift;
 	[[ -z "$@" ]] && _die "$PROGRAM $COMMAND [--path=subfolder,-p subfolder] gpg-id..."
 	RECIPIENTS=($@)
-	PASSWORD_STORE_SIGNING_KEY=${TOMB_RECIPIENTS[0]}
 	
 	# Sanity checks
 	check_sneaky_paths "$TOMB_FILE"
@@ -188,23 +187,6 @@ cmd_tomb() {
 	
 	# Use the same recipients to initialise the password store
 	echo "${TOMB_RECIPIENTS/,/\n}" > "$PREFIX/.gpg-id"
-	
-	# Sign the .gpg-id file
-	if [[ ! -z "$PASSWORD_STORE_SIGNING_KEY" ]]; then
-	    _tmp_create
-    	tmpres=$TMP
-		gpg --batch --detach-sign --default-key "$PASSWORD_STORE_SIGNING_KEY" \
-			--no-mdc-warning --no-options --status-fd 2 --no-permission-warning \
-			--no-tty --output "$PREFIX/.gpg-id.sig" "$PREFIX/.gpg-id" 2> "$tmpres"
-	    ret=1
-		while read ii; do
-			_verbose "$ii"
-			[[ "$ii" =~ "SIG_CREATED" ]] && ret=0;
-		done <$tmpres
-    	[[ $ret == 0 ]] || {
-			_die "Unable to sign $PREFIX/.gpg-id with $PASSWORD_STORE_SIGNING_KEY"
-		}
-	fi
 	
 	_success "Your password tomb as been created and openned in $PREFIX."
 	_success "You can now use pass normaly"
