@@ -146,6 +146,10 @@ cmd_open() {
 	_tmp_create
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -f -r "dummy-gpgid" "$PREFIX/$path"
 	sudo chown -R "$USER:$USER" "$PREFIX/$path" || _die "Unable to set the permission on $PREFIX/$path"
+	
+	_success "Your password tomb as been openned in $PREFIX/."
+	_message "You can now use pass as usual"
+	_message "When finished, close the password tomb using 'pass close'"
 	return 0
 }
 
@@ -159,6 +163,9 @@ cmd_close() {
 	
 	_tmp_create
 	_tomb close "$TOMB_NAME"
+	
+	_success "Your password tomb as been closed"
+	_message "Your passwords remain present in $TOMB_FILE"
 	return 0
 }
 
@@ -216,7 +223,7 @@ cmd_tomb() {
 		_success "$ret"
 		_message "Your tomb is: $TOMB_FILE"
 		_message "Your tomb key is: $TOMB_KEY"
-		_message "You can now use pass normaly"
+		_message "You can now use pass as usual"
 		_message "When finished, close the password tomb using 'pass close'"
 	else
 		_warning "$ret"
