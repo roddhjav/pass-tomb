@@ -170,12 +170,18 @@ cmd_tomb() {
 	RECIPIENTS=($@)
 	
 	# Sanity checks
+	check_sneaky_paths "$path"
 	check_sneaky_paths "$TOMB_FILE"
 	check_sneaky_paths "$TOMB_KEY"
-	{ is_valid_recipients $TOMB_RECIPIENTS ;} || { _die "You set an invalid GPG ID." ;}
-	[[ -e "$TOMB_KEY" ]] && _die "The tomb key $TOMB_KEY already exists. I won't overwrite it."
-	[[ -e "$TOMB_FILE" ]] && _die "The password tomb $TOMB_FILE already exists. I won't overwrite it."
-	[[ "$TOMB_SIZE" -lt 10 ]] && _die "A password tomb cannot be smaller than 10 mebibytes."
+	if ! is_valid_recipients "${RECIPIENTS[@]}"; then
+		_die "You set an invalid GPG ID."
+	elif [[ -e "$TOMB_KEY" ]]; then
+		_die "The tomb key $TOMB_KEY already exists. I won't overwrite it."
+	elif [[ -e "$TOMB_FILE" ]]; then
+		_die "The password tomb $TOMB_FILE already exists. I won't overwrite it."
+	elif [[ "$TOMB_SIZE" -lt 10 ]]; then
+		_die "A password tomb cannot be smaller than 10 MB."
+	fi
 	
 	# Create the password tomb
 	_tmp_create
