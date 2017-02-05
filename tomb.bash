@@ -186,11 +186,21 @@ cmd_tomb() {
 	sudo chown -R $USER:$USER "$PREFIX" || _die "Unable to set the permission on $PREFIX"
 	
 	# Use the same recipients to initialise the password store
-	echo "${TOMB_RECIPIENTS/,/\n}" > "$PREFIX/.gpg-id"
-	
-	_success "Your password tomb as been created and openned in $PREFIX."
-	_success "You can now use pass normaly"
-	_success "When finish, close the password tomb using 'pass close'"
+	local ret path_cmd
+	[ -z "$path" ] || path_cmd="--path=$path"
+	ret=$(cmd_init "${RECIPIENTS[@]}" $path_cmd)
+	if [[ -e "$PREFIX/$path/.gpg-id" ]]; then
+		_success "Your password tomb as been created and openned in $PREFIX."
+		_success "$ret"
+		_message "Your tomb is: $TOMB_FILE"
+		_message "Your tomb key is: $TOMB_KEY"
+		_message "You can now use pass normaly"
+		_message "When finished, close the password tomb using 'pass close'"
+	else
+		_warning "$ret"
+		_die "Unable to initialise the password store"
+	fi
+	return 0
 }
 
 # Check dependencies are present or bail out
