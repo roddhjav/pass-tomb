@@ -26,24 +26,22 @@ typeset -a TMPFILES
 TMPFILES=()
 
 #
-# Color Code
+# Commons color and functions
 #
-bold=$(tput bold)
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-blue=$(tput setaf 4)
-reset=$(tput sgr0)
-
-#
-# Commons tools and functions
-#
-_title() { echo "${bold}${blue}::${reset} ${bold}${*}${reset}"; }
-_msg() { echo " ${*}"; }
-_alert() { echo " ${bold}${yellow}(*)${reset} ${*}"; }
-_warn() { echo " ${bold}${yellow}[W]${reset}${bold} Warning :${reset} ${*}"; }
-_success() { echo " ${bold}${green}(*) ${*}${reset}"; }
-_error() { echo " ${bold}${red}[*]${reset}${bold} Error :${reset} ${*}"; }
+green='\e[0;32m'
+yellow='\e[0;33m'
+bold='\e[1m'
+Bred='\e[1;31m'
+Bgreen='\e[1;32m'
+Byellow='\e[1;33m'
+Bblue='\e[1;34m'
+reset='\e[0m'
+_title() { echo -e "${Bblue}::${reset} ${bold}${*}${reset}"; }
+_message() { echo -e " ${bold} . ${reset} ${*}"; }
+_alert() { echo -e " ${Byellow}(*)${reset} ${*}"; }
+_warning() { echo -e " ${Byellow}[W]${reset} ${yellow}${*}${reset}"; }
+_success() { echo -e " ${Bgreen}(*)${reset} ${green}${*}${reset}"; }
+_error() { echo -e " ${Bred}[*]${reset}${bold} Error :${reset} ${*}"; }
 _die() { _error "${@}" && exit 1; }
 _verbose() { _alert "${@}"; }
 
