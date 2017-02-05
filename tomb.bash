@@ -121,8 +121,8 @@ cmd_tomb_help() {
 	_EOF
 }
 
+# Open a password tomb
 cmd_open() {
-
 	# Sanity checks
 	check_sneaky_paths "$TOMB_FILE"
 	check_sneaky_paths "$TOMB_KEY"
@@ -131,17 +131,20 @@ cmd_open() {
 	
 	_tmp_create
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -f -r "dummy-gpgid" "$PREFIX"
-	sudo chown -R $USER:$USER "$PREFIX" || _die "Unable to set the permission on $PREFIX"
-	
+	sudo chown -R "$USER:$USER" "$PREFIX" || _die "Unable to set the permission on $PREFIX"
 	return 0
 }
 
+# Close a password tomb
 cmd_close() {
+	# Sanity checks
+	check_sneaky_paths "$TOMB_FILE"
+	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to close."
 	TOMB_NAME=${TOMB_FILE##*/}
+	[[ -z "$TOMB_NAME" ]] && _die "There no password tomb."
 	
 	_tmp_create
 	_tomb close "$TOMB_NAME"
-	
 	return 0
 }
 
