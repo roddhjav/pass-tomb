@@ -75,7 +75,8 @@ clean() {
 #
 GLOBAL_RESULT=0
 typeset -A results
-tests=(	pass-tomb populate pass-open pass-close)
+tests=(	pass-tomb populate pass-open pass-close pass-tomb-sub pass-tomb-opt
+pass-tomb-share)
 
 #
 # GnuPG Conf.
@@ -88,6 +89,7 @@ KEY2="70BD448330ACF0653645B8F2B4DDBFF0D774A374"
 KEY3="62EBE74BE834C2EC71E6414595C4B715EB7D54A8"
 KEY4="9378267629F989A0E96677B7976DD3D6E4691410"
 KEY5="4D2AFBDE67C60F5999D143AFA6E073D439E5020C"
+#export PASSWORD_STORE_SIGNING_KEY="$KEY1"
 
 
 #
@@ -111,9 +113,43 @@ pass_tomb() {
 	
 }
 
+pass_tomb_extra() {
+	
+	notice "Testing password tomb in subfolder"
+	clean
+	pass tomb "$KEY1" --path=perso --verbose --unsafe
+	test $? = 0 && results[pass-tomb-sub]=SUCCESS
+	
+	clean
+	notice "Testing a shared password tomb"
+	pass tomb "$KEY1" "$KEY2" "$KEY3" --verbose --unsafe
+	test $? = 0 && results[pass-tomb-share]=SUCCESS
+	
+	# Internet sync (in an other repo, eg: pass sync)
+	# Also need to check git-remote-gcrypt
+	#notice "Testing a onlince sync of password tomb"
+	#pass tomb "$KEY1" "$KEY2" "$KEY3"
+	#test $? = 0 && results[pass-tomb-rsync]=SUCCESS
+}
+
+pass_tomb_opt() {
+	notice "Test - Bad options"
+	res=0
+	pass tomb &> /dev/null					# Need a gpgid
+	test $? = 1 || res=1
+	pass tomb Website/user &> /dev/null		# Not a gpgid
+	test $? = 1 || res=1
+	pass tomb --unknown-option	&> /dev/null # Not a known option
+	test $? = 1 || res=1
+	pass tomb --help &> /dev/null			# Help exist
+	test $? = 0 || res=1
+	test $res = 0 && results[pass-tomb-opt]=SUCCESS
+}
 
 clean
 pass_tomb
+pass_tomb_extra
+pass_tomb_opt
 
 #
 # Units Test Results
