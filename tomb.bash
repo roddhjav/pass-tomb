@@ -182,6 +182,11 @@ cmd_tomb() {
 	elif [[ "$TOMB_SIZE" -lt 10 ]]; then
 		_die "A password tomb cannot be smaller than 10 MB."
 	fi
+	if [[ $UNSAFE -ne 0 ]]; then
+		_warning "Using unsafe mode to speed up tomb generation."
+		_warning "Only use it for test purpose."
+		local unsafe="--unsafe --use-urandom"
+	fi
 	
 	# Sharing support
 	local recipients_arg shared tmp_arg
