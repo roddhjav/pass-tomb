@@ -50,26 +50,26 @@ _ensure_dependencies() {
 
 # $@ is the list of all the recipient used to encrypt a tomb key
 is_valid_recipients() {
-    typeset -a recipients
-    local tmp
-    recipients=($@)   # 
-    
+	typeset -a recipients
+	local tmp
+	recipients=($@)   # 
+	
 	# All the keys ID must be valid (the public keys must be present in the database)
-    for gpg_id in ${recipients[@]}; do
-        tmp=$(gpg --list-keys "$gpg_id")
-        [[ $? != 0 ]] && {
-            _warn "$gpg_id is not a valid key ID."
-            return 1
-        }
-    done
+	for gpg_id in ${recipients[@]}; do
+		tmp=$(gpg --list-keys "$gpg_id")
+		[[ $? != 0 ]] && {
+			_warn "$gpg_id is not a valid key ID."
+			return 1
+		}
+	done
 
 	# At least one private key must be present
-    for gpg_id in $recipients; do
-        tmp=$(gpg --list-secret-keys "$gpg_id")
-        [[ $? = 0 ]] && { 
-            return 0
-        }
-    done
+	for gpg_id in $recipients; do
+		tmp=$(gpg --list-secret-keys "$gpg_id")
+		[[ $? = 0 ]] && { 
+			return 0
+		}
+	done
 
 	return 1
 }
