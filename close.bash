@@ -16,6 +16,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-source "$PASSWORD_STORE_EXTENSIONS_DIR/tomb.bash"
+if [[ -x "$PASSWORD_STORE_EXTENSIONS_DIR/tomb.bash" ]]; then
+	source "$PASSWORD_STORE_EXTENSIONS_DIR/tomb.bash"
+elif [[ -x "$SYSTEM_EXTENSION_DIR/tomb.bash" ]]; then
+	source "$SYSTEM_EXTENSION_DIR/tomb.bash"
+else
+	die "Unable to load the pass tomb extension"
+fi
 
-cmd_close $@
+cmd_close "$@"

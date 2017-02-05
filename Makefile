@@ -28,7 +28,6 @@ uninstall:
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash" \
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/open.bash" \
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/close.bash" \
-		"$(DESTDIR)$(IMPORTERS_DIR)/" \
 		"$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1" \
 
 test:
