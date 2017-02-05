@@ -39,24 +39,23 @@ _warning() { echo -e " ${Byellow}[W]${reset} ${yellow}${*}${reset}"; }
 _success() { echo -e " ${Bgreen}(*)${reset} ${green}${*}${reset}"; }
 _error() { echo -e " ${Bred}[*]${reset}${bold} Error :${reset} ${*}"; }
 _die() { _error "${@}" && exit 1; }
-_verbose() { _alert "${@}"; }
+_verbose() { [ "$VERBOSE" = 0 ] || _alert "${@}"; }
 
 # Check program dependencies
 #
-# pass tomb depends on tomb>2.3
+# pass tomb depends on tomb
 _ensure_dependencies() {
-    command -v "$TOMB" 1>/dev/null 2>/dev/null || _die "tomb is not present"
+	command -v "$TOMB" 1>/dev/null 2>/dev/null || _die "Tomb is not present"
 }
 
 # $@ is the list of all the recipient used to encrypt a tomb key
 is_valid_recipients() {
 	typeset -a recipients
-	local tmp
-	recipients=($@)   # 
+	recipients=($@)
 	
 	# All the keys ID must be valid (the public keys must be present in the database)
-	for gpg_id in ${recipients[@]}; do
-		tmp=$(gpg --list-keys "$gpg_id")
+	for gpg_id in "${recipients[@]}"; do
+		gpg --list-keys "$gpg_id" &> /dev/null
 		[[ $? != 0 ]] && {
 			_warn "$gpg_id is not a valid key ID."
 			return 1
@@ -64,13 +63,12 @@ is_valid_recipients() {
 	done
 
 	# At least one private key must be present
-	for gpg_id in $recipients; do
-		tmp=$(gpg --list-secret-keys "$gpg_id")
+	for gpg_id in "${recipients[@]}"; do
+		gpg --list-secret-keys "$gpg_id" &> /dev/null
 		[[ $? = 0 ]] && { 
 			return 0
 		}
 	done
-
 	return 1
 }
 
@@ -146,8 +144,8 @@ cmd_open() {
 	[[ -e "$TOMB_KEY" ]] || _die "There is no password tomb key."
 	
 	_tmp_create
-	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -f -r "dummy-gpgid" "$PREFIX"
-	sudo chown -R "$USER:$USER" "$PREFIX" || _die "Unable to set the permission on $PREFIX"
+	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -f -r "dummy-gpgid" "$PREFIX/$path"
+	sudo chown -R "$USER:$USER" "$PREFIX/$path" || _die "Unable to set the permission on $PREFIX/$path"
 	return 0
 }
 
@@ -164,6 +162,9 @@ cmd_close() {
 	return 0
 }
 
+# Create a new password tomb and initialise the password repository.
+# $1: path subfolder
+# $@: gpg-ids
 cmd_tomb() {
 	local path="$1"; shift;
 	[[ -z "$@" ]] && _die "$PROGRAM $COMMAND [--path=subfolder,-p subfolder] gpg-id..."
