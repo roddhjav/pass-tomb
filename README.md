@@ -14,7 +14,7 @@ It uses the same GPG key to encrypt passwords and tomb.
 
 The new workflow is the following:
 * Create a password tomb with `pass tomb`
- - Create a new tomb and open it in ~/.password-store
+ - Create a new tomb and open it in `~/.password-store`
  - Initialize the password repository with the same GPG key.
 * Use tomb as usual
 * When finished close the password tomb: `pass close`

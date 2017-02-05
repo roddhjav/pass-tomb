@@ -57,7 +57,7 @@ is_valid_recipients() {
 	for gpg_id in "${recipients[@]}"; do
 		gpg --list-keys "$gpg_id" &> /dev/null
 		[[ $? != 0 ]] && {
-			_warn "$gpg_id is not a valid key ID."
+			_warning "$gpg_id is not a valid key ID."
 			return 1
 		}
 	done
