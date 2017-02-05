@@ -104,19 +104,35 @@ _tmp_create() {
 	return 0
 }
 
-cmd_tomb_help() {
+cmd_tomb_verion() {
+	cat <<-_EOF
+	$PROGRAM tomb - A pass extension allowing you to put and manage your
+	            password repository in a tomb.
+	
+	Vesion: 0.1
+	_EOF
+}
+
+cmd_tomb_usage() {
+	cmd_tomb_verion
+	echo
 	cat <<-_EOF
 	Usage:
-	    $PROGRAM tomb gpg-id...
-	    	Create and initialise a new password tomb.
-	    	Use gpg-id for encryption of both tomb and passwords
-	    $PROGRAM tomb help
-	    	Print this help
+	    $PROGRAM tomb [--path=subfolder,-p subfolder] gpg-id...
+	        Create and initialise a new password tomb.
+	        Use gpg-id for encryption of both tomb and passwords
 	    $PROGRAM open
-	    	Open a password tomb
+	        Open a password tomb
 	    $PROGRAM close
-	    	Close a password tomb
-
+	        Close a password tomb
+	
+	Options:
+	    -v, --verbose  Print tomb message
+	    -d, --debug    Print tomb debug message
+	        --unsafe   Speed up tomb creation (for test only)
+	    -V, --version  Show version information.
+	    -h, --help	   Print this help message and exit.
+	
 	More information may be found in the pass-tomb(1) man page.
 	_EOF
 }
@@ -148,8 +164,10 @@ cmd_close() {
 	return 0
 }
 
-cmd_tomb_create() {
-	TOMB_RECIPIENTS=($@)
+cmd_tomb() {
+	local path="$1"; shift;
+	[[ -z "$@" ]] && _die "$PROGRAM $COMMAND [--path=subfolder,-p subfolder] gpg-id..."
+	RECIPIENTS=($@)
 	PASSWORD_STORE_SIGNING_KEY=${TOMB_RECIPIENTS[0]}
 	
 	# Sanity checks
@@ -193,19 +211,25 @@ cmd_tomb_create() {
 	_success "When finish, close the password tomb using 'pass close'"
 }
 
+# Check dependencies are present or bail out
+_ensure_dependencies
 
-cmd_tomb() {
+# Global options
+UNSAFE=0
+VERBOSE=0
+DEBUG=""
+opts="$($GETOPT -o vdhVp: -l verbose,debug,help,version,path:,unsafe -n "$PROGRAM $COMMAND" -- "$@")"
+err=$?
+eval set -- "$opts"
+while true; do case $1 in
+	-v|--verbose) VERBOSE=1; shift ;;
+	-d|--debug) DEBUG="-D"; VERBOSE=1; shift ;;
+	-h|--help) shift; cmd_tomb_usage; exit 0 ;;
+	-V|--version) shift; cmd_tomb_verion; exit 0 ;;
+	-p|--path) id_path="$2"; shift 2 ;;
+	--unsafe) UNSAFE=1; shift ;;
+	--) shift; break ;;
+esac done
 
-	_ensure_dependencies  # Check dependencies are present or bail out
-	check_sneaky_paths "$1"
-	
-	if [[ "$1" == "help" ]]; then
-		cmd_tomb_help
-	else
-		cmd_tomb_create "$1"
-	fi
-
-    return $?
-}
-
-[[ "$COMMAND" == "tomb" ]] && cmd_tomb "$@"
+[[ $err -ne 0 ]] && cmd_tomb_usage && exit 1
+[[ "$COMMAND" == "tomb" ]] && cmd_tomb "$id_path" "$@"
