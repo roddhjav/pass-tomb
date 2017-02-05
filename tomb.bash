@@ -16,14 +16,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-WIPE=(rm -f)
 TOMB="${PASSWORD_STORE_TOMB:-tomb}"
 TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/password}"
 TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/password.key}"
 TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
-
-typeset -a TMPFILES
-TMPFILES=()
 
 #
 # Commons color and functions
@@ -51,18 +47,6 @@ _verbose() { _alert "${@}"; }
 _ensure_dependencies() {
     command -v $TOMB 1>/dev/null 2>/dev/null || _die "tomb is not present"
 }
-
-# Cleanup anything sensitive before exiting.
-_endgame() {
-
-# Clear temporary files
-    for f in $TMPFILES; do
-        ${WIPE} "$f"
-    done
-    unset TMPFILES
-}
-
-trap _endgame EXIT
 
 _basename() { # From https://github.com/chilicuil/learn
     [ -z "${1}" ] && return 1 || _basename__name="${1%%/}"
@@ -118,32 +102,32 @@ is_valid_recipients() {
 
 _tomb() {
 	local cmd="$1"; shift
-	"$TOMB" -D "$cmd" "$@" 2> "$TMP"
-	[[ $? == 0 ]] || {
-		_die "Unable to $cmd the password tomb"
-	}
+	"$TOMB" "$cmd" "$@" "$DEBUG" &> "$TMP"
+	ret=$?
+	while read ii; do
+		_verbose "$ii"
+	done <$TMP
+	[[ $ret == 0 ]] || _die "Unable to $cmd the password tomb"
 }
 
 # Provide a random filename in shared memory
 _tmp_create() {
-	TMPPREFIX=/tmp
+	tmpdir	# Defines $SECURE_TMPDIR
+	tfile="$(mktemp -u "$SECURE_TMPDIR/XXXXXXXXXXXXXXXXXXXX")" # Temporary file
 	
-    tfile="${TMPPREFIX}/$RANDOM$RANDOM$RANDOM$RANDOM"   # Temporary file
-    umask 066
-    [[ $? == 0 ]] || {
-        _die "Fatal error setting the permission umask for temporary files"; }
+	umask 066
+	[[ $? == 0 ]] || {
+		_die "Fatal error setting the permission umask for temporary files"; }
 
-    [[ -r "$tfile" ]] && {
-        _die "Someone is messing up with us trying to hijack temporary files."; }
+	[[ -r "$tfile" ]] && {
+		_die "Someone is messing up with us trying to hijack temporary files."; }
 
-    touch "$tfile"
-    [[ $? == 0 ]] || {
-        _die "Fatal error creating a temporary file: $tfile"; }
+	touch "$tfile"
+	[[ $? == 0 ]] || {
+		_die "Fatal error creating a temporary file: $tfile"; }
 
-    TMP="$tfile"
-    TMPFILES+=("$tfile")
-
-    return 0
+	TMP="$tfile"
+	return 0
 }
 
 cmd_tomb_help() {
@@ -174,9 +158,6 @@ cmd_open() {
 	_tmp_create
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -f -r "dummy-gpgid" "$PREFIX"
 	sudo chown -R $USER:$USER "$PREFIX" || _die "Unable to set the permission on $PREFIX"
-	while read ii; do
-		_verbose "$ii"
-	done <$TMP
 	
 	return 0
 }
@@ -186,9 +167,6 @@ cmd_close() {
 	
 	_tmp_create
 	_tomb close "$TOMB_NAME"
-	while read ii; do
-		_verbose "$ii"
-	done <$TMP
 	
 	return 0
 }
@@ -212,9 +190,6 @@ cmd_tomb_create() {
 	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -r "$TOMB_RECIPIENTS"
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -r "$TOMB_RECIPIENTS" "$PREFIX"
 	sudo chown -R $USER:$USER "$PREFIX" || _die "Unable to set the permission on $PREFIX"
-	while read ii; do
-		_verbose "$ii"
-	done <$TMP
 	
 	# Use the same recipients to initialise the password store
 	echo "${TOMB_RECIPIENTS/,/\n}" > "$PREFIX/.gpg-id"
