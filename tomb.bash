@@ -183,11 +183,21 @@ cmd_tomb() {
 		_die "A password tomb cannot be smaller than 10 MB."
 	fi
 	
+	# Sharing support
+	local recipients_arg shared tmp_arg
+	if [ "${#RECIPIENTS[@]}" -gt 1 ]; then
+		tmp_arg="${RECIPIENTS[*]}"
+		recipients_arg=${tmp_arg// /,}
+		shared="--shared"
+	else
+		recipients_arg="${RECIPIENTS[0]}"
+	fi
+	
 	# Create the password tomb
 	_tmp_create
 	_tomb dig "$TOMB_FILE" -s "$TOMB_SIZE"
-	_tomb forge "$TOMB_KEY" -r "$TOMB_RECIPIENTS"
-	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -r "$TOMB_RECIPIENTS"
+	_tomb forge "$TOMB_KEY" -r "$recipients_arg" $shared $unsafe
+	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -r "$recipients_arg"
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -r "$recipients_arg" "$PREFIX/$path"
 	sudo chown -R "$USER:$USER" "$PREFIX/$path" || _die "Unable to set the permission on $PREFIX/$path"
 	
