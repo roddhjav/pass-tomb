@@ -52,7 +52,7 @@ _ensure_dependencies() {
 is_valid_recipients() {
 	typeset -a recipients
 	recipients=($@)
-	
+
 	# All the keys ID must be valid (the public keys must be present in the database)
 	for gpg_id in "${recipients[@]}"; do
 		gpg --list-keys "$gpg_id" &> /dev/null
@@ -65,7 +65,7 @@ is_valid_recipients() {
 	# At least one private key must be present
 	for gpg_id in "${recipients[@]}"; do
 		gpg --list-secret-keys "$gpg_id" &> /dev/null
-		[[ $? = 0 ]] && { 
+		[[ $? = 0 ]] && {
 			return 0
 		}
 	done
@@ -86,7 +86,7 @@ _tomb() {
 _tmp_create() {
 	tmpdir	# Defines $SECURE_TMPDIR
 	tfile="$(mktemp -u "$SECURE_TMPDIR/XXXXXXXXXXXXXXXXXXXX")" # Temporary file
-	
+
 	umask 066
 	[[ $? == 0 ]] || {
 		_die "Fatal error setting the permission umask for temporary files"; }
@@ -106,7 +106,7 @@ cmd_tomb_verion() {
 	cat <<-_EOF
 	$PROGRAM tomb - A pass extension allowing you to put and manage your
 	            password repository in a tomb.
-	
+
 	Vesion: 0.1
 	_EOF
 }
@@ -123,14 +123,14 @@ cmd_tomb_usage() {
 	        Open a password tomb
 	    $PROGRAM close
 	        Close a password tomb
-	
+
 	Options:
 	    -v, --verbose  Print tomb message
 	    -d, --debug    Print tomb debug message
 	        --unsafe   Speed up tomb creation (for test only)
 	    -V, --version  Show version information.
 	    -h, --help	   Print this help message and exit.
-	
+
 	More information may be found in the pass-tomb(1) man page.
 	_EOF
 }
@@ -142,11 +142,11 @@ cmd_open() {
 	check_sneaky_paths "$TOMB_KEY"
 	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to open."
 	[[ -e "$TOMB_KEY" ]] || _die "There is no password tomb key."
-	
+
 	_tmp_create
-	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -f -r "dummy-gpgid" "$PREFIX/$path"
+	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "$PREFIX/$path"
 	sudo chown -R "$USER:$USER" "$PREFIX/$path" || _die "Unable to set the permission on $PREFIX/$path"
-	
+
 	_success "Your password tomb as been openned in $PREFIX/."
 	_message "You can now use pass as usual"
 	_message "When finished, close the password tomb using 'pass close'"
@@ -160,10 +160,10 @@ cmd_close() {
 	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to close."
 	TOMB_NAME=${TOMB_FILE##*/}
 	[[ -z "$TOMB_NAME" ]] && _die "There no password tomb."
-	
+
 	_tmp_create
 	_tomb close "$TOMB_NAME"
-	
+
 	_success "Your password tomb as been closed"
 	_message "Your passwords remain present in $TOMB_FILE"
 	return 0
@@ -176,7 +176,7 @@ cmd_tomb() {
 	local path="$1"; shift;
 	[[ -z "$@" ]] && _die "$PROGRAM $COMMAND [--path=subfolder,-p subfolder] gpg-id..."
 	RECIPIENTS=($@)
-	
+
 	# Sanity checks
 	check_sneaky_paths "$path"
 	check_sneaky_paths "$TOMB_FILE"
@@ -195,7 +195,7 @@ cmd_tomb() {
 		_warning "Only use it for test purpose."
 		local unsafe="--unsafe --use-urandom"
 	fi
-	
+
 	# Sharing support
 	local recipients_arg shared tmp_arg
 	if [ "${#RECIPIENTS[@]}" -gt 1 ]; then
@@ -205,15 +205,15 @@ cmd_tomb() {
 	else
 		recipients_arg="${RECIPIENTS[0]}"
 	fi
-	
+
 	# Create the password tomb
 	_tmp_create
 	_tomb dig "$TOMB_FILE" -s "$TOMB_SIZE"
-	_tomb forge "$TOMB_KEY" -r "$recipients_arg" $shared $unsafe
-	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -r "$recipients_arg"
-	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -r "$recipients_arg" "$PREFIX/$path"
+	_tomb forge "$TOMB_KEY" -gr "$recipients_arg" $shared $unsafe
+	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg"
+	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg" "$PREFIX/$path"
 	sudo chown -R "$USER:$USER" "$PREFIX/$path" || _die "Unable to set the permission on $PREFIX/$path"
-	
+
 	# Use the same recipients to initialise the password store
 	local ret path_cmd
 	[ -z "$path" ] || path_cmd="--path=$path"
