@@ -1,4 +1,4 @@
-# pass tomb [![build status](https://gitlab.com/roddhjav/pass-tomb/badges/master/build.svg)][1]
+# pass tomb [![build status][build-img]][build-url]
 
 A [pass](https://www.passwordstore.org/) extension allowing you to put and
 manage your password repository in a tomb.
@@ -92,11 +92,10 @@ See `man pass-tomb` for more information on import process
 
 **Requirments**
 
-* `tomb` with [GnuPG Key Support](https://github.com/dyne/Tomb/pull/244).
-As of today this version has not been released yet. Therefore you need to
-install it by hand:
+* `tomb` with GnuPG Key Support. As of today this version has not been released
+yet. Therefore you need to install it by hand:
 
-		git clone https://github.com/roddhjav/Tomb.git -b gnupg-key-support
+		git clone https://github.com/dyne/Tomb.git
 		cd Tomb
 		sudo make install
 
@@ -132,4 +131,5 @@ Feedback, contributors, pull requests are all very welcome.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-[1]: https://gitlab.com/roddhjav/pass-tomb/commits/master
+[build-img]: https://gitlab.com/roddhjav/pass-tomb/badges/master/build.svg
+[build-url]: https://gitlab.com/roddhjav/pass-tomb/commits/master
