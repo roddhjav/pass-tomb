@@ -10,7 +10,7 @@ before_script:
   - sudo make --directory=password-store install
 
   # Installing tomb
-  - git clone https://github.com/roddhjav/Tomb.git -b gnupg-key-support
+  - git clone https://github.com/dyne/Tomb.git
   - sudo make --directory=Tomb install
 
 stages:
@@ -21,4 +21,3 @@ test:
   script:
     - chmod 744 tests/runtests
     - make test
-
