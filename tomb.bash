@@ -154,7 +154,6 @@ cmd_open() {
 	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to open."
 	[[ -e "$TOMB_KEY" ]] || _die "There is no password tomb key."
 
-
 	_tmp_create
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "$PREFIX/$path"
 	_set_ownership "$PREFIX/$path"
@@ -171,6 +170,7 @@ cmd_close() {
 	check_sneaky_paths "$TOMB_FILE"
 	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to close."
 	TOMB_NAME=${TOMB_FILE##*/}
+	TOMB_NAME=${TOMB_NAME%.*}
 	[[ -z "$TOMB_NAME" ]] && _die "There no password tomb."
 
 	_tmp_create

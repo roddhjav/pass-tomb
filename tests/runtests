@@ -26,10 +26,10 @@
 PASS="/usr/bin/pass"
 export PASSWORD_STORE_TOMB="tomb"
 export PASSWORD_STORE_ENABLE_EXTENSIONS=true
-export PASSWORD_STORE_EXTENSIONS_DIR="../" 
+export PASSWORD_STORE_EXTENSIONS_DIR="../"
 export PASSWORD_STORE_DIR="/tmp/.password-store"
-export PASSWORD_STORE_TOMB_FILE="/tmp/password"
-export PASSWORD_STORE_TOMB_KEY="/tmp/password.key"
+export PASSWORD_STORE_TOMB_FILE="/tmp/password.tomb"
+export PASSWORD_STORE_TOMB_KEY="/tmp/password.tomb.key"
 pass() {
 	${PASS} "$@"
 	return $?
@@ -110,21 +110,21 @@ pass_tomb() {
 
 	pass open
 	test $? = 0 && results[pass-open]=SUCCESS
-	
+
 }
 
 pass_tomb_extra() {
-	
+
 	notice "Testing password tomb in subfolder"
 	clean
 	pass tomb "$KEY1" --path=perso --verbose --unsafe
 	test $? = 0 && results[pass-tomb-sub]=SUCCESS
-	
+
 	clean
 	notice "Testing a shared password tomb"
 	pass tomb "$KEY1" "$KEY2" "$KEY3" --verbose --unsafe
 	test $? = 0 && results[pass-tomb-share]=SUCCESS
-	
+
 	# Internet sync (in an other repo, eg: pass sync)
 	# Also need to check git-remote-gcrypt
 	#notice "Testing a onlince sync of password tomb"
@@ -181,4 +181,3 @@ unset PASSWORD_STORE_SIGNING_KEY
 }
 
 exit $GLOBAL_RESULT
-
