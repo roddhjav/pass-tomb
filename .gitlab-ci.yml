@@ -20,4 +20,5 @@ test:
   stage: test
   script:
     - chmod 744 tests/runtests
+    - chmod 744 tomb.bash open.bash close.bash
     - make test
