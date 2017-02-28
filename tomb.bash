@@ -102,6 +102,17 @@ _tmp_create() {
 	return 0
 }
 
+# Set ownership when mounting a tomb
+# $1: Tomb path
+_set_ownership() {
+	local path="$1"
+	local uid="$(id -u $USER)"
+	local gid="$(id -g $USER)"
+
+	sudo chown -R $uid:$gid "$path" || _die "Unable to set the permission on $path"
+	sudo chmod 0711 "$path" || _die "Unable to set the permission on $path"
+}
+
 cmd_tomb_verion() {
 	cat <<-_EOF
 	$PROGRAM tomb - A pass extension allowing you to put and manage your
@@ -143,9 +154,10 @@ cmd_open() {
 	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to open."
 	[[ -e "$TOMB_KEY" ]] || _die "There is no password tomb key."
 
+
 	_tmp_create
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "$PREFIX/$path"
-	sudo chown -R "$USER:$USER" "$PREFIX/$path" || _die "Unable to set the permission on $PREFIX/$path"
+	_set_ownership "$PREFIX/$path"
 
 	_success "Your password tomb as been openned in $PREFIX/."
 	_message "You can now use pass as usual"
@@ -212,7 +224,7 @@ cmd_tomb() {
 	_tomb forge "$TOMB_KEY" -gr "$recipients_arg" $shared $unsafe
 	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg"
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg" "$PREFIX/$path"
-	sudo chown -R "$USER:$USER" "$PREFIX/$path" || _die "Unable to set the permission on $PREFIX/$path"
+	_set_ownership "$PREFIX/$path"
 
 	# Use the same recipients to initialise the password store
 	local ret path_cmd
