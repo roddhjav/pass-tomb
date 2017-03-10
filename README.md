@@ -62,7 +62,7 @@ $ pass close
 		Options:
 		    -v, --verbose  Print tomb message
 		    -d, --debug    Print tomb debug message
-		          --unsafe   Speed up tomb creation (for test only)
+		          --unsafe   Speed up tomb creation (for testing only)
 		    -V, --version  Show version information.
 		    -h, --help	     Print this help message and exit.
 
