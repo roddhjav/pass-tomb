@@ -2,7 +2,7 @@
 
 .SH NAME
 pass import - A \fBpass\fP(1) extension allowing you to put and manage your
-password repository in a \fBtomb\fP(1).
+password store in a \fBtomb\fP(1).
 
 
 .SH SYNOPSIS
@@ -13,9 +13,9 @@ password repository in a \fBtomb\fP(1).
 \fBpass close\fP
 
 .SH DESCRIPTION
-Due to the structure of \fBpass\fP(1), files and directories names are not encrypted
-in the password store. \fBpass tomb\fP provides a convenient solution to put you
-password repository in a \fBtomb\fP(1) and then keep your password tree encrypted
+Due to the structure of \fBpass\fP(1), file- and directory names are not encrypted
+in the password store. \fBpass tomb\fP provides a convenient solution to put your
+password store in a \fBtomb\fP(1) and then keep your password tree encrypted
 when you are not using it.
 
 It uses the same GPG key to encrypt passwords and tomb.
@@ -23,31 +23,31 @@ It uses the same GPG key to encrypt passwords and tomb.
 .TP
 .B The new workflow is the following:
 .IP
-1. Create a password tomb with \fBpass tomb\fP. It creates a new tomb and open it
-in ~/.password-store. Then it initializes the password repository with the same
+1. Create a password tomb with \fBpass tomb\fP. It creates a new tomb and opens it
+in ~/.password-store. Then it initialises the password repository with the same
 GPG key.
 .IP
-2. Use tomb as usual
+2. Use tomb as usual.
 .IP
-3. When finished close the password tomb: \fBpass close\fP
+3. When finished close the password tomb: \fBpass close\fP.
 .IP
-4. To use pass again, you need to open the password tomb: \fBpass open\fP
+4. To use pass again, you need to open the password tomb: \fBpass open\fP.
 
 
 .SH COMMAND
 
 .TP
-\fBpass tomb\fP [ \fI--path=sub-folder\fP, \fI-p sub-folder\fP ] \fIgpg-id...\fP
+\fBpass tomb\fP [ \fI--path=subfolder\fP, \fI-p subfolder\fP ] \fIgpg-id...\fP
 Create and initialise a new password tomb. Use
 .I gpg-id
 for encryption of both passwords and tomb. Multiple gpg-ids may be specified,
 in order to encrypt the tomb and each password with multiple ids. This command
-must be run first before a password store can be used. Note that use of
+must be run first, before a password store can be used. Note that use of
 .BR gpg-agent (1)
 is recommended so that the batch decryption does not require as much user
 intervention. If \fI--path\fP or \fI-p\fP is specified, along with an argument,
 a specific password tomb using gpg-id or a set of gpg-ids is assigned for that
-specific sub folder of the password store.
+specific subfolder of the password store.
 
 .TP
 \fBpass open\fP
@@ -68,15 +68,15 @@ Print tomb message
 
 .TP
 \fB\-\-unsafe\fR
-Speed up tomb creation (for test only
+Speed up tomb creation (for testing only)
 
 .TP
 \fB\-V\fB, \-\-version\fR
-Show version information.
+Show version information
 
 .TP
 \fB\-h\fB, \-\-help\fR
-Show usage message.
+Show usage message
 
 
 .SH EXAMPLES
@@ -84,52 +84,51 @@ Show usage message.
 Create a new password tomb
 .B zx2c4@laptop ~ $ pass tomb Jason@zx2c4.com
 .br
- (*) Your password tomb as been created and openned in ~/.password-store.
+ (*) Your password tomb has been created and opened in ~/.password-store.
 .br
- (*) Password store initialized for Jason@zx2c4.com
+ (*) Password store initialised for Jason@zx2c4.com.
 .br
-  .  Your tomb is: ~/password
+  .  Your tomb is: ~/password.
 .br
-  .  Your tomb key is: ~/password.key
+  .  Your tomb key is: ~/password.key.
 .br
-  .  You can now use pass as usual
+  .  You can now use pass as usual.
 .br
-  .  When finished, close the password tomb using 'pass close'
+  .  When finished, close the password tomb using 'pass close'.
 
 .TP
 Open a password tomb
 .B zx2c4@laptop ~ $ pass open
 .br
- (*) Your password tomb as been closed
+ (*) Your password tomb has been opened in ~/.password-store.
 .br
-  .  Your passwords remain present in ~/password
-
+  .  You can now use pass as usual.
+.br
+  .  When finished, close the password tomb using 'pass close'.
+  
 .TP
 Close a password tomb
 .B zx2c4@laptop ~ $ pass close
 .br
- (*) Your password tomb as been openned in ~/.password-store.
+ (*) Your password tomb has been closed.
 .br
-  .  You can now use pass as usual
-.br
-  .  When finished, close the password tomb using 'pass close'
-
-
+  .  Your passwords remain present in ~/password.
+  
 
 
 .SH ENVIRONMENT VARIABLES
 .TP
 .I PASSWORD_STORE_TOMB
-Path to tomb
+Path to tomb executable
 .TP
 .I PASSWORD_STORE_TOMB_FILE
-Path to the password tomb, by default \fI~/password\fP.
+Path to the password tomb, by default \fI~/password\fP
 .TP
 .I PASSWORD_STORE_TOMB_KEY
-Path to the password tomb key file by default \fI~/password.key\fP.
+Path to the password tomb key file by default \fI~/password.key\fP
 .TP
 .I PASSWORD_STORE_TOMB_SIZE
-Password tomb size in MB, by default \fI10\fP.
+Password tomb size in MB, by default \fI10\fP
 
 
 .SH SEE ALSO
