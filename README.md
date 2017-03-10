@@ -6,7 +6,7 @@ manage your password store in a tomb.
 ## Description
 
 Due to the structure of `pass`, file- and directory names are not encrypted in
-the password store. `pass-tomb` provides a convenient solution to put you password
+the password store. `pass-tomb` provides a convenient solution to put your password
 store in a [tomb](https://github.com/dyne/Tomb) and then keep your password
 tree encrypted when you are not using it.
 
