@@ -1,13 +1,13 @@
 # pass tomb [![build status][build-img]][build-url]
 
 A [pass](https://www.passwordstore.org/) extension allowing you to put and
-manage your password repository in a tomb.
+manage your password store in a tomb.
 
 ## Description
 
-Due to the structure of `pass`, files and directories names are not encrypted in
-the password store. `pass-tomb` provides a convenient solution to put you password
-repository in a [tomb](https://github.com/dyne/Tomb) and then keep your password
+Due to the structure of `pass`, file- and directory names are not encrypted in
+the password store. `pass-tomb` provides a convenient solution to put your password
+store in a [tomb](https://github.com/dyne/Tomb) and then keep your password
 tree encrypted when you are not using it.
 
 It uses the same GPG key to encrypt passwords and tomb.
@@ -15,9 +15,9 @@ It uses the same GPG key to encrypt passwords and tomb.
 The new workflow is the following:
 * Create a password tomb with `pass tomb`
  - Create a new tomb and open it in `~/.password-store`
- - Initialize the password repository with the same GPG key.
+ - Initialise the password store with the same GPG key
 * Use tomb as usual
-* When finished close the password tomb: `pass close`
+* When finished, close the password tomb: `pass close`
 * To use pass again, you need to open the password tomb: `pass open`
 
 ## Examples
@@ -25,7 +25,7 @@ The new workflow is the following:
 **Create a new password tomb**
 ```
 $ pass tomb <gpg-id>
- (*) Your password tomb as been created and openned in ~/.password-store.
+ (*) Your password tomb has been created and opened in ~/.password-store.
  (*) Password store initialized for <gpg-id>
   .  Your tomb is: ~/password
   .  Your tomb key is: ~/password.key
@@ -36,23 +36,23 @@ $ pass tomb <gpg-id>
 **Open a password tomb**
 ```
 $ pass open
- (*) Your password tomb as been closed
-  .  Your passwords remain present in ~/password
+ (*) Your password tomb has been opened in ~/.password-store.
+  .  You can now use pass as usual.
+  .  When finished, close the password tomb using 'pass close'.
 ```
 
 **Close a password tomb**
 ```
 $ pass close
- (*) Your password tomb as been openned in ~/.password-store.
-  .  You can now use pass as usual
-  .  When finished, close the password tomb using 'pass close'
-```
+ (*) Your password tomb has been closed.
+  .  Your passwords remain present in ~/password.
+  ```
 
 ## Usage
 
 		Usage:
 		    pass tomb [--path=subfolder,-p subfolder] gpg-id...
-		        Create and initialise a new password tomb.
+		        Create and initialise a new password tomb
 		        Use gpg-id for encryption of both tomb and passwords
 		    pass open
 		        Open a password tomb
@@ -62,21 +62,21 @@ $ pass close
 		Options:
 		    -v, --verbose  Print tomb message
 		    -d, --debug    Print tomb debug message
-		        --unsafe   Speed up tomb creation (for test only)
+		          --unsafe   Speed up tomb creation (for testing only)
 		    -V, --version  Show version information.
-		    -h, --help	   Print this help message and exit.
+		    -h, --help	     Print this help message and exit.
 
 		More information may be found in the pass-tomb(1) man page.
 
 
-See `man pass-tomb` for more information on import process
+See `man pass-tomb` for more information.
 
 ## Environment Variables
 
-* `PASSWORD_STORE_TOMB`: Path to `tomb`
-* `PASSWORD_STORE_TOMB_FILE`: Path to the password tomb. (default: `~/password`)
-* `PASSWORD_STORE_TOMB_KEY`: Path to the password tomb key file. (default: `~/password.key`)
-* `PASSWORD_STORE_TOMB_SIZE`: Password tomb size in MB (default: `10`)
+* `PASSWORD_STORE_TOMB`: path to `tomb` executable
+* `PASSWORD_STORE_TOMB_FILE`: path to the password tomb (default: `~/password`)
+* `PASSWORD_STORE_TOMB_KEY`: path to the password tomb key file (default: `~/password.key`)
+* `PASSWORD_STORE_TOMB_SIZE`: password tomb size in MB (default: `10`)
 
 ## Installation
 
@@ -84,7 +84,7 @@ See `man pass-tomb` for more information on import process
 
 		pacaur -S pass-tomb
 
-**Other linux**
+**Other linuxes**
 
 		git clone https://gitlab.com/roddhjav/pass-tomb/
 		cd pass-tomb
@@ -92,8 +92,7 @@ See `man pass-tomb` for more information on import process
 
 **Requirments**
 
-* `tomb` with GnuPG Key Support. As of today this version has not been released
-yet. Therefore you need to install it by hand:
+* `tomb` with GnuPG Key Support. Currently unreleased. Therefore you need to install it by hand:
 
 		git clone https://github.com/dyne/Tomb.git
 		cd Tomb

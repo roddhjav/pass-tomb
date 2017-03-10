@@ -10,8 +10,8 @@ all:
 	@echo ""
 	@echo "To install it try \"make install\" instead."
 	@echo
-	@echo "To run pass $(PROG) one needs to have some tools installed on the system:"
-	@echo "     Tomb and password store"
+	@echo "To run pass-$(PROG) one needs to have some tools installed on the system:"
+	@echo "     tomb and pass."
 
 install:
 	@install -v -d "$(DESTDIR)$(MANDIR)/man1" && install -m 0644 -v pass-$(PROG).1 "$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1"

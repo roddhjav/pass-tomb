@@ -22,7 +22,7 @@ TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/password.key}"
 TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
 
 #
-# Commons color and functions
+# Common colors and functions
 #
 green='\e[0;32m'
 yellow='\e[0;33m'
@@ -45,7 +45,7 @@ _verbose() { [ "$VERBOSE" = 0 ] || _alert "${@}"; }
 #
 # pass tomb depends on tomb
 _ensure_dependencies() {
-	command -v "$TOMB" 1>/dev/null 2>/dev/null || _die "Tomb is not present"
+	command -v "$TOMB" 1>/dev/null 2>/dev/null || _die "Tomb is not present."
 }
 
 # $@ is the list of all the recipient used to encrypt a tomb key
@@ -57,7 +57,7 @@ is_valid_recipients() {
 	for gpg_id in "${recipients[@]}"; do
 		gpg --list-keys "$gpg_id" &> /dev/null
 		[[ $? != 0 ]] && {
-			_warning "$gpg_id is not a valid key ID."
+			_warning "${gpg_id} is not a valid key ID."
 			return 1
 		}
 	done
@@ -79,7 +79,7 @@ _tomb() {
 	while read ii; do
 		_verbose "$ii"
 	done <$TMP
-	[[ $ret == 0 ]] || _die "Unable to $cmd the password tomb"
+	[[ $ret == 0 ]] || _die "Unable to ${cmd} the password tomb."
 }
 
 # Provide a random filename in shared memory
@@ -89,14 +89,14 @@ _tmp_create() {
 
 	umask 066
 	[[ $? == 0 ]] || {
-		_die "Fatal error setting the permission umask for temporary files"; }
+		_die "Fatal error setting the permission umask for temporary files."; }
 
 	[[ -r "$tfile" ]] && {
 		_die "Someone is messing up with us trying to hijack temporary files."; }
 
 	touch "$tfile"
 	[[ $? == 0 ]] || {
-		_die "Fatal error creating a temporary file: $tfile"; }
+		_die "Fatal error creating a temporary file: ${tfile}."; }
 
 	TMP="$tfile"
 	return 0
@@ -109,14 +109,14 @@ _set_ownership() {
 	local uid="$(id -u $USER)"
 	local gid="$(id -g $USER)"
 
-	sudo chown -R $uid:$gid "$path" || _die "Unable to set the permission on $path"
-	sudo chmod 0711 "$path" || _die "Unable to set the permission on $path"
+	sudo chown -R $uid:$gid "$path" || _die "Unable to set ownership permission on ${path}."
+	sudo chmod 0711 "$path" || _die "Unable to set permissions on ${path}."
 }
 
 cmd_tomb_verion() {
 	cat <<-_EOF
 	$PROGRAM tomb - A pass extension allowing you to put and manage your
-	            password repository in a tomb.
+	            password store in a tomb.
 
 	Vesion: 0.1
 	_EOF
@@ -128,7 +128,7 @@ cmd_tomb_usage() {
 	cat <<-_EOF
 	Usage:
 	    $PROGRAM tomb [--path=subfolder,-p subfolder] gpg-id...
-	        Create and initialise a new password tomb.
+	        Create and initialise a new password tomb
 	        Use gpg-id for encryption of both tomb and passwords
 	    $PROGRAM open
 	        Open a password tomb
@@ -138,9 +138,9 @@ cmd_tomb_usage() {
 	Options:
 	    -v, --verbose  Print tomb message
 	    -d, --debug    Print tomb debug message
-	        --unsafe   Speed up tomb creation (for test only)
+	          --unsafe   Speed up tomb creation (for testing only)
 	    -V, --version  Show version information.
-	    -h, --help	   Print this help message and exit.
+	    -h, --help	     Print this help message and exit.
 
 	More information may be found in the pass-tomb(1) man page.
 	_EOF
@@ -155,12 +155,12 @@ cmd_open() {
 	[[ -e "$TOMB_KEY" ]] || _die "There is no password tomb key."
 
 	_tmp_create
-	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "$PREFIX/$path"
-	_set_ownership "$PREFIX/$path"
+	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "${PREFIX}/${path}"
+	_set_ownership "${PREFIX}/${path}"
 
-	_success "Your password tomb as been openned in $PREFIX/."
-	_message "You can now use pass as usual"
-	_message "When finished, close the password tomb using 'pass close'"
+	_success "Your password tomb has been openned in ${PREFIX}/."
+	_message "You can now use pass as usual."
+	_message "When finished, close the password tomb using 'pass close'."
 	return 0
 }
 
@@ -171,13 +171,13 @@ cmd_close() {
 	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to close."
 	TOMB_NAME=${TOMB_FILE##*/}
 	TOMB_NAME=${TOMB_NAME%.*}
-	[[ -z "$TOMB_NAME" ]] && _die "There no password tomb."
+	[[ -z "$TOMB_NAME" ]] && _die "There is no password tomb."
 
 	_tmp_create
 	_tomb close "$TOMB_NAME"
 
-	_success "Your password tomb as been closed"
-	_message "Your passwords remain present in $TOMB_FILE"
+	_success "Your password tomb has been closed."
+	_message "Your passwords remain present in ${TOMB_FILE}."
 	return 0
 }
 
@@ -196,15 +196,15 @@ cmd_tomb() {
 	if ! is_valid_recipients "${RECIPIENTS[@]}"; then
 		_die "You set an invalid GPG ID."
 	elif [[ -e "$TOMB_KEY" ]]; then
-		_die "The tomb key $TOMB_KEY already exists. I won't overwrite it."
+		_die "The tomb key ${TOMB_KEY} already exists. I won't overwrite it."
 	elif [[ -e "$TOMB_FILE" ]]; then
-		_die "The password tomb $TOMB_FILE already exists. I won't overwrite it."
+		_die "The password tomb ${TOMB_FILE} already exists. I won't overwrite it."
 	elif [[ "$TOMB_SIZE" -lt 10 ]]; then
 		_die "A password tomb cannot be smaller than 10 MB."
 	fi
 	if [[ $UNSAFE -ne 0 ]]; then
 		_warning "Using unsafe mode to speed up tomb generation."
-		_warning "Only use it for test purpose."
+		_warning "Only use it for testing purposes."
 		local unsafe="--unsafe --use-urandom"
 	fi
 
@@ -223,23 +223,23 @@ cmd_tomb() {
 	_tomb dig "$TOMB_FILE" -s "$TOMB_SIZE"
 	_tomb forge "$TOMB_KEY" -gr "$recipients_arg" $shared $unsafe
 	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg"
-	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg" "$PREFIX/$path"
-	_set_ownership "$PREFIX/$path"
+	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg" "${PREFIX}/${path}"
+	_set_ownership "${PREFIX}/${path}"
 
 	# Use the same recipients to initialise the password store
 	local ret path_cmd
 	[ -z "$path" ] || path_cmd="--path=$path"
 	ret=$(cmd_init "${RECIPIENTS[@]}" $path_cmd)
-	if [[ -e "$PREFIX/$path/.gpg-id" ]]; then
-		_success "Your password tomb as been created and openned in $PREFIX."
+	if [[ -e "${PREFIX}/${path}/.gpg-id" ]]; then
+		_success "Your password tomb has been created and opened in ${PREFIX}."
 		_success "$ret"
-		_message "Your tomb is: $TOMB_FILE"
-		_message "Your tomb key is: $TOMB_KEY"
-		_message "You can now use pass as usual"
-		_message "When finished, close the password tomb using 'pass close'"
+		_message "Your tomb is: ${TOMB_FILE}"
+		_message "Your tomb key is: ${TOMB_KEY}"
+		_message "You can now use pass as usual."
+		_message "When finished, close the password tomb using 'pass close'."
 	else
 		_warning "$ret"
-		_die "Unable to initialise the password store"
+		_die "Unable to initialise the password store."
 	fi
 	return 0
 }
