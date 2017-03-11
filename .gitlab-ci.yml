@@ -1,23 +1,29 @@
-before_script:
-  # Tomb and pass dependencies
-  - export DEBIAN_FRONTEND=noninteractive
-  - sudo apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" install --no-install-recommends -y git tree zsh sudo gnupg cryptsetup pinentry-curses gawk  libgcrypt20-dev steghide qrencode e2fsprogs shellcheck dcfldd steghide qrencode
-  - sudo swapoff -a
+debian:
+  image: debian
+  before_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - su root -c '/usr/bin/apt-get -qq update'
+    - su root -c '/usr/bin/apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" install --no-install-recommends -y make bash sudo git tree zsh gnupg cryptsetup pinentry-curses gawk libgcrypt20-dev steghide e2fsprogs dcfldd steghide qrencode gettext ca-certificates shellcheck'
+    - sudo swapoff -a
+    - git clone https://git.zx2c4.com/password-store
+    - sudo make --directory=password-store install
+    - git clone https://github.com/dyne/Tomb.git
+    - sudo make --directory=Tomb install
 
-  # Installing password-store
-  - git clone https://git.zx2c4.com/password-store
-  - sudo make --directory=password-store install
-
-  # Installing tomb
-  - git clone https://github.com/dyne/Tomb.git
-  - sudo make --directory=Tomb install
-
-stages:
-  - test
-
-test:
-  stage: test
   script:
-    - chmod 744 tests/runtests
-    - chmod 744 tomb.bash open.bash close.bash
+    - chmod 744 tomb.bash open.bash close.bash tests/runtests
+    - make test
+
+archlinux:
+  image: base/archlinux
+  before_script:
+    - su root -c '/usr/bin/pacman -Syu --noconfirm --quiet base-devel bash sudo git tree zsh gnupg cryptsetup e2fsprogs lsof steghide dcfldd wipe qrencode shellcheck'
+    - sudo swapoff -a
+    - git clone https://git.zx2c4.com/password-store
+    - sudo make --directory=password-store install
+    - git clone https://github.com/dyne/Tomb.git
+    - sudo make --directory=Tomb install
+
+  script:
+    - chmod 744 tomb.bash open.bash close.bash tests/runtests
     - make test
