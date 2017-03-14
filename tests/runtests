@@ -18,7 +18,7 @@
 
 # Test units suite
 
-# WARNING: This test suite will slam all running tomb on your system.
+# WARNING: This test suite will slam all running tombs on your system.
 
 #
 # pass config
@@ -44,7 +44,7 @@ pass_populate() {
 
 
 #
-# Commons color and functions
+# Common colors and functions
 #
 red='\e[0;31m'
 green='\e[0;32m'
@@ -98,7 +98,7 @@ KEY5="4D2AFBDE67C60F5999D143AFA6E073D439E5020C"
 notice "Loading test suite"
 
 pass_tomb() {
-	notice "Testing password tomb creation and store initialisation."
+	notice "Testing password tomb creation and store initialisation"
 	pass tomb "$KEY1" --verbose --unsafe
 	test $? = 0 && results[pass-tomb]=SUCCESS
 
@@ -165,7 +165,7 @@ for t in ${tests[@]}; do
 	fi
 done
 
-success "Done. You can remove temporary leftovers from $PASSWORD_STORE_DIR/"
+success "Done. You can remove temporary leftovers from ${PASSWORD_STORE_DIR}/"
 
 unset PASSWORD_STORE_ENABLE_EXTENSIONS
 unset PASSWORD_STORE_EXTENSIONS_DIR
@@ -177,7 +177,7 @@ unset PASSWORD_STORE_SIGNING_KEY
 [ $GLOBAL_RESULT = 0 ] && {
 	success "Tests passed"
 } || {
-	error "Tests failded"
+	error "Tests failed"
 }
 
 exit $GLOBAL_RESULT
