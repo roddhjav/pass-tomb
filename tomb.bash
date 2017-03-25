@@ -32,14 +32,12 @@ Bgreen='\e[1;32m'
 Byellow='\e[1;33m'
 Bblue='\e[1;34m'
 reset='\e[0m'
-_title() { echo -e "${Bblue}::${reset} ${bold}${*}${reset}"; }
-_message() { echo -e " ${bold} . ${reset} ${*}"; }
-_alert() { echo -e " ${Byellow}(*)${reset} ${*}"; }
-_warning() { echo -e " ${Byellow}[W]${reset} ${yellow}${*}${reset}"; }
-_success() { echo -e " ${Bgreen}(*)${reset} ${green}${*}${reset}"; }
+_message() { [ "$QUIET" = 0 ] && echo -e " ${bold} . ${reset} ${*}"; }
+_warning() { [ "$QUIET" = 0 ] && echo -e " ${Byellow}[W]${reset} ${yellow}${*}${reset}"; }
+_success() { [ "$QUIET" = 0 ] && echo -e " ${Bgreen}(*)${reset} ${green}${*}${reset}"; }
 _error() { echo -e " ${Bred}[*]${reset}${bold} Error :${reset} ${*}"; }
 _die() { _error "${@}" && exit 1; }
-_verbose() { [ "$VERBOSE" = 0 ] || _alert "${@}"; }
+_verbose() { [ "$VERBOSE" = 0 ] || echo -e " ${Byellow}(*)${reset} ${*}"; }
 
 # Check program dependencies
 #
@@ -136,6 +134,7 @@ cmd_tomb_usage() {
 	        Close a password tomb
 
 	Options:
+	    -q, --quiet    Be quiet
 	    -v, --verbose  Print tomb message
 	    -d, --debug    Print tomb debug message
 	          --unsafe   Speed up tomb creation (for testing only)
@@ -250,11 +249,13 @@ _ensure_dependencies
 # Global options
 UNSAFE=0
 VERBOSE=0
+QUIET=0
 DEBUG=""
-opts="$($GETOPT -o vdhVp: -l verbose,debug,help,version,path:,unsafe -n "$PROGRAM $COMMAND" -- "$@")"
+opts="$($GETOPT -o vdhVp:q -l verbose,debug,help,version,path:,unsafe,quiet -n "$PROGRAM $COMMAND" -- "$@")"
 err=$?
 eval set -- "$opts"
 while true; do case $1 in
+	-q|--quiet) QUIET=1; VERBOSE=0; DEBUG=""; shift ;;
 	-v|--verbose) VERBOSE=1; shift ;;
 	-d|--debug) DEBUG="-D"; VERBOSE=1; shift ;;
 	-h|--help) shift; cmd_tomb_usage; exit 0 ;;
