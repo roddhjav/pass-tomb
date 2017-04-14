@@ -1,7 +1,7 @@
 # pass tomb [![build status][build-img]][build-url]
 
-A [pass](https://www.passwordstore.org/) extension allowing you to put and
-manage your password store in a tomb.
+A [pass](https://www.passwordstore.org/) extension that helps to keep the whole
+tree of password encrypted inside a tomb.
 
 ## Description
 
