@@ -136,6 +136,7 @@ cmd_tomb_usage() {
 	        Close a password tomb
 
 	Options:
+	    -n, --no-init  Do not initialise the password store
 	    -q, --quiet    Be quiet
 	    -v, --verbose  Print tomb message
 	    -d, --debug    Print tomb debug message
@@ -230,19 +231,27 @@ cmd_tomb() {
 
 	# Use the same recipients to initialise the password store
 	local ret path_cmd
-	[ -z "$path" ] || path_cmd="--path=$path"
-	ret=$(cmd_init "${RECIPIENTS[@]}" $path_cmd)
-	if [[ -e "${PREFIX}/${path}/.gpg-id" ]]; then
-		_success "Your password tomb has been created and opened in ${PREFIX}."
-		_success "$ret"
-		_message "Your tomb is: ${TOMB_FILE}"
-		_message "Your tomb key is: ${TOMB_KEY}"
-		_message "You can now use pass as usual."
-		_message "When finished, close the password tomb using 'pass close'."
-	else
-		_warning "$ret"
-		_die "Unable to initialise the password store."
+	if [[ $NOINIT -eq 0 ]]; then
+		[ -z "$path" ] || path_cmd="--path=${path}"
+		_verbose "GPG key used: ${RECIPIENTS[*]}"
+		ret=$(cmd_init "${RECIPIENTS[@]}" ${path_cmd})
+		if [[ ! -e "${PREFIX}/${path}/.gpg-id" ]]; then
+			_warning "$ret"
+			_die "Unable to initialise the password store."
+		fi
 	fi
+
+	# Success!
+	_success "Your password tomb has been created and opened in ${PREFIX}."
+	[[ -z "$ret" ]] || _success "$ret"
+	_message "Your tomb is: ${TOMB_FILE}"
+	_message "Your tomb key is: ${TOMB_KEY}"
+	if [[ -z "$ret" ]]; then
+		_message "You need to initialise the store with 'pass init gpg-id...'."
+	else
+		_message "You can now use pass as usual."
+	fi
+	_message "When finished, close the password tomb using 'pass close'."
 	return 0
 }
 
@@ -254,6 +263,7 @@ UNSAFE=0
 VERBOSE=0
 QUIET=0
 DEBUG=""
+NOINIT=0
 
 # Getopt options
 small_arg="vdhVp:qn"
@@ -268,6 +278,7 @@ while true; do case $1 in
 	-h|--help) shift; cmd_tomb_usage; exit 0 ;;
 	-V|--version) shift; cmd_tomb_verion; exit 0 ;;
 	-p|--path) id_path="$2"; shift 2 ;;
+	-n|--no-init) NOINIT=1; shift ;;
 	--unsafe) UNSAFE=1; shift ;;
 	--) shift; break ;;
 esac done
