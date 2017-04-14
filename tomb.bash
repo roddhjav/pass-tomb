@@ -16,22 +16,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-TOMB="${PASSWORD_STORE_TOMB:-tomb}"
-TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/password}"
-TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/password.key}"
-TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
+readonly TOMB="${PASSWORD_STORE_TOMB:-tomb}"
+readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password}"
+readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.key}"
+readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
 
 #
 # Common colors and functions
 #
-green='\e[0;32m'
-yellow='\e[0;33m'
-bold='\e[1m'
-Bred='\e[1;31m'
-Bgreen='\e[1;32m'
-Byellow='\e[1;33m'
-Bblue='\e[1;34m'
-reset='\e[0m'
+readonly green='\e[0;32m'
+readonly yellow='\e[0;33m'
+readonly bold='\e[1m'
+readonly Bred='\e[1;31m'
+readonly Bgreen='\e[1;32m'
+readonly Byellow='\e[1;33m'
+readonly Bblue='\e[1;34m'
+readonly reset='\e[0m'
 _message() { [ "$QUIET" = 0 ] && echo -e " ${bold} . ${reset} ${*}"; }
 _warning() { [ "$QUIET" = 0 ] && echo -e " ${Byellow}[W]${reset} ${yellow}${*}${reset}"; }
 _success() { [ "$QUIET" = 0 ] && echo -e " ${Bgreen}(*)${reset} ${green}${*}${reset}"; }
@@ -71,17 +71,19 @@ is_valid_recipients() {
 }
 
 _tomb() {
+	local ii ret
 	local cmd="$1"; shift
 	"$TOMB" "$cmd" "$@" "$DEBUG" &> "$TMP"
 	ret=$?
-	while read ii; do
+	while read -r ii; do
 		_verbose "$ii"
-	done <$TMP
+	done <"$TMP"
 	[[ $ret == 0 ]] || _die "Unable to ${cmd} the password tomb."
 }
 
 # Provide a random filename in shared memory
 _tmp_create() {
+	local tfile
 	tmpdir	# Defines $SECURE_TMPDIR
 	tfile="$(mktemp -u "$SECURE_TMPDIR/XXXXXXXXXXXXXXXXXXXX")" # Temporary file
 
@@ -103,12 +105,12 @@ _tmp_create() {
 # Set ownership when mounting a tomb
 # $1: Tomb path
 _set_ownership() {
-	local path="$1"
-	local uid="$(id -u $USER)"
-	local gid="$(id -g $USER)"
+	local uid gid path="$1"
+	uid="$(id -u "$USER")"
+	gid="$(id -g "$USER")"
 
-	sudo chown -R $uid:$gid "$path" || _die "Unable to set ownership permission on ${path}."
-	sudo chmod 0711 "$path" || _die "Unable to set permissions on ${path}."
+	sudo chown -R "${uid}:${gid}" "${path}" || _die "Unable to set ownership permission on ${path}."
+	sudo chmod 0711 "${path}" || _die "Unable to set permissions on ${path}."
 }
 
 cmd_tomb_verion() {
@@ -116,7 +118,7 @@ cmd_tomb_verion() {
 	$PROGRAM tomb - A pass extension allowing you to put and manage your
 	            password store in a tomb.
 
-	Vesion: 0.1
+	Version: 0.1
 	_EOF
 }
 
@@ -137,9 +139,9 @@ cmd_tomb_usage() {
 	    -q, --quiet    Be quiet
 	    -v, --verbose  Print tomb message
 	    -d, --debug    Print tomb debug message
-	          --unsafe   Speed up tomb creation (for testing only)
+	        --unsafe   Speed up tomb creation (for testing only)
 	    -V, --version  Show version information.
-	    -h, --help	     Print this help message and exit.
+	    -h, --help	   Print this help message and exit.
 
 	More information may be found in the pass-tomb(1) man page.
 	_EOF
@@ -185,7 +187,8 @@ cmd_close() {
 # $@: gpg-ids
 cmd_tomb() {
 	local path="$1"; shift;
-	[[ -z "$@" ]] && _die "$PROGRAM $COMMAND [--path=subfolder,-p subfolder] gpg-id..."
+	typeset -a RECIPIENTS
+	[[ -z "$*" ]] && _die "$PROGRAM $COMMAND [--path=subfolder,-p subfolder] gpg-id..."
 	RECIPIENTS=($@)
 
 	# Sanity checks
@@ -251,7 +254,11 @@ UNSAFE=0
 VERBOSE=0
 QUIET=0
 DEBUG=""
-opts="$($GETOPT -o vdhVp:q -l verbose,debug,help,version,path:,unsafe,quiet -n "$PROGRAM $COMMAND" -- "$@")"
+
+# Getopt options
+small_arg="vdhVp:qn"
+long_arg="verbose,debug,help,version,path:,unsafe,quiet,no-init"
+opts="$($GETOPT -o $small_arg -l $long_arg -n "$PROGRAM $COMMAND" -- "$@")"
 err=$?
 eval set -- "$opts"
 while true; do case $1 in
