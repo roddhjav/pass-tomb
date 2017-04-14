@@ -86,7 +86,7 @@ See `man pass-tomb` for more information.
 
 **Other linuxes**
 
-		git clone https://gitlab.com/roddhjav/pass-tomb/
+		git clone https://github.com/roddhjav/pass-tomb/
 		cd pass-tomb
 		sudo make install
 
@@ -126,5 +126,5 @@ Feedback, contributors, pull requests are all very welcome.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-[build-img]: https://gitlab.com/roddhjav/pass-tomb/badges/master/build.svg
-[build-url]: https://gitlab.com/roddhjav/pass-tomb/commits/master
+[build-img]: https://travis-ci.org/roddhjav/pass-tomb.svg?branch=master
+[build-url]: https://travis-ci.org/roddhjav/pass-tomb
