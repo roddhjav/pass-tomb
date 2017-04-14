@@ -1,0 +1,40 @@
+dist: trusty
+sudo: required
+
+language: bash
+
+env:
+  - PASS_VERSION=1.7 TOMB_VERSION=master
+  - PASS_VERSION=master TOMB_VERSION=master
+
+addons:
+  apt:
+    packages:
+      - tree
+      - zsh
+      - gnupg
+      - cryptsetup
+      - pinentry-curses
+      - gawk
+      - libgcrypt20-dev
+      - steghide
+      - e2fsprogs
+      - dcfldd
+      - steghide
+      - qrencode
+      - gettext
+      - ca-certificates
+      - shellcheck
+
+before_script:
+  - wget https://git.zx2c4.com/password-store/snapshot/password-store-$PASS_VERSION.tar.xz
+  - tar -xvf "password-store-$PASS_VERSION.tar.xz"
+  - sudo make --directory="password-store-$PASS_VERSION" install
+  - wget https://github.com/dyne/Tomb/archive/$TOMB_VERSION.tar.gz
+  - tar -xvzf "$TOMB_VERSION.tar.gz"
+  - sudo make --directory="Tomb-$TOMB_VERSION" install
+  - sudo swapoff -a
+
+script:
+  - make lint
+  - make test
