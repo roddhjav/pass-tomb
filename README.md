@@ -92,11 +92,7 @@ See `man pass-tomb` for more information.
 
 **Requirments**
 
-* `tomb` with GnuPG Key Support. Currently unreleased. Therefore you need to install it by hand:
-
-		git clone https://github.com/dyne/Tomb.git
-		cd Tomb
-		sudo make install
+* `tomb 2.4` or greater.
 
 * `pass 1.7.0` or greater.
 
