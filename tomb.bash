@@ -21,6 +21,9 @@ readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password}"
 readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.key}"
 readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
 
+readonly _UID="$(id -u "$USER")"
+readonly _GID="$(id -g "$USER")"
+
 #
 # Common colors and functions
 #
@@ -106,10 +109,7 @@ _tmp_create() {
 # $1: Tomb path
 _set_ownership() {
 	local uid gid path="$1"
-	uid="$(id -u "$USER")"
-	gid="$(id -g "$USER")"
-
-	sudo chown -R "${uid}:${gid}" "${path}" || _die "Unable to set ownership permission on ${path}."
+	sudo chown -R "${_UID}:${_GID}" "${path}" || _die "Unable to set ownership permission on ${path}."
 	sudo chmod 0711 "${path}" || _die "Unable to set permissions on ${path}."
 }
 
