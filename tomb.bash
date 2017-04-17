@@ -137,6 +137,7 @@ cmd_tomb_usage() {
 
 	Options:
 	    -n, --no-init  Do not initialise the password store
+		-t, --timer    Close the store after a given time (default: 1 hour)
 	    -q, --quiet    Be quiet
 	    -v, --verbose  Print tomb message
 	    -d, --debug    Print tomb debug message
@@ -240,6 +241,14 @@ cmd_tomb() {
 		fi
 	fi
 
+	# Initialise the timer
+	local timer=false
+	if [[ ! -z "$TIMER" ]]; then
+		echo "$TIMER" > "${PREFIX}/${path}/.timer"
+		_timer "$TIMER"
+		[[ $? == 0 ]] && timer=true
+	fi
+
 	# Success!
 	_success "Your password tomb has been created and opened in ${PREFIX}."
 	[[ -z "$ret" ]] || _success "$ret"
@@ -250,7 +259,11 @@ cmd_tomb() {
 	else
 		_message "You can now use pass as usual."
 	fi
-	_message "When finished, close the password tomb using 'pass close'."
+	if [[ $timer == "true" ]]; then
+		_message "This password store will be closed in $TIMER"
+	else
+		_message "When finished, close the password tomb using 'pass close'."
+	fi
 	return 0
 }
 
@@ -263,10 +276,11 @@ VERBOSE=0
 QUIET=0
 DEBUG=""
 NOINIT=0
+TIMER=""
 
 # Getopt options
-small_arg="vdhVp:qn"
-long_arg="verbose,debug,help,version,path:,unsafe,quiet,no-init"
+small_arg="vdhVp:qny"
+long_arg="verbose,debug,help,version,path:,unsafe,quiet,no-init,timer::"
 opts="$($GETOPT -o $small_arg -l $long_arg -n "$PROGRAM $COMMAND" -- "$@")"
 err=$?
 eval set -- "$opts"
@@ -277,6 +291,7 @@ while true; do case $1 in
 	-h|--help) shift; cmd_tomb_usage; exit 0 ;;
 	-V|--version) shift; cmd_tomb_verion; exit 0 ;;
 	-p|--path) id_path="$2"; shift 2 ;;
+	-t|--timer) TIMER="$2"; shift 2 ;;
 	-n|--no-init) NOINIT=1; shift ;;
 	--unsafe) UNSAFE=1; shift ;;
 	--) shift; break ;;
