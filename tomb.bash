@@ -169,18 +169,21 @@ cmd_open() {
 
 # Close a password tomb
 cmd_close() {
+	local _tomb_name _tomb_file="$1"
+	[[ -z "$_tomb_file" ]] && _tomb_file="$TOMB_FILE"
+
 	# Sanity checks
-	check_sneaky_paths "$TOMB_FILE"
-	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to close."
-	TOMB_NAME=${TOMB_FILE##*/}
-	TOMB_NAME=${TOMB_NAME%.*}
-	[[ -z "$TOMB_NAME" ]] && _die "There is no password tomb."
+	check_sneaky_paths "$_tomb_file"
+	[[ -e "$_tomb_file" ]] || _die "There is no password tomb to close."
+	_tomb_name=${_tomb_file##*/}
+	_tomb_name=${_tomb_name%.*}
+	[[ -z "$_tomb_name" ]] && _die "There is no password tomb."
 
 	_tmp_create
-	_tomb close "$TOMB_NAME"
+	_tomb close "$_tomb_name"
 
 	_success "Your password tomb has been closed."
-	_message "Your passwords remain present in ${TOMB_FILE}."
+	_message "Your passwords remain present in ${_tomb_file}."
 	return 0
 }
 
