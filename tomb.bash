@@ -109,6 +109,7 @@ _tmp_create() {
 # $1: Tomb path
 _set_ownership() {
 	local path="$1"
+	_verbose "Setting user permissions on ${path}"
 	sudo chown -R "${_UID}:${_GID}" "${path}" || _die "Unable to set ownership permission on ${path}."
 	sudo chmod 0711 "${path}" || _die "Unable to set permissions on ${path}."
 }
@@ -152,6 +153,7 @@ cmd_tomb_usage() {
 # Open a password tomb
 cmd_open() {
 	local path="$1"; shift;
+	_verbose "Opening the password tomb $TOMB_FILE using the key $TOMB_KEY"
 
 	# Sanity checks
 	check_sneaky_paths "$path"
@@ -175,6 +177,7 @@ cmd_open() {
 cmd_close() {
 	local _tomb_name _tomb_file="$1"
 	[[ -z "$_tomb_file" ]] && _tomb_file="$TOMB_FILE"
+	_verbose "Closing the password tomb $_tomb_file"
 
 	# Sanity checks
 	check_sneaky_paths "$_tomb_file"
@@ -199,6 +202,7 @@ cmd_tomb() {
 	typeset -a RECIPIENTS
 	[[ -z "$*" ]] && _die "$PROGRAM $COMMAND [--path=subfolder,-p subfolder] gpg-id..."
 	RECIPIENTS=($@)
+	_verbose "Creating a password tomb with the GPG key(s): ${RECIPIENTS[*]}"
 
 	# Sanity checks
 	check_sneaky_paths "$path"
@@ -240,7 +244,6 @@ cmd_tomb() {
 	local ret path_cmd
 	if [[ $NOINIT -eq 0 ]]; then
 		[[ -z "$path" ]] || path_cmd="--path=${path}"
-		_verbose "GPG key used: ${RECIPIENTS[*]}"
 		ret=$(cmd_init "${RECIPIENTS[@]}" ${path_cmd})
 		if [[ ! -e "${PREFIX}/${path}/.gpg-id" ]]; then
 			_warning "$ret"
