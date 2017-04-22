@@ -16,6 +16,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# shellcheck disable=SC2181
+
 readonly TOMB="${PASSWORD_STORE_TOMB:-tomb}"
 readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password}"
 readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.key}"
@@ -216,7 +218,7 @@ cmd_tomb() {
 	if [[ $UNSAFE -ne 0 ]]; then
 		_warning "Using unsafe mode to speed up tomb generation."
 		_warning "Only use it for testing purposes."
-		local unsafe="--unsafe --use-urandom"
+		local unsafe=(--unsafe --use-urandom)
 	fi
 
 	# Sharing support
@@ -231,16 +233,16 @@ cmd_tomb() {
 	# Create the password tomb
 	_tmp_create
 	_tomb dig "$TOMB_FILE" -s "$TOMB_SIZE"
-	_tomb forge "$TOMB_KEY" -gr "$recipients_arg" $unsafe
+	_tomb forge "$TOMB_KEY" -gr "$recipients_arg" "${unsafe[@]}"
 	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg"
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg" "${PREFIX}/${path}"
 	_set_ownership "${PREFIX}/${path}"
 
 	# Use the same recipients to initialise the password store
-	local ret path_cmd
+	local ret path_cmd=()
 	if [[ $NOINIT -eq 0 ]]; then
-		[[ -z "$path" ]] || path_cmd="--path=${path}"
-		ret=$(cmd_init "${RECIPIENTS[@]}" ${path_cmd})
+		[[ -z "$path" ]] || path_cmd=("--path=${path}")
+		ret="$(cmd_init "${RECIPIENTS[@]}" "${path_cmd[@]}")"
 		if [[ ! -e "${PREFIX}/${path}/.gpg-id" ]]; then
 			_warning "$ret"
 			_die "Unable to initialise the password store."
