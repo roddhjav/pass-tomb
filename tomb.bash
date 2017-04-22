@@ -35,18 +35,18 @@ readonly Bgreen='\e[1;32m'
 readonly Byellow='\e[1;33m'
 readonly Bblue='\e[1;34m'
 readonly reset='\e[0m'
-_message() { [ "$QUIET" = 0 ] && echo -e " ${bold} . ${reset} ${*}"; }
-_warning() { [ "$QUIET" = 0 ] && echo -e " ${Byellow}[W]${reset} ${yellow}${*}${reset}"; }
-_success() { [ "$QUIET" = 0 ] && echo -e " ${Bgreen}(*)${reset} ${green}${*}${reset}"; }
-_error() { echo -e " ${Bred}[*]${reset}${bold} Error :${reset} ${*}"; }
+_message() { [ "$QUIET" = 0 ] && echo -e " ${bold} . ${reset} ${*}" >&2; }
+_warning() { [ "$QUIET" = 0 ] && echo -e " ${Byellow}[W]${reset} ${yellow}${*}${reset}" >&2; }
+_success() { [ "$QUIET" = 0 ] && echo -e " ${Bgreen}(*)${reset} ${green}${*}${reset}" >&2; }
+_error() { echo -e " ${Bred}[*]${reset}${bold} Error :${reset} ${*}" >&2; }
 _die() { _error "${@}" && exit 1; }
-_verbose() { [ "$VERBOSE" = 0 ] || echo -e " ${Byellow}(*)${reset} ${*}"; }
+_verbose() { [ "$VERBOSE" = 0 ] || echo -e " ${Byellow}(*)${reset} ${*}" >&2; }
 
 # Check program dependencies
 #
 # pass tomb depends on tomb
 _ensure_dependencies() {
-	command -v "$TOMB" 1>/dev/null 2>/dev/null || _die "Tomb is not present."
+	command -v "$TOMB" &> /dev/null || _die "Tomb is not present."
 }
 
 # $@ is the list of all the recipient used to encrypt a tomb key
@@ -57,18 +57,18 @@ is_valid_recipients() {
 	# All the keys ID must be valid (the public keys must be present in the database)
 	for gpg_id in "${recipients[@]}"; do
 		gpg --list-keys "$gpg_id" &> /dev/null
-		[[ $? != 0 ]] && {
+		if [[ $? != 0 ]]; then
 			_warning "${gpg_id} is not a valid key ID."
 			return 1
-		}
+		fi
 	done
 
 	# At least one private key must be present
 	for gpg_id in "${recipients[@]}"; do
 		gpg --list-secret-keys "$gpg_id" &> /dev/null
-		[[ $? = 0 ]] && {
+		if [[ $? = 0 ]]; then
 			return 0
-		}
+		fi
 	done
 	return 1
 }
@@ -91,15 +91,11 @@ _tmp_create() {
 	tfile="$(mktemp -u "$SECURE_TMPDIR/XXXXXXXXXXXXXXXXXXXX")" # Temporary file
 
 	umask 066
-	[[ $? == 0 ]] || {
-		_die "Fatal error setting permission umask for temporary files."; }
-
-	[[ -r "$tfile" ]] && {
-		_die "Someone is messing up with us trying to hijack temporary files."; }
+	[[ $? == 0 ]] || _die "Fatal error setting permission umask for temporary files."
+	[[ -r "$tfile" ]] && _die "Someone is messing up with us trying to hijack temporary files.";
 
 	touch "$tfile"
-	[[ $? == 0 ]] || {
-		_die "Fatal error creating temporary file: ${tfile}."; }
+	[[ $? == 0 ]] || _die "Fatal error creating temporary file: ${tfile}."
 
 	TMP="$tfile"
 	return 0
