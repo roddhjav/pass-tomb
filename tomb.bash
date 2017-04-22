@@ -108,7 +108,7 @@ _tmp_create() {
 # Set ownership when mounting a tomb
 # $1: Tomb path
 _set_ownership() {
-	local uid gid path="$1"
+	local path="$1"
 	sudo chown -R "${_UID}:${_GID}" "${path}" || _die "Unable to set ownership permission on ${path}."
 	sudo chmod 0711 "${path}" || _die "Unable to set permissions on ${path}."
 }
@@ -151,12 +151,16 @@ cmd_tomb_usage() {
 
 # Open a password tomb
 cmd_open() {
+	local path="$1"; shift;
+
 	# Sanity checks
+	check_sneaky_paths "$path"
 	check_sneaky_paths "$TOMB_FILE"
 	check_sneaky_paths "$TOMB_KEY"
 	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to open."
 	[[ -e "$TOMB_KEY" ]] || _die "There is no password tomb key."
 
+	# Open the passwod tomb
 	_tmp_create
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "${PREFIX}/${path}"
 	_set_ownership "${PREFIX}/${path}"
@@ -235,7 +239,7 @@ cmd_tomb() {
 	# Use the same recipients to initialise the password store
 	local ret path_cmd
 	if [[ $NOINIT -eq 0 ]]; then
-		[ -z "$path" ] || path_cmd="--path=${path}"
+		[[ -z "$path" ]] || path_cmd="--path=${path}"
 		_verbose "GPG key used: ${RECIPIENTS[*]}"
 		ret=$(cmd_init "${RECIPIENTS[@]}" ${path_cmd})
 		if [[ ! -e "${PREFIX}/${path}/.gpg-id" ]]; then
