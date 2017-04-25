@@ -34,7 +34,7 @@ test:
 	make -C tests
 
 lint:
-	shellcheck -s bash $(PROG).bash
+	shellcheck -s bash -e SC2068 $(PROG).bash
 
 
 .PHONY: install uninstall test lint
