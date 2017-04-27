@@ -1,4 +1,4 @@
-# pass tomb [![build status][build-img]][build-url]
+# pass tomb [![build][build-img]][build-url] [![coverage][cover-img]][cover-url] [![climate][clima-img]][clima-url]
 
 A [pass](https://www.passwordstore.org/) extension that helps to keep the whole
 tree of password encrypted inside a tomb.
@@ -124,3 +124,7 @@ Feedback, contributors, pull requests are all very welcome.
 
 [build-img]: https://travis-ci.org/roddhjav/pass-tomb.svg?branch=master
 [build-url]: https://travis-ci.org/roddhjav/pass-tomb
+[cover-img]: https://coveralls.io/repos/github/roddhjav/pass-tomb/badge.svg?branch=master
+[cover-url]: https://coveralls.io/github/roddhjav/pass-tomb?branch=master
+[clima-img]: https://codeclimate.com/github/roddhjav/pass-tomb/badges/gpa.svg
+[clima-url]: https://codeclimate.com/github/roddhjav/pass-tomb
