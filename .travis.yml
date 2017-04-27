@@ -14,17 +14,17 @@ addons:
       - zsh
       - gnupg
       - cryptsetup
-      - pinentry-curses
       - gawk
-      - libgcrypt20-dev
-      - steghide
       - e2fsprogs
       - dcfldd
       - steghide
-      - qrencode
       - gettext
       - ca-certificates
       - shellcheck
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
 
 before_script:
   - wget https://git.zx2c4.com/password-store/snapshot/password-store-$PASS_VERSION.tar.xz
@@ -34,6 +34,16 @@ before_script:
   - tar -xzf "v$TOMB_VERSION.tar.gz"
   - sudo make --directory="Tomb-$TOMB_VERSION" install
   - sudo swapoff -a
+  - wget https://github.com/SimonKagstrom/kcov/archive/v33.tar.gz &&
+    tar xzf v33.tar.gz &&
+    cd kcov-33 &&
+    mkdir build &&
+    cd build &&
+    cmake .. &&
+    make &&
+    sudo make install &&
+    cd ../.. &&
+    rm -rf kcov-33
 
 script:
   - make lint

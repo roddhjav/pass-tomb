@@ -27,6 +27,13 @@
 # shellcheck disable=SC1091
 
 #
+# Project directory
+#
+TEST_HOME="$(pwd)"
+EXT_HOME="$(dirname "$TEST_HOME")"
+
+
+#
 # Check dependencies
 #
 
@@ -52,22 +59,25 @@ if [[ ! -e "$GPG" ]]; then
 	fi
 fi
 
-COVERAGE="false"
+COVERAGE="true"
 if [[ "$COVERAGE" == "true" ]]; then
-	exit 1
+	KCOV="$(which kcov)"
+	if [[ ! -e "$KCOV" ]]; then
+		echo "Could not find kcov command"
+		exit 1
+	fi
+	[[ -z "$TRAVIS_JOB_ID" ]] || TRAVIS="--coveralls-id=$TRAVIS_JOB_ID"
+	_pass() { "$KCOV" $TRAVIS --exclude-path="$PASS" "$TMP/$0" "$PASS" "${@}"; }
 else
 	_pass() { "$PASS" "${@}"; }
 fi
-
+pass() { "$PASS" "${@}"; }
 
 #
 # sharness config
 #
-TEST_HOME="$(pwd)"
-EXT_HOME="$(dirname "$TEST_HOME")"
 source ./sharness.sh
-export SHARNESS_TRASH_DIRECTORY="/tmp/pass-tomb"
-mkdir -p "$SHARNESS_TRASH_DIRECTORY"
+export TMP="/tmp/pass-tomb"
 
 
 #
@@ -95,10 +105,6 @@ unset EDITOR
 export PASSWORD_STORE_ENABLE_EXTENSIONS=true
 export PASSWORD_STORE_EXTENSIONS_DIR="$EXT_HOME"
 export PASSWORD_STORE_TOMB="$TOMB"
-export GIT_DIR="$PASSWORD_STORE_DIR/.git"
-export GIT_WORK_TREE="$PASSWORD_STORE_DIR"
-git config --local user.email "Pass-Automated-Testing-Suite@zx2c4.com"
-git config --local user.name "Pass Automated Testing Suite"
 
 
 #
@@ -121,12 +127,19 @@ chmod 700 "$GNUPGHOME"
 test_pass_populate() {
 	local path=""
 	[[ -z "$1" ]] || path="$1/"
-	"$PASS" generate "${path}Tests/user1"
-	"$PASS" generate "${path}Tests/user2"
+	pass generate "${path}Tests/user1"
+	pass generate "${path}Tests/user2"
 }
 
 test_cleanup() {
 	"$TOMB" slam all &> /dev/null
-	sudo rm -rf "$SHARNESS_TRASH_DIRECTORY"
-	mkdir -p "$SHARNESS_TRASH_DIRECTORY"
+	sudo rm -rf "$TMP"
+	mkdir -p "$TMP"
+}
+
+test_export() {
+	local test="$1"
+	export PASSWORD_STORE_DIR="$TMP/${test}-store"
+	export PASSWORD_STORE_TOMB_FILE="$TMP/${test}.tomb"
+	export PASSWORD_STORE_TOMB_KEY="$TMP/${test}.key"
 }

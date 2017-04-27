@@ -18,14 +18,12 @@
 
 # shellcheck disable=SC2016,SC1091
 
-export test_description="Testing pass tomb, pass open and pass close."
+export test_description="pass-tomb, test suite."
 
 source ./setup.sh
 test_cleanup
 
-export PASSWORD_STORE_DIR="$SHARNESS_TRASH_DIRECTORY/password-store"
-export PASSWORD_STORE_TOMB_FILE="$SHARNESS_TRASH_DIRECTORY/password.tomb"
-export PASSWORD_STORE_TOMB_KEY="$SHARNESS_TRASH_DIRECTORY/password.tomb.key"
+test_export "password"
 test_expect_success 'Password tomb creation & populate' '
     _pass tomb "$KEY1" --verbose --unsafe &&
     test_pass_populate &&
@@ -37,28 +35,22 @@ test_expect_success 'Password tomb open & close' '
     _pass close
     '
 
-export PASSWORD_STORE_DIR="$SHARNESS_TRASH_DIRECTORY/noinit-store"
-export PASSWORD_STORE_TOMB_FILE="$SHARNESS_TRASH_DIRECTORY/noinit.tomb"
-export PASSWORD_STORE_TOMB_KEY="$SHARNESS_TRASH_DIRECTORY/noinit.tomb.key"
+test_export "noinit"
 test_expect_success 'Testing password store creation without store initialisation' '
     _pass tomb "$KEY1" --no-init --verbose --unsafe &&
-    _pass init "$KEY2" &&
+    pass init "$KEY2" &&
     test_pass_populate &&
     _pass close
     '
 
-export PASSWORD_STORE_DIR="$SHARNESS_TRASH_DIRECTORY/shared-store"
-export PASSWORD_STORE_TOMB_FILE="$SHARNESS_TRASH_DIRECTORY/shared.tomb"
-export PASSWORD_STORE_TOMB_KEY="$SHARNESS_TRASH_DIRECTORY/shared.tomb.key"
+test_export "shared"
 test_expect_success 'Testing a shared password tomb' '
     _pass tomb "$KEY1" "$KEY2" "$KEY3" --verbose --unsafe &&
     test_pass_populate &&
     _pass close
     '
 
-export PASSWORD_STORE_DIR="$SHARNESS_TRASH_DIRECTORY/subfolder-store"
-export PASSWORD_STORE_TOMB_FILE="$SHARNESS_TRASH_DIRECTORY/subfolder.tomb"
-export PASSWORD_STORE_TOMB_KEY="$SHARNESS_TRASH_DIRECTORY/subfolder.tomb.key"
+test_export "subfolder"
 test_expect_success 'Testing password tomb in subfolder' '
     path="perso"
     _pass tomb "$KEY1" --path="$path" --verbose --unsafe &&
@@ -67,5 +59,10 @@ test_expect_success 'Testing password tomb in subfolder' '
     _pass open "$path" &&
     _pass close
     '
+
+test_expect_success 'Testing help message' '
+	_pass tomb --help &&
+    _pass tomb --version
+	'
 
 test_done
