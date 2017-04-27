@@ -16,6 +16,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# shellcheck disable=SC2068,SC1090
+
 if [[ -x "${PASSWORD_STORE_EXTENSIONS_DIR}/tomb.bash" ]]; then
 	source "${PASSWORD_STORE_EXTENSIONS_DIR}/tomb.bash"
 elif [[ -x "${SYSTEM_EXTENSION_DIR}/tomb.bash" ]]; then
