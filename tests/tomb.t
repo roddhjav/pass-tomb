@@ -38,7 +38,7 @@ test_expect_success 'Password tomb open & close' '
 test_export "noinit"
 test_expect_success 'Testing password store creation without store initialisation' '
     _pass tomb "$KEY1" --no-init --verbose --unsafe &&
-    pass init "$KEY2" &&
+    _pass init "$KEY2" &&
     test_pass_populate &&
     _pass close
     '
@@ -60,9 +60,20 @@ test_expect_success 'Testing password tomb in subfolder' '
     _pass close
     '
 
-test_expect_success 'Testing help message' '
-	_pass tomb --help &&
+test_export "invalidkey"
+
+test_expect_success 'Password tomb creation with invalid key' '
+    test_must_fail _pass tomb "$KEYI" --debug --unsafe
+    '
+test_expect_success 'Testing wrong tomb parameters' '
+    PASSWORD_STORE_TOMB_SIZE=5 test_must_fail _pass tomb "$KEY1" --verbose --unsafe
+    PASSWORD_STORE_TOMB_FILE="$TMP/password.tomb" test_must_fail  _pass tomb "$KEY1" --quiet --unsafe &&
+    PASSWORD_STORE_TOMB_KEY="$TMP/password.key" test_must_fail  _pass tomb "$KEY1" --quiet --unsafe
+    '
+
+test_expect_success 'Testing help messages' '
+    _pass tomb --help &&
     _pass tomb --version
-	'
+    '
 
 test_done
