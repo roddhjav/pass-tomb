@@ -31,18 +31,21 @@ readonly _GID="$(id -g "$USER")"
 #
 readonly green='\e[0;32m'
 readonly yellow='\e[0;33m'
-readonly bold='\e[1m'
+readonly magenta='\e[0;35m'
+readonly Bold='\e[1m'
 readonly Bred='\e[1;31m'
 readonly Bgreen='\e[1;32m'
 readonly Byellow='\e[1;33m'
 readonly Bblue='\e[1;34m'
+readonly Bmagenta='\e[1;35m'
 readonly reset='\e[0m'
-_message() { [ "$QUIET" = 0 ] && echo -e " ${bold} . ${reset} ${*}" >&2; }
-_warning() { [ "$QUIET" = 0 ] && echo -e " ${Byellow}[W]${reset} ${yellow}${*}${reset}" >&2; }
+_message() { [ "$QUIET" = 0 ] && echo -e " ${Bold} . ${reset} ${*}" >&2; }
+_warning() { [ "$QUIET" = 0 ] && echo -e " ${Byellow} w ${reset} ${yellow}${*}${reset}" >&2; }
 _success() { [ "$QUIET" = 0 ] && echo -e " ${Bgreen}(*)${reset} ${green}${*}${reset}" >&2; }
-_error() { echo -e " ${Bred}[*]${reset}${bold} Error :${reset} ${*}" >&2; }
+_error() { echo -e " ${Bred}[x]${reset} ${Bold}Error :${reset} ${*}" >&2; }
 _die() { _error "${@}" && exit 1; }
-_verbose() { [ "$VERBOSE" = 0 ] || echo -e " ${Byellow}(*)${reset} ${*}" >&2; }
+_verbose() { [ "$VERBOSE" = 0 ] || echo -e " ${Bmagenta} . ${reset} ${magenta}pass${reset} ${*}" >&2; }
+_verbose_tomb() { [ "$VERBOSE" = 0 ] || echo -e " ${Bmagenta} . ${reset} ${*}" >&2; }
 
 # Check program dependencies
 #
@@ -81,7 +84,7 @@ _tomb() {
 	"$TOMB" "$cmd" "$@" "$DEBUG" &> "$TMP"
 	ret=$?
 	while read -r ii; do
-		_verbose "$ii"
+		_verbose_tomb "$ii"
 	done <"$TMP"
 	[[ $ret == 0 ]] || _die "Unable to ${cmd} the password tomb."
 }
