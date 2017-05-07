@@ -24,7 +24,7 @@ RM ?= rm -f
 PROVE ?= prove
 AGGREGATE_SCRIPT ?= aggregate-results
 DEFAULT_TEST_TARGET ?= test
-TEST_OPTS ?= -v
+TEST_OPTS ?= --verbose --immediate --chain-lint --root=/tmp/sharness
 
 T = $(sort $(wildcard *.sh))
 
