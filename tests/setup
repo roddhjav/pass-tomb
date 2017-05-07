@@ -66,8 +66,7 @@ if [[ "$COVERAGE" == "true" ]]; then
 		echo "Could not find kcov command"
 		exit 1
 	fi
-	[[ -z "$TRAVIS_JOB_ID" ]] || TRAVIS="--coveralls-id=$TRAVIS_JOB_ID"
-	_pass() { "$KCOV" $TRAVIS --exclude-path="$PASS" "$TMP/$0" "$PASS" "${@}"; }
+	_pass() { "$KCOV" --exclude-path="$PASS" "$TMP/$0" "$PASS" "${@}"; }
 else
 	_pass() { "$PASS" "${@}"; }
 fi
@@ -75,9 +74,11 @@ fi
 #
 # sharness config
 #
-source ./sharness.sh
+source ./sharness
 export TMP="/tmp/pass-tomb"
 
+# Check for auxiliary programs
+[[ -z "$TRAVIS_JOB_ID" ]] || test_set_prereq TRAVIS
 
 #
 #  Prepare pass config vars

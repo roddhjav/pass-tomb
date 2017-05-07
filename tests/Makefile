@@ -22,11 +22,11 @@ SHELL_PATH ?= $(SHELL)
 SHELL_PATH_SQ = $(subst ','\'',$(SHELL_PATH))
 RM ?= rm -f
 PROVE ?= prove
-AGGREGATE_SCRIPT ?= aggregate-results.sh
+AGGREGATE_SCRIPT ?= aggregate-results
 DEFAULT_TEST_TARGET ?= test
 TEST_OPTS ?= -v
 
-T = $(sort $(wildcard *.t))
+T = $(sort $(wildcard *.sh))
 
 all: $(DEFAULT_TEST_TARGET)
 
