@@ -26,63 +26,40 @@
 
 # shellcheck disable=SC1091
 
-#
-# Project directory
-#
+# Project directories
 TEST_HOME="$(pwd)"
 EXT_HOME="$(dirname "$TEST_HOME")"
 
 
-#
 # Check dependencies
-#
-
-PASS="$(which pass)"
-if [[ ! -e "$PASS" ]]; then
-	echo "Could not find pass command"
-	exit 1
-fi
-
-TOMB="$(which tomb)"
-if [[ ! -e "$TOMB" ]]; then
-	echo "Could not find tomb command"
-	exit 1
-fi
-
-GPG="$(which gpg)"
+_die() { echo "${@}" && exit 1; }
+PASS="$(which pass)"; TOMB="$(which tomb)"; GPG="$(which gpg)"; COVERAGE="true"
+[[ -e "$PASS" ]] || _die "Could not find pass command"
+[[ -e "$TOMB" ]] || _die "Could not find tomb command"
 if [[ ! -e "$GPG" ]]; then
 	if which gpg2 &>/dev/null; then
 		GPG="gpg2"
 	else
-		echo "Could not find gpg command"
-		exit 1
+		_die "Could not find gpg command"
 	fi
 fi
-
-COVERAGE="true"
 if [[ "$COVERAGE" == "true" ]]; then
-	KCOV="$(which kcov)"
-	if [[ ! -e "$KCOV" ]]; then
-		echo "Could not find kcov command"
-		exit 1
-	fi
+	KCOV="$(which kcov)"; [[ -e "$KCOV" ]] || _die "Could not find kcov command"
 	_pass() { "$KCOV" --exclude-path="$PASS" "$TMP/$0" "$PASS" "${@}"; }
 else
 	_pass() { "$PASS" "${@}"; }
 fi
 
-#
+
 # sharness config
-#
 source ./sharness
 export TMP="/tmp/pass-tomb"
+
 
 # Check for auxiliary programs
 [[ -z "$TRAVIS_JOB_ID" ]] || test_set_prereq TRAVIS
 
-#
 #  Prepare pass config vars
-#
 unset PASSWORD_STORE_DIR
 unset PASSWORD_STORE_KEY
 unset PASSWORD_STORE_GIT
@@ -107,9 +84,7 @@ export PASSWORD_STORE_EXTENSIONS_DIR="$EXT_HOME"
 export PASSWORD_STORE_TOMB="$TOMB"
 
 
-#
 # GnuPG config
-#
 unset GPG_AGENT_INFO
 export GNUPGHOME="$TEST_HOME/gnupg/"
 export KEY1="D4C78DB7920E1E27F5416B81CC9DB947CF90C77B"
@@ -121,11 +96,9 @@ export KEYI="8BEB79760D3D8748267E27F5416BFF9987DB13AF"
 chmod 700 "$GNUPGHOME"
 
 
-#
 # Test helpers
-#
 
-test_pass_populate() {
+_pass_populate() {
 	local path=""
 	[[ -z "$1" ]] || path="$1/"
 	pass generate "${path}Tests/user1"
@@ -139,8 +112,8 @@ test_cleanup() {
 }
 
 test_export() {
-	local test="$1"
-	export PASSWORD_STORE_DIR="$TMP/${test}-store"
-	export PASSWORD_STORE_TOMB_FILE="$TMP/${test}.tomb"
-	export PASSWORD_STORE_TOMB_KEY="$TMP/${test}.key"
+	export testname="$1"
+	export PASSWORD_STORE_DIR="$TMP/${testname}-store"
+	export PASSWORD_STORE_TOMB_FILE="$TMP/${testname}.tomb"
+	export PASSWORD_STORE_TOMB_KEY="$TMP/${testname}.key"
 }
