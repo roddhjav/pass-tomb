@@ -154,7 +154,6 @@ cmd_tomb_usage() {
 # Open a password tomb
 cmd_open() {
 	local path="$1"; shift;
-	_verbose "Opening the password tomb $TOMB_FILE using the key $TOMB_KEY"
 
 	# Sanity checks
 	check_sneaky_paths "$path"
@@ -165,6 +164,7 @@ cmd_open() {
 
 	# Open the passwod tomb
 	_tmp_create
+	_verbose "Opening the password tomb $TOMB_FILE using the key $TOMB_KEY"
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "${PREFIX}/${path}"
 	_set_ownership "${PREFIX}/${path}"
 
@@ -178,7 +178,6 @@ cmd_open() {
 cmd_close() {
 	local _tomb_name _tomb_file="$1"
 	[[ -z "$_tomb_file" ]] && _tomb_file="$TOMB_FILE"
-	_verbose "Closing the password tomb $_tomb_file"
 
 	# Sanity checks
 	check_sneaky_paths "$_tomb_file"
@@ -188,6 +187,7 @@ cmd_close() {
 	[[ -z "$_tomb_name" ]] && _die "There is no password tomb."
 
 	_tmp_create
+	_verbose "Closing the password tomb $_tomb_file"
 	_tomb close "$_tomb_name"
 
 	_success "Your password tomb has been closed."
