@@ -16,7 +16,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# shellcheck disable=SC2181
+# shellcheck disable=SC2181,SC2024
 
 readonly TOMB="${PASSWORD_STORE_TOMB:-tomb}"
 readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password}"
@@ -87,6 +87,34 @@ _tomb() {
 		_verbose_tomb "$ii"
 	done <"$TMP"
 	[[ $ret == 0 ]] || _die "Unable to ${cmd} the password tomb."
+}
+
+# Systemd timer to close the passwod store.
+# $1: Delay before to run the pass-close service
+# $2: Path in the password store to save the delay (may be empty)
+# return 0 on success, 1 otherwise
+_timer() {
+	local ret ii delay="$1" path="$2"
+	_tmp_create
+	sudo systemd-run --system --on-active="$delay" \
+		--description="pass-close timer" --unit="pass-close-$RANDOM" \
+		--setenv="PASSWORD_STORE_TOMB_FILE=$TOMB_FILE" \
+		--setenv="PASSWORD_STORE_EXTENSIONS_DIR=$PASSWORD_STORE_EXTENSIONS_DIR" \
+		--setenv="PASSWORD_STORE_ENABLE_EXTENSIONS=$PASSWORD_STORE_ENABLE_EXTENSIONS" \
+		/usr/bin/bash -c '/usr/bin/pass close --verbose' &> "$TMP"
+	ret=$?
+	while read -r ii; do
+		_verbose "$ii"
+	done <"$TMP"
+	if [[ $ret == 0 ]]; then
+		echo "$delay" > "${PREFIX}/${path}/.timer"
+		_verbose "Timer successfully created"
+		echo 0
+	else
+		_warning "Unable to set the timer"
+		echo 1
+	fi
+	return $ret
 }
 
 # Provide a random filename in shared memory
@@ -168,9 +196,25 @@ cmd_open() {
 	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "${PREFIX}/${path}"
 	_set_ownership "${PREFIX}/${path}"
 
+	# Read, initialise and start the timer
+	local timed=1
+	if [[ -z "$TIMER" ]]; then
+		if [[ -e "${PREFIX}/${path}/.timer" ]]; then
+			TIMER="$(cat "${PREFIX}/${path}/.timer")"
+			[[ -z "$TIMER" ]] || timed="$(_timer "$TIMER" "${path}")"
+		fi
+	else
+		timed="$(_timer "$TIMER" "${path}")"
+	fi
+
+	# Success!
 	_success "Your password tomb has been opened in ${PREFIX}/."
 	_message "You can now use pass as usual."
-	_message "When finished, close the password tomb using 'pass close'."
+	if [[ $timed == 0 ]]; then
+		_message "This password store will be closed in $TIMER"
+	else
+		_message "When finished, close the password tomb using 'pass close'."
+	fi
 	return 0
 }
 
@@ -253,12 +297,8 @@ cmd_tomb() {
 	fi
 
 	# Initialise the timer
-	local timer=false
-	if [[ ! -z "$TIMER" ]]; then
-		echo "$TIMER" > "${PREFIX}/${path}/.timer"
-		_timer "$TIMER"
-		[[ $? == 0 ]] && timer=true
-	fi
+	local timed=1
+	[[ -z "$TIMER" ]] || timed="$(_timer "$TIMER" "${path}")"
 
 	# Success!
 	_success "Your password tomb has been created and opened in ${PREFIX}."
@@ -270,7 +310,7 @@ cmd_tomb() {
 	else
 		_message "You can now use pass as usual."
 	fi
-	if [[ $timer == "true" ]]; then
+	if [[ $timed == 0 ]]; then
 		_message "This password store will be closed in $TIMER"
 	else
 		_message "When finished, close the password tomb using 'pass close'."
@@ -290,8 +330,8 @@ NOINIT=0
 TIMER=""
 
 # Getopt options
-small_arg="vdhVp:qny"
-long_arg="verbose,debug,help,version,path:,unsafe,quiet,no-init,timer::"
+small_arg="vdhVp:qnt:"
+long_arg="verbose,debug,help,version,path:,unsafe,quiet,no-init,timer:"
 opts="$($GETOPT -o $small_arg -l $long_arg -n "$PROGRAM $COMMAND" -- "$@")"
 err=$?
 eval set -- "$opts"
