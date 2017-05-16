@@ -19,8 +19,8 @@
 # shellcheck disable=SC2181,SC2024
 
 readonly TOMB="${PASSWORD_STORE_TOMB:-tomb}"
-readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password}"
-readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.key}"
+readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password.tomb}"
+readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.tomb.key}"
 readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
 
 readonly _UID="$(id -u "$USER")"
