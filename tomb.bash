@@ -26,6 +26,8 @@ readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
 readonly _UID="$(id -u "$USER")"
 readonly _GID="$(id -g "$USER")"
 
+readonly VERSION="1.0"
+
 #
 # Common colors and functions
 #
@@ -145,10 +147,8 @@ _set_ownership() {
 
 cmd_tomb_verion() {
 	cat <<-_EOF
-	$PROGRAM tomb - A pass extension allowing you to put and manage your
-	            password store in a tomb.
-
-	Version: 0.1
+	$PROGRAM tomb $VERSION - A pass extension that helps to keep the whole tree of
+	                password encrypted inside a tomb.
 	_EOF
 }
 
@@ -157,23 +157,26 @@ cmd_tomb_usage() {
 	echo
 	cat <<-_EOF
 	Usage:
-	    $PROGRAM tomb [--path=subfolder,-p subfolder] gpg-id...
+	    $PROGRAM tomb [-n] [-t time] [-p subfolder] gpg-id...
 	        Create and initialise a new password tomb
 	        Use gpg-id for encryption of both tomb and passwords
-	    $PROGRAM open
+
+	    $PROGRAM open [subfolder] [-t time]
 	        Open a password tomb
-	    $PROGRAM close
+
+	    $PROGRAM close [store]
 	        Close a password tomb
 
 	Options:
 	    -n, --no-init  Do not initialise the password store
-		-t, --timer    Close the store after a given time (default: 1 hour)
+	    -t, --timer    Close the store after a given time
+	    -p, --path     Create the store for that specific subfolder
 	    -q, --quiet    Be quiet
-	    -v, --verbose  Print tomb message
-	    -d, --debug    Print tomb debug message
+	    -v, --verbose  Be verbose
+	    -d, --debug    Print tomb debug messages
 	        --unsafe   Speed up tomb creation (for testing only)
 	    -V, --version  Show version information.
-	    -h, --help	   Print this help message and exit.
+	    -h, --help     Print this help message and exit.
 
 	More information may be found in the pass-tomb(1) man page.
 	_EOF
@@ -245,7 +248,7 @@ cmd_close() {
 cmd_tomb() {
 	local path="$1"; shift;
 	typeset -a RECIPIENTS
-	[[ -z "$*" ]] && _die "$PROGRAM $COMMAND [--path=subfolder,-p subfolder] gpg-id..."
+	[[ -z "$*" ]] && _die "$PROGRAM $COMMAND [-n] [-t time] [-p subfolder] gpg-id..."
 	RECIPIENTS=($@)
 
 	# Sanity checks
