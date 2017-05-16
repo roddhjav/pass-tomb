@@ -111,7 +111,7 @@ _timer() {
 		_verbose "Timer successfully created"
 		echo 0
 	else
-		_warning "Unable to set the timer"
+		_warning "Unable to set the timer to close the password tomb in $delay."
 		echo 1
 	fi
 	return $ret
@@ -247,7 +247,6 @@ cmd_tomb() {
 	typeset -a RECIPIENTS
 	[[ -z "$*" ]] && _die "$PROGRAM $COMMAND [--path=subfolder,-p subfolder] gpg-id..."
 	RECIPIENTS=($@)
-	_verbose "Creating a password tomb with the GPG key(s): ${RECIPIENTS[*]}"
 
 	# Sanity checks
 	check_sneaky_paths "$path"
@@ -279,6 +278,7 @@ cmd_tomb() {
 
 	# Create the password tomb
 	_tmp_create
+	_verbose "Creating a password tomb with the GPG key(s): ${RECIPIENTS[*]}"
 	_tomb dig "$TOMB_FILE" -s "$TOMB_SIZE"
 	_tomb forge "$TOMB_KEY" -gr "$recipients_arg" "${unsafe[@]}"
 	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg"
