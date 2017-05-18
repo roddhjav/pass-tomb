@@ -113,23 +113,26 @@ See `man pass-tomb` for more information.
 ## Installation
 
 **From git**
-
-		git clone https://github.com/roddhjav/pass-tomb/
-		cd pass-tomb
-		sudo make install
+```sh
+git clone https://github.com/roddhjav/pass-tomb/
+cd pass-tomb
+sudo make install
+```
 
 **Generic Linux**
-
-		wget https://github.com/roddhjav/pass-tomb/archive/v1.0.tar.gz
-	    tar xzf v1.0.tar.gz
-	    cd pass-tomb-1.0
-	    sudo make install
+```sh
+wget https://github.com/roddhjav/pass-tomb/archive/v1.0.tar.gz
+tar xzf v1.0.tar.gz
+cd pass-tomb-1.0
+sudo make install
+```
 
 **ArchLinux**
 
 `pass-tomb` is available in the [Arch User Repository][aur].
-
-		pacaur -S pass-tomb
+```sh
+pacaur -S pass-tomb
+```
 
 **Requirments**
 
