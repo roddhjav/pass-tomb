@@ -12,8 +12,9 @@ if test_have_prereq TRAVIS; then
         sudo make --directory=$EXT_HOME install
         '
 
+    export PASSWORD_STORE_ENABLE_EXTENSIONS=''
+    export PASSWORD_STORE_EXTENSIONS_DIR=''
     test_expect_success 'Testing installated extension.' '
-        unset PASSWORD_STORE_ENABLE_EXTENSIONS &&
         _pass open &&
         _pass close
         '
