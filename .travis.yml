@@ -4,8 +4,9 @@ sudo: required
 language: bash
 
 env:
-  - PASS_VERSION=1.7 TOMB_VERSION=2.4
-  - PASS_VERSION=master TOMB_VERSION=2.4
+  global:
+    - PASS_VERSION=1.7
+    - TOMB_VERSION=2.4
 
 addons:
   apt:
@@ -17,7 +18,6 @@ addons:
       - gawk
       - e2fsprogs
       - dcfldd
-      - steghide
       - gettext
       - ca-certificates
       - shellcheck
@@ -28,11 +28,11 @@ addons:
 
 before_script:
   - wget https://git.zx2c4.com/password-store/snapshot/password-store-$PASS_VERSION.tar.xz
-  - tar -xf "password-store-$PASS_VERSION.tar.xz"
-  - sudo make --directory="password-store-$PASS_VERSION" install
+  - tar -xf password-store-$PASS_VERSION.tar.xz
+  - sudo make --directory=password-store-$PASS_VERSION install
   - wget https://github.com/dyne/Tomb/archive/v$TOMB_VERSION.tar.gz
-  - tar -xzf "v$TOMB_VERSION.tar.gz"
-  - sudo make --directory="Tomb-$TOMB_VERSION" install
+  - tar -xzf v$TOMB_VERSION.tar.gz
+  - sudo make --directory=Tomb-$TOMB_VERSION install
   - sudo swapoff -a
   - wget https://github.com/SimonKagstrom/kcov/archive/v33.tar.gz &&
     tar xzf v33.tar.gz &&
@@ -46,5 +46,7 @@ before_script:
     rm -rf kcov-33
 
 script:
-  - make lint
   - make test
+
+notifications:
+  email: false
