@@ -110,11 +110,27 @@ $ pass open --timer=10min
 * `PASSWORD_STORE_TOMB_KEY`: path to the password tomb key file (default: `~/.password.key.tomb`)
 * `PASSWORD_STORE_TOMB_SIZE`: password tomb size in MB (default: `10`)
 
+## Multiple password tombs
+It is possible to create multiple pass tomb and open them separately. You only need to set the tomb file, key and the password store directory manually using the environment variables:
 
+**Create a tomb**
+```sh
+PASSWORD_STORE_TOMB_FILE=<tomb_path> PASSWORD_STORE_TOMB_KEY=<key_path> PASSWORD_STORE_DIR=<dir_path> pass tomb <gpgid>
 ```
 
+**Open/Close a tomb**
+```sh
+PASSWORD_STORE_TOMB_FILE=<tomb_path> PASSWORD_STORE_TOMB_KEY=<key_path> PASSWORD_STORE_DIR=<dir_path> pass open
+PASSWORD_STORE_TOMB_FILE=<tomb_path> PASSWORD_STORE_TOMB_KEY=<key_path> PASSWORD_STORE_DIR=<dir_path> pass close
+```
 
+If you always need a second password store, you can create a pass alias, `pass2` that will manage the second store with in `.bashrc`:
+```sh
+alias pass2='PASSWORD_STORE_TOMB_FILE=<tomb_path> PASSWORD_STORE_TOMB_KEY=<key_path> PASSWORD_STORE_DIR=<dir_path> pass'
+```
 
+## Advanced use
+Using `tomb` to store your password repository, you can take advantage of the  tomb advanced feature like *steganography* and *private cloud storage*. The [tomb website][tomb] provide a good presentation of the features available with tomb. Moreover, you can read my guide on how to use [Tomb with GPG keys][pujol.io-tomb].
 
 ## Installation
 
@@ -177,5 +193,7 @@ Feedback, contributors, pull requests are all very welcome.
 [clima-img]: https://codeclimate.com/github/roddhjav/pass-tomb/badges/gpa.svg
 [clima-url]: https://codeclimate.com/github/roddhjav/pass-tomb
 
+[tomb]: https://www.dyne.org/software/tomb/
 [github-tomb]: https://github.com/dyne/Tomb
 [aur]: https://aur.archlinux.org/packages/pass-tomb
+[pujol.io-tomb]: https://pujol.io/blog/tomb-with-gpg-keys/
