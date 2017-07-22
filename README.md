@@ -16,6 +16,39 @@ It uses the same GPG key to encrypt passwords and tomb, therefore you don't need
 * When finished, close the password tomb: `pass close`
 * To use pass again, you need to open the password tomb: `pass open`
 
+## Usage
+
+```
+pass tomb 1.0 - A pass extension that helps to keep the whole tree of
+                password encrypted inside a tomb.
+
+Usage:
+    pass tomb [-n] [-t time] [-p subfolder] gpg-id...
+        Create and initialise a new password tomb
+        Use gpg-id for encryption of both tomb and passwords
+
+    pass open [subfolder] [-t time]
+        Open a password tomb
+
+    pass close [store]
+        Close a password tomb
+
+Options:
+    -n, --no-init  Do not initialise the password store
+    -t, --timer    Close the store after a given time
+    -p, --path     Create the store for that specific subfolder
+    -q, --quiet    Be quiet
+    -v, --verbose  Be verbose
+    -d, --debug    Print tomb debug messages
+        --unsafe   Speed up tomb creation (for testing only)
+    -V, --version  Show version information.
+    -h, --help     Print this help message and exit.
+
+More information may be found in the pass-tomb(1) man page.
+```
+
+See `man pass-tomb` for more information.
+
 ## Examples
 
 **Create a new password tomb**
@@ -70,45 +103,18 @@ $ pass open --timer=10min
   .  This password store will be closed in 10min
 ```
 
-## Usage
-
-```
-pass tomb 1.0 - A pass extension that helps to keep the whole tree of
-                password encrypted inside a tomb.
-
-Usage:
-    pass tomb [-n] [-t time] [-p subfolder] gpg-id...
-        Create and initialise a new password tomb
-        Use gpg-id for encryption of both tomb and passwords
-
-    pass open [subfolder] [-t time]
-        Open a password tomb
-
-    pass close [store]
-        Close a password tomb
-
-Options:
-    -n, --no-init  Do not initialise the password store
-    -t, --timer    Close the store after a given time
-    -p, --path     Create the store for that specific subfolder
-    -q, --quiet    Be quiet
-    -v, --verbose  Be verbose
-    -d, --debug    Print tomb debug messages
-        --unsafe   Speed up tomb creation (for testing only)
-    -V, --version  Show version information.
-    -h, --help     Print this help message and exit.
-
-More information may be found in the pass-tomb(1) man page.
-```
-
-See `man pass-tomb` for more information.
-
 ## Environment Variables
 
 * `PASSWORD_STORE_TOMB`: path to `tomb` executable
 * `PASSWORD_STORE_TOMB_FILE`: path to the password tomb (default: `~/.password.tomb`)
 * `PASSWORD_STORE_TOMB_KEY`: path to the password tomb key file (default: `~/.password.key.tomb`)
 * `PASSWORD_STORE_TOMB_SIZE`: password tomb size in MB (default: `10`)
+
+
+```
+
+
+
 
 ## Installation
 
@@ -134,14 +140,10 @@ sudo make install
 pacaur -S pass-tomb
 ```
 
-**Requirments**
-
+**Requirements**
 * `tomb 2.4` or greater.
-
 * A `systemd` linux distribution is required to use the timer feature.
-
 * `pass 1.7.0` or greater.
-
 * If you do not want to install this extension as system extension, you need to
 enable user extension with `PASSWORD_STORE_ENABLE_EXTENSIONS=true pass`. You can
 create an alias in `.bashrc`: `alias pass='PASSWORD_STORE_ENABLE_EXTENSIONS=true pass'`
