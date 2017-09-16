@@ -14,11 +14,12 @@ all:
 	@echo "     Tomb and password store"
 
 install:
-	@install -v -d "$(DESTDIR)$(MANDIR)/man1" && install -m 0644 -v pass-$(PROG).1 "$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1"
+	@install -v -d "$(DESTDIR)$(MANDIR)/man1"
 	@install -v -d "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/"
-	@install -Dm0755 $(PROG).bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash"
-	@install -Dm0755 open.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/open.bash"
-	@install -Dm0755 close.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/close.bash"
+	@install -v -m 0755 $(PROG).bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash"
+	@install -v -m 0755 open.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/open.bash"
+	@install -v -m 0755 close.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/close.bash"
+	@install -v -m 0644 pass-$(PROG).1 "$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1"
 	@echo
 	@echo "pass-$(PROG) is installed succesfully"
 	@echo
