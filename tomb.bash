@@ -145,7 +145,7 @@ _set_ownership() {
 	sudo chmod 0711 "${path}" || _die "Unable to set permissions on ${path}."
 }
 
-cmd_tomb_verion() {
+cmd_tomb_version() {
 	cat <<-_EOF
 	$PROGRAM tomb $VERSION - A pass extension that helps to keep the whole tree of
 	                password encrypted inside a tomb.
@@ -153,7 +153,7 @@ cmd_tomb_verion() {
 }
 
 cmd_tomb_usage() {
-	cmd_tomb_verion
+	cmd_tomb_version
 	echo
 	cat <<-_EOF
 	Usage:
@@ -187,9 +187,7 @@ cmd_open() {
 	local path="$1"; shift;
 
 	# Sanity checks
-	check_sneaky_paths "$path"
-	check_sneaky_paths "$TOMB_FILE"
-	check_sneaky_paths "$TOMB_KEY"
+	check_sneaky_paths "$path" "$TOMB_FILE" "$TOMB_KEY"
 	[[ -e "$TOMB_FILE" ]] || _die "There is no password tomb to open."
 	[[ -e "$TOMB_KEY" ]] || _die "There is no password tomb key."
 
@@ -252,9 +250,7 @@ cmd_tomb() {
 	RECIPIENTS=($@)
 
 	# Sanity checks
-	check_sneaky_paths "$path"
-	check_sneaky_paths "$TOMB_FILE"
-	check_sneaky_paths "$TOMB_KEY"
+	check_sneaky_paths "$path" "$TOMB_FILE" "$TOMB_KEY"
 	if ! is_valid_recipients "${RECIPIENTS[@]}"; then
 		_die "You set an invalid GPG ID."
 	elif [[ -e "$TOMB_KEY" ]]; then
@@ -343,7 +339,7 @@ while true; do case $1 in
 	-v|--verbose) VERBOSE=1; shift ;;
 	-d|--debug) DEBUG="-D"; VERBOSE=1; shift ;;
 	-h|--help) shift; cmd_tomb_usage; exit 0 ;;
-	-V|--version) shift; cmd_tomb_verion; exit 0 ;;
+	-V|--version) shift; cmd_tomb_version; exit 0 ;;
 	-p|--path) id_path="$2"; shift 2 ;;
 	-t|--timer) TIMER="$2"; shift 2 ;;
 	-n|--no-init) NOINIT=1; shift ;;
