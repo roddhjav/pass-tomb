@@ -1,8 +1,0 @@
-engines:
-  shellcheck:
-    enabled: true
-ratings:
-  paths:
-  - "tomb.bash"
-  - "open.bash"
-  - "close.bash"

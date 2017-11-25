@@ -1,4 +1,4 @@
-# pass tomb [![build][build-img]][build-url] [![coverage][cover-img]][cover-url] [![climate][clima-img]][clima-url]
+# pass tomb [![build][build-img]][build-url] [![coverage][cover-img]][cover-url] [![codacy][codac-img]][codac-url]
 
 A [pass](https://www.passwordstore.org/) extension that helps to keep the whole tree of password encrypted inside a tomb.
 
@@ -190,8 +190,8 @@ Feedback, contributors, pull requests are all very welcome.
 [build-url]: https://travis-ci.org/roddhjav/pass-tomb
 [cover-img]: https://coveralls.io/repos/github/roddhjav/pass-tomb/badge.svg?branch=master
 [cover-url]: https://coveralls.io/github/roddhjav/pass-tomb?branch=master
-[clima-img]: https://codeclimate.com/github/roddhjav/pass-tomb/badges/gpa.svg
-[clima-url]: https://codeclimate.com/github/roddhjav/pass-tomb
+[codac-img]: https://api.codacy.com/project/badge/Grade/1c58ea63487a4b82874b05220d500c60
+[codac-url]: https://www.codacy.com/app/roddhjav/pass-tomb
 
 [tomb]: https://www.dyne.org/software/tomb/
 [github-tomb]: https://github.com/dyne/Tomb
