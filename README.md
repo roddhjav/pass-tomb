@@ -1,6 +1,15 @@
-# pass tomb [![build][build-img]][build-url] [![coverage][cover-img]][cover-url] [![codacy][codac-img]][codac-url]
+<h1 align="center">pass tomb</h1>
 
-A [pass](https://www.passwordstore.org/) extension that helps to keep the whole tree of password encrypted inside a tomb.
+<p align="center">
+<a href="https://travis-ci.org/roddhjav/pass-tomb"><img src="https://img.shields.io/travis/roddhjav/pass-tomb/master.svg" alt="Build Status" /></a>
+<a href="https://coveralls.io/github/roddhjav/pass-tomb"><img src="https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg" alt="Code Coverage" /></a>
+<a href="https://www.codacy.com/app/roddhjav/pass-tomb"><img src="https://img.shields.io/codacy/grade/1c58ea63487a4b82874b05220d500c60/master.svg" alt="Code Quality" /></a>
+<a href="https://github.com/roddhjav/pass-tomb/releases/latest"><img src="https://img.shields.io/github/release/roddhjav/pass-tomb.svg?maxAge=600" alt="Last Release" /></a>
+</p>
+
+<p align="center">
+A <a href="https://www.passwordstore.org/">pass</a> extension that helps to keep the whole tree of password encrypted inside a <a href="https://www.dyne.org/software/tomb/">tomb</a>.
+</p>
 
 ## Description
 
@@ -186,12 +195,6 @@ Feedback, contributors, pull requests are all very welcome.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-[build-img]: https://travis-ci.org/roddhjav/pass-tomb.svg?branch=master
-[build-url]: https://travis-ci.org/roddhjav/pass-tomb
-[cover-img]: https://coveralls.io/repos/github/roddhjav/pass-tomb/badge.svg?branch=master
-[cover-url]: https://coveralls.io/github/roddhjav/pass-tomb?branch=master
-[codac-img]: https://api.codacy.com/project/badge/Grade/1c58ea63487a4b82874b05220d500c60
-[codac-url]: https://www.codacy.com/app/roddhjav/pass-tomb
 
 [tomb]: https://www.dyne.org/software/tomb/
 [github-tomb]: https://github.com/dyne/Tomb
