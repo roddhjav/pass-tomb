@@ -178,6 +178,15 @@ create an alias in `.bashrc`: `alias pass='PASSWORD_STORE_ENABLE_EXTENSIONS=true
 Feedback, contributors, pull requests are all very welcome.
 
 
+## Donations
+If you really like this software and would like to donate, you can send donations using one of the following currencies:
+* In Bitcoin: `1HQaENhbThLHYzgjzmRpVMT7ErTSGzHEzq` (see [proof][keybase])
+* In Etherium: `0x4296ee83cd0d66e1cb3e0622c8f8fef82532c968`
+* In Zcash: `t1StE9pbFvep296pdQmKVdaBaRkvnXBKkR1` (see [proof][keybase])
+* In Litecoin: `LTjxtZhkYHT31aveumozMd7bCKJ5uymMAC`
+* In Bitcoin Cash: `1FCEjKXUGXYctHt53EYifSm4XeQgC1piis`
+
+
 ## License
 
     Copyright (C) 2017  Alexandre PUJOL
@@ -200,3 +209,4 @@ Feedback, contributors, pull requests are all very welcome.
 [github-tomb]: https://github.com/dyne/Tomb
 [aur]: https://aur.archlinux.org/packages/pass-tomb
 [pujol.io-tomb]: https://pujol.io/blog/tomb-with-gpg-keys/
+[keybase]: https://keybase.io/roddhjav
