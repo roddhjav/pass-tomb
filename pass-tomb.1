@@ -39,7 +39,7 @@ GPG key.
 
 .TP
 \fBpass tomb\fP [ \fI--no-init\fP, \fI-n\fP ] [\fI--timer=time\fP, \fI-t time\fP]
-   [ \fI--path=subfolder\fP, \fI-p subfolder\fP ] \fIgpg-id...\fP
+   [ \fI--path=subfolder\fP, \fI-p subfolder\fP ] [\fI--force\fP, \fI-f\fP] \fIgpg-id...\fP
 
 Create and initialise a new password tomb. This command must be run first,
 before a password store can be used.
@@ -62,14 +62,22 @@ If \fI--timer\fP, \fI-t\fP is specified, along with an argument, the password
 store will be automatically closed using a systemd timer after a given time. This
 time will be saved in the .timer file present in the store.
 
+If \fI--force\fP is specified, the password store will create or mount the
+password store even if a plain text swap is present. Make sure you know what you
+are doing if you force an operation.
+
 .TP
-\fBpass open\fP [\fI--timer=time\fP, \fI-t time\fP] [\fIsubfolder\fP]
+\fBpass open\fP [\fI--timer=time\fP, \fI-t time\fP] [\fI--force\fP, \fI-f\fP] [\fIsubfolder\fP]
 Open a password tomb. If a .timer file is present in the store, a systemd timer
 will be initialized.
 
 If \fI--timer\fP, \fI-t\fP is specified, along with an
 argument, the password store will be automatically closed using a systemd timer
 after a given time. If a .time file was already present in the store, this time will be updated.
+
+If \fI--force\fP is specified, the password store will create or mount the
+password store even if a plain text swap is present. Make sure you know what you
+are doing if you force an operation.
 
 If \fIsubfolder\fP is specified, the password store will be opened in the subfolder.
 
@@ -91,6 +99,10 @@ Close the store after a given time
 .TP
 \fB\-p\fB, \-\-path\fR
 Create the store for that specific subfolder
+
+.TP
+\fB\-f\fB, \-\-force\fR
+Force the tomb operations (i.e. even if swap is active)
 
 .TP
 \fB\-q\fB, \-\-quiet\fR

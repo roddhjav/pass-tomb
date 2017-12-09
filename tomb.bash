@@ -83,7 +83,7 @@ is_valid_recipients() {
 _tomb() {
 	local ii ret
 	local cmd="$1"; shift
-	"$TOMB" "$cmd" "$@" "$DEBUG" &> "$TMP"
+	"$TOMB" "$cmd" "$@" "$FORCE" "$DEBUG" &> "$TMP"
 	ret=$?
 	while read -r ii; do
 		_verbose_tomb "$ii"
@@ -157,11 +157,11 @@ cmd_tomb_usage() {
 	echo
 	cat <<-_EOF
 	Usage:
-	    $PROGRAM tomb [-n] [-t time] [-p subfolder] gpg-id...
+	    $PROGRAM tomb [-n] [-t time] [-f] [-p subfolder] gpg-id...
 	        Create and initialise a new password tomb
 	        Use gpg-id for encryption of both tomb and passwords
 
-	    $PROGRAM open [subfolder] [-t time]
+	    $PROGRAM open [subfolder] [-t time] [-f]
 	        Open a password tomb
 
 	    $PROGRAM close [store]
@@ -171,6 +171,7 @@ cmd_tomb_usage() {
 	    -n, --no-init  Do not initialise the password store
 	    -t, --timer    Close the store after a given time
 	    -p, --path     Create the store for that specific subfolder
+	    -f, --force    Force operation (i.e. even if swap is active)
 	    -q, --quiet    Be quiet
 	    -v, --verbose  Be verbose
 	    -d, --debug    Print tomb debug messages
@@ -324,13 +325,14 @@ _ensure_dependencies
 UNSAFE=0
 VERBOSE=0
 QUIET=0
+FORCE=""
 DEBUG=""
 NOINIT=0
 TIMER=""
 
 # Getopt options
-small_arg="vdhVp:qnt:"
-long_arg="verbose,debug,help,version,path:,unsafe,quiet,no-init,timer:"
+small_arg="vdhVp:qnt:f"
+long_arg="verbose,debug,help,version,path:,unsafe,quiet,no-init,timer:,force"
 opts="$($GETOPT -o $small_arg -l $long_arg -n "$PROGRAM $COMMAND" -- "$@")"
 err=$?
 eval set -- "$opts"
@@ -338,6 +340,7 @@ while true; do case $1 in
 	-q|--quiet) QUIET=1; VERBOSE=0; DEBUG=""; shift ;;
 	-v|--verbose) VERBOSE=1; shift ;;
 	-d|--debug) DEBUG="-D"; VERBOSE=1; shift ;;
+	-f|--force) FORCE="--force"; shift ;;
 	-h|--help) shift; cmd_tomb_usage; exit 0 ;;
 	-V|--version) shift; cmd_tomb_version; exit 0 ;;
 	-p|--path) id_path="$2"; shift 2 ;;

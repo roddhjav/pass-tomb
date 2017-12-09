@@ -18,4 +18,11 @@ test_expect_success 'Password tomb open & close' '
     _pass close
     '
 
+test_expect_success 'Password tomb creation with plain swap' '
+    sudo swapon -a &&
+    _pass open --force &&
+    _pass close &&
+    sudo swapoff -a
+    '
+
 test_done
