@@ -5,7 +5,7 @@ language: bash
 
 env:
   global:
-    - PASS_VERSION=1.7
+    - PASS_VERSION=1.7.1
     - TOMB_VERSION=2.4
     - KCOV_VERSION=33
 
