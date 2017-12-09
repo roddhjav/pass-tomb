@@ -227,8 +227,8 @@ cmd_close() {
 	# Sanity checks
 	check_sneaky_paths "$_tomb_file"
 	[[ -e "$_tomb_file" ]] || _die "There is no password tomb to close."
-	_tomb_name=${_tomb_file##*/}
-	_tomb_name=${_tomb_name%.*}
+	_tomb_name="${_tomb_file##*/}"
+	_tomb_name="${_tomb_name%.*}"
 	[[ -z "$_tomb_name" ]] && _die "There is no password tomb."
 
 	_tmp_create
