@@ -13,9 +13,14 @@ A <a href="https://www.passwordstore.org/">pass</a> extension that helps to keep
 
 ## Description
 
-Due to the structure of `pass`, file- and directory names are not encrypted in the password store. `pass-tomb` provides a convenient solution to put your password store in a [tomb][github-tomb] and then keep your password tree encrypted when you are not using it.
+Due to the structure of `pass`, file- and directory names are not encrypted in
+the password store. `pass-tomb` provides a convenient solution to put your
+password store in a [tomb][github-tomb] and then keep your password tree
+encrypted when you are not using it.
 
-It uses the same GPG key to encrypt passwords and tomb, therefore you don't need to manage more key or secret. Moreover, you can ask pass-tomb to automatically close your store after a given time.
+It uses the same GPG key to encrypt passwords and tomb, therefore you don't need
+to manage more key or secret. Moreover, you can ask pass-tomb to automatically
+close your store after a given time.
 
 **The new workflow is the following:**
 * Create a password tomb with `pass tomb`
@@ -151,19 +156,27 @@ cd pass-tomb
 sudo make install
 ```
 
-**Generic Linux**
-```sh
-wget https://github.com/roddhjav/pass-tomb/archive/v1.0.tar.gz
-tar xzf v1.0.tar.gz
+**Stable version**
+```
+wget https://github.com/roddhjav/pass-tomb/releases/download/v1.0/pass-tomb-1.0.tar.gz
+tar xzf pass-tomb-1.0.tar.gz
 cd pass-tomb-1.0
 sudo make install
+```
+
+[Releases][releases] and commits are signed using [`06A26D531D56C42D66805049C5469996F0DF68EC`][keys].
+You should check the key's fingerprint and verify the signature:
+```sh
+wget https://github.com/roddhjav/pass-tomb/releases/download/v1.0/pass-tomb-1.0.tar.gz.sig
+gpg --recv-keys 06A26D531D56C42D66805049C5469996F0DF68EC
+gpg --verify pass-tomb-1.0.tar.gz.sig
 ```
 
 **ArchLinux**
 
 `pass-tomb` is available in the [Arch User Repository][aur].
 ```sh
-pacaur -S pass-tomb
+pacaur -S pass-tomb  # or your preferred AUR install method
 ```
 
 **Requirements**
@@ -182,7 +195,7 @@ Feedback, contributors, pull requests are all very welcome.
 ## Donations
 If you really like this software and would like to donate, you can send donations using one of the following currencies:
 * In Bitcoin: `1HQaENhbThLHYzgjzmRpVMT7ErTSGzHEzq` (see [proof][keybase])
-* In Etherium: `0x4296ee83cd0d66e1cb3e0622c8f8fef82532c968`
+* In Ethereum: `0x4296ee83cd0d66e1cb3e0622c8f8fef82532c968`
 * In Zcash: `t1StE9pbFvep296pdQmKVdaBaRkvnXBKkR1` (see [proof][keybase])
 * In Litecoin: `LTjxtZhkYHT31aveumozMd7bCKJ5uymMAC`
 * In Bitcoin Cash: `1FCEjKXUGXYctHt53EYifSm4XeQgC1piis`
@@ -205,9 +218,10 @@ If you really like this software and would like to donate, you can send donation
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 [tomb]: https://www.dyne.org/software/tomb/
 [github-tomb]: https://github.com/dyne/Tomb
-[aur]: https://aur.archlinux.org/packages/pass-tomb
 [pujol.io-tomb]: https://pujol.io/blog/tomb-with-gpg-keys/
+[keys]: https://pujol.io/keys
+[aur]: https://aur.archlinux.org/packages/pass-tomb
+[releases]: https://github.com/roddhjav/pass-tomb/releases
 [keybase]: https://keybase.io/roddhjav
