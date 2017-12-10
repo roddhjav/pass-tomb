@@ -26,7 +26,7 @@ readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
 readonly _UID="$(id -u "$USER")"
 readonly _GID="$(id -g "$USER")"
 
-readonly VERSION="1.0"
+readonly VERSION="1.1"
 
 #
 # Common colors and functions
