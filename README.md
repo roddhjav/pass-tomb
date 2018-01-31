@@ -13,6 +13,8 @@ A <a href="https://www.passwordstore.org/">pass</a> extension that helps to keep
 
 ## Description
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1c58ea63487a4b82874b05220d500c60)](https://www.codacy.com/app/roddhjav/pass-tomb?utm_source=github.com&utm_medium=referral&utm_content=roddhjav/pass-tomb&utm_campaign=badger)
+
 Due to the structure of `pass`, file- and directory names are not encrypted in
 the password store. `pass-tomb` provides a convenient solution to put your
 password store in a [tomb][github-tomb] and then keep your password tree
