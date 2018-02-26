@@ -1,14 +1,22 @@
 <h1 align="center">pass tomb</h1>
-
 <p align="center">
-<a href="https://travis-ci.org/roddhjav/pass-tomb"><img src="https://img.shields.io/travis/roddhjav/pass-tomb/master.svg" alt="Build Status" /></a>
-<a href="https://coveralls.io/github/roddhjav/pass-tomb"><img src="https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg" alt="Code Coverage" /></a>
-<a href="https://www.codacy.com/app/roddhjav/pass-tomb"><img src="https://img.shields.io/codacy/grade/1c58ea63487a4b82874b05220d500c60/master.svg" alt="Code Quality" /></a>
-<a href="https://github.com/roddhjav/pass-tomb/releases/latest"><img src="https://img.shields.io/github/release/roddhjav/pass-tomb.svg?maxAge=600" alt="Last Release" /></a>
+    <a href="https://travis-ci.org/roddhjav/pass-tomb">
+        <img src="https://img.shields.io/travis/roddhjav/pass-tomb/master.svg"
+             alt="Build Status" /></a>
+    <a href="https://coveralls.io/github/roddhjav/pass-tomb">
+        <img src="https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg"
+             alt="Code Coverage" /></a>
+    <a href="https://www.codacy.com/app/roddhjav/pass-tomb">
+        <img src="https://img.shields.io/codacy/grade/1c58ea63487a4b82874b05220d500c60/master.svg"
+             alt="Code Quality" /></a>
+    <a href="https://github.com/roddhjav/pass-tomb/releases/latest">
+        <img src="https://img.shields.io/github/release/roddhjav/pass-tomb.svg?maxAge=600"
+             alt="Last Release" /></a>
 </p>
-
 <p align="center">
-A <a href="https://www.passwordstore.org/">pass</a> extension that helps to keep the whole tree of password encrypted inside a <a href="https://www.dyne.org/software/tomb/">tomb</a>.
+A <a href="https://www.passwordstore.org/">pass</a> extension that helps to
+keep the whole tree of password encrypted inside a
+<a href="https://www.dyne.org/software/tomb/">tomb</a>.
 </p>
 
 ## Description
@@ -126,7 +134,9 @@ $ pass open --timer=10min
 * `PASSWORD_STORE_TOMB_SIZE`: password tomb size in MB (default: `10`)
 
 ## Multiple password tombs
-It is possible to create multiple pass tomb and open them separately. You only need to set the tomb file, key and the password store directory manually using the environment variables:
+It is possible to create multiple pass tomb and open them separately. You only
+need to set the tomb file, key and the password store directory manually using
+the environment variables:
 
 **Create a tomb**
 ```sh
@@ -145,15 +155,30 @@ alias pass2='PASSWORD_STORE_TOMB_FILE=<tomb_path> PASSWORD_STORE_TOMB_KEY=<key_p
 ```
 
 ## Advanced use
-Using `tomb` to store your password repository, you can take advantage of the  tomb advanced feature like *steganography* and *private cloud storage*. The [tomb website][tomb] provide a good presentation of the features available with tomb. Moreover, you can read my guide on how to use [Tomb with GPG keys][pujol.io-tomb].
+Using `tomb` to store your password repository, you can take advantage of the
+tomb advanced feature like *steganography* and *private cloud storage*. The
+[tomb website][tomb] provide a good presentation of the features available with
+Tomb. Moreover, you can read my guide on how to use [Tomb with GPG keys][pujol.io-tomb].
 
 ## Installation
+
+**Requirements**
+* `pass 1.7.0` or greater.
+* `tomb 2.4` or greater.
+* A `systemd` linux distribution is required to use the timer feature.
 
 **From git**
 ```sh
 git clone https://github.com/roddhjav/pass-tomb/
 cd pass-tomb
-sudo make install
+sudo make install  # Add: PREFIX=/usr/local for OS X
+```
+
+**ArchLinux**
+
+`pass-tomb` is available in the [Arch User Repository][aur].
+```sh
+pacaur -S pass-tomb  # or your preferred AUR install method
 ```
 
 **Stable version**
@@ -171,21 +196,6 @@ wget https://github.com/roddhjav/pass-tomb/releases/download/v1.1/pass-tomb-1.1.
 gpg --recv-keys 06A26D531D56C42D66805049C5469996F0DF68EC
 gpg --verify pass-tomb-1.1.tar.gz.asc
 ```
-
-**ArchLinux**
-
-`pass-tomb` is available in the [Arch User Repository][aur].
-```sh
-pacaur -S pass-tomb  # or your preferred AUR install method
-```
-
-**Requirements**
-* `tomb 2.4` or greater.
-* A `systemd` linux distribution is required to use the timer feature.
-* `pass 1.7.0` or greater.
-* If you do not want to install this extension as system extension, you need to
-enable user extension with `PASSWORD_STORE_ENABLE_EXTENSIONS=true pass`. You can
-create an alias in `.bashrc`: `alias pass='PASSWORD_STORE_ENABLE_EXTENSIONS=true pass'`
 
 
 ## Contribution
