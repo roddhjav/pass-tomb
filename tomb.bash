@@ -98,7 +98,7 @@ _tomb() {
 _timer() {
 	local ret ii delay="$1" path="$2"
 	_tmp_create
-	sudo systemd-run --system --on-active="$delay" \
+	systemd-run --user --on-active="$delay" \
 		--description="pass-close timer" --unit="pass-close-$RANDOM" \
 		--setenv="PASSWORD_STORE_TOMB_FILE=$TOMB_FILE" \
 		--setenv="PASSWORD_STORE_EXTENSIONS_DIR=$PASSWORD_STORE_EXTENSIONS_DIR" \
