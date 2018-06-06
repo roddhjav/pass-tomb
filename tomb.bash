@@ -103,7 +103,7 @@ _timer() {
 		--setenv="PASSWORD_STORE_TOMB_FILE=$TOMB_FILE" \
 		--setenv="PASSWORD_STORE_EXTENSIONS_DIR=$PASSWORD_STORE_EXTENSIONS_DIR" \
 		--setenv="PASSWORD_STORE_ENABLE_EXTENSIONS=$PASSWORD_STORE_ENABLE_EXTENSIONS" \
-		/usr/bin/bash -c '/usr/bin/pass close --verbose' &> "$TMP"
+		bash -c '/usr/bin/pass close --verbose' &> "$TMP"
 	ret=$?
 	while read -r ii; do
 		_verbose "$ii"
