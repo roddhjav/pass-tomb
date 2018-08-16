@@ -1,16 +1,16 @@
 <h1 align="center">pass tomb</h1>
 <p align="center">
     <a href="https://travis-ci.org/roddhjav/pass-tomb">
-        <img src="https://img.shields.io/travis/roddhjav/pass-tomb/master.svg"
+        <img src="https://img.shields.io/travis/roddhjav/pass-tomb/master.svg?style=flat-square"
              alt="Build Status" /></a>
     <a href="https://coveralls.io/github/roddhjav/pass-tomb">
-        <img src="https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg"
+        <img src="https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg?style=flat-square"
              alt="Code Coverage" /></a>
     <a href="https://www.codacy.com/app/roddhjav/pass-tomb">
-        <img src="https://img.shields.io/codacy/grade/1c58ea63487a4b82874b05220d500c60/master.svg"
+        <img src="https://img.shields.io/codacy/grade/1c58ea63487a4b82874b05220d500c60/master.svg?style=flat-square"
              alt="Code Quality" /></a>
     <a href="https://github.com/roddhjav/pass-tomb/releases/latest">
-        <img src="https://img.shields.io/github/release/roddhjav/pass-tomb.svg?maxAge=600"
+        <img src="https://img.shields.io/github/release/roddhjav/pass-tomb.svg?maxAge=600&style=flat-square"
              alt="Last Release" /></a>
 </p>
 <p align="center">
