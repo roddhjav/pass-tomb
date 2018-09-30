@@ -16,15 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/ .
 
-COVERAGE="true"
+_die() { echo "${@}" && exit 1; }
 if [[ "$COVERAGE" == "true" ]]; then
 	KCOV="$(which kcov)"
-	if [[ ! -e "$KCOV" ]]; then
-		echo "Could not find kcov command"
-		exit 1
-	fi
-	TMP="/tmp/pass-tomb"
-	COVERED=($(find $TMP/*.sh -maxdepth 0 -type d))
+	[[ ! -e "$KCOV" ]] && _die "Could not find kcov command"
+	COVERED=("$(find $TMP/*.sh -maxdepth 0 -type d)")
 	[[ -z "$TRAVIS_JOB_ID" ]] || TRAVIS="--coveralls-id=$TRAVIS_JOB_ID"
 	"$KCOV" $TRAVIS --merge "$TMP/kcov" "${COVERED[@]}"
 fi

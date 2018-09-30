@@ -33,7 +33,7 @@ EXT_HOME="$(dirname "$TEST_HOME")"
 
 # Check dependencies
 _die() { echo "${@}" && exit 1; }
-PASS="$(which pass)"; TOMB="$(which tomb)"; GPG="$(which gpg)"; COVERAGE="true"
+PASS="$(which pass)"; TOMB="$(which tomb)"; GPG="$(which gpg)"
 [[ -e "$PASS" ]] || _die "Could not find pass command"
 [[ -e "$TOMB" ]] || _die "Could not find tomb command"
 if [[ ! -e "$GPG" ]]; then
@@ -44,8 +44,9 @@ if [[ ! -e "$GPG" ]]; then
 	fi
 fi
 if [[ "$COVERAGE" == "true" ]]; then
-	KCOV="$(which kcov)"; [[ -e "$KCOV" ]] || _die "Could not find kcov command"
 	_pass() { "$KCOV" --exclude-path="$PASS" "$TMP/$0" "$PASS" "${@}"; }
+	KCOV="$(which kcov)"
+	[[ -e "$KCOV" ]] || _die "Could not find kcov command"
 else
 	_pass() { "$PASS" "${@}"; }
 fi
@@ -53,7 +54,6 @@ fi
 
 # sharness config
 source ./sharness
-export TMP="/tmp/pass-tomb"
 
 
 # Check for auxiliary programs

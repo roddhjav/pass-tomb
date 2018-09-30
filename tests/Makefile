@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/ .
 
+TMP := /tmp/pass-tomb
+COVERAGE := true
 SHELL := /bin/bash
 SHELL_PATH ?= $(SHELL)
 SHELL_PATH_SQ = $(subst ','\'',$(SHELL_PATH))
@@ -25,6 +27,7 @@ PROVE ?= prove
 AGGREGATE_SCRIPT ?= aggregate-results
 DEFAULT_TEST_TARGET ?= test
 TEST_OPTS ?= --verbose --immediate --chain-lint --root=/tmp/sharness
+export COVERAGE TMP
 
 T = $(sort $(wildcard *.sh))
 
