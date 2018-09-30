@@ -126,6 +126,17 @@ $ pass open --timer=10min
   .  This password store will be closed in 10min
 ```
 
+## Import existing password repository
+
+In order to use pass-tomb with your existing password repository you can:
+1. Move your password repository: `mv ~/.password-store ~/.password-store-backup`
+2. Create a new password tomb: `pass tomb <gpgid>`
+3. Open the password tomb: `pass open`
+4. Move all the content of your password repository in the new password tomb:
+   ```
+   mv ~/.password-store-backup/ ~/.password-store`
+   ```
+
 ## Environment Variables
 
 * `PASSWORD_STORE_TOMB`: path to `tomb` executable
