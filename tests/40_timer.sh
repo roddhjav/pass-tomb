@@ -47,6 +47,10 @@ if test_have_prereq SYSTEMD; then
         sleep 40s &&
         _tomb_unmounted
         '
+
+    test_expect_success 'Testing timer: with wrong time value' '
+        _pass open --timer=nan --verbose
+        '
 fi
 
 test_done
