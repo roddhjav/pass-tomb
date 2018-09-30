@@ -59,7 +59,7 @@ _ensure_dependencies() {
 # $@ is the list of all the recipient used to encrypt a tomb key
 is_valid_recipients() {
 	typeset -a recipients
-	recipients=($@)
+	IFS=" " read -r -a recipients <<< "$@"
 
 	# All the keys ID must be valid (the public keys must be present in the database)
 	for gpg_id in "${recipients[@]}"; do
@@ -248,7 +248,7 @@ cmd_tomb() {
 	local path="$1"; shift;
 	typeset -a RECIPIENTS
 	[[ -z "$*" ]] && _die "$PROGRAM $COMMAND [-n] [-t time] [-p subfolder] gpg-id..."
-	RECIPIENTS=($@)
+	IFS=" " read -r -a RECIPIENTS <<< "$@"
 
 	# Sanity checks
 	check_sneaky_paths "$path" "$TOMB_FILE" "$TOMB_KEY"
