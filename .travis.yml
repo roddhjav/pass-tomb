@@ -7,7 +7,7 @@ env:
   global:
     - PASS_VERSION=1.7.3
     - TOMB_VERSION=2.5
-    - KCOV_VERSION=35
+    - KCOV_VERSION=36
 
 addons:
   apt:
