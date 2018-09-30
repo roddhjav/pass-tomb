@@ -44,9 +44,9 @@ if [[ ! -e "$GPG" ]]; then
 	fi
 fi
 if [[ "$COVERAGE" == "true" ]]; then
-	_pass() { "$KCOV" --exclude-path="$PASS" "$TMP/$0" "$PASS" "${@}"; }
 	KCOV="$(which kcov)"
 	[[ -e "$KCOV" ]] || _die "Could not find kcov command"
+	_pass() { "$KCOV" --include-path="$EXT_HOME/tomb.bash" "$TMP/$0" "$PASS" "${@}"; }
 else
 	_pass() { "$PASS" "${@}"; }
 fi
