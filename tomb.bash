@@ -127,7 +127,7 @@ _tmp_create() {
 
 	umask 066
 	[[ $? == 0 ]] || _die "Fatal error setting permission umask for temporary files."
-	[[ -r "$tfile" ]] && _die "Someone is messing up with us trying to hijack temporary files.";
+	[[ -r "$tfile" ]] && _die "Someone is messing up with us trying to hijack temporary files."
 
 	touch "$tfile"
 	[[ $? == 0 ]] || _die "Fatal error creating temporary file: ${tfile}."
