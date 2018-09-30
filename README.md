@@ -197,6 +197,10 @@ gpg --recv-keys 06A26D531D56C42D66805049C5469996F0DF68EC
 gpg --verify pass-tomb-1.1.tar.gz.asc
 ```
 
+**OSX**
+
+> **pass-tomb is based on dm-crypt and therefore it is not compatible with Mac systems.**
+
 
 ## Contribution
 Feedback, contributors, pull requests are all very welcome.
