@@ -7,7 +7,7 @@ source ./setup
 
 _tomb_unmounted() {
     local name="$1"
-    test -z "$(mount -l | grep /dev/mapper/tomb.$name)"
+    test -z "$(mount -l | grep "/dev/mapper/tomb.$name")"
     return $?
 }
 

@@ -16,13 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see http://www.gnu.org/licenses/ .
 
+# shellcheck disable=SC2230,SC2094,SC2162
+
 _die() { echo "${@}" && exit 1; }
 if [[ "$COVERAGE" == "true" ]]; then
 	KCOV="$(which kcov)"
 	[[ ! -e "$KCOV" ]] && _die "Could not find kcov command"
-	COVERED=("$(find $TMP/*.sh -maxdepth 0 -type d)")
-	[[ -z "$TRAVIS_JOB_ID" ]] || TRAVIS="--coveralls-id=$TRAVIS_JOB_ID"
-	"$KCOV" $TRAVIS --merge "$TMP/kcov" "${COVERED[@]}"
+	mapfile -t COVERED < <(find "$TMP"/*.sh -maxdepth 0 -type d)
+	[[ -z "$TRAVIS_JOB_ID" ]] || OPTS=("--coveralls-id=$TRAVIS_JOB_ID")
+	"$KCOV" "${OPTS[@]}" --merge "$TMP/kcov" "${COVERED[@]}"
 fi
 
 failed_tests=
@@ -38,30 +40,30 @@ while read file; do
 		'')
 			continue ;;
 		fixed)
-			fixed=$(($fixed + $value)) ;;
+			fixed=$((fixed + value)) ;;
 		success)
-			success=$(($success + $value)) ;;
+			success=$((success + value)) ;;
 		failed)
-			failed=$(($failed + $value))
-			if test $value != 0; then
+			failed=$((failed + value))
+			if test "$value" != 0; then
 				test_name=$(expr "$file" : 'test-results/\(.*\)\.[0-9]*\.counts')
 				failed_tests="$failed_tests $test_name"
 			fi
 			;;
 		broken)
-			broken=$(($broken + $value)) ;;
+			broken=$((broken + value)) ;;
 		total)
-			total=$(($total + $value)) ;;
+			total=$((total + value)) ;;
 		esac
 	done <"$file"
 done
 
 if test -n "$failed_tests"; then
-	printf "\nfailed test(s):$failed_tests\n\n"
+	printf '\nFailed test(s): %s\n\n' "$failed_tests"
 fi
 
-printf "%-8s%d\n" fixed $fixed
-printf "%-8s%d\n" success $success
-printf "%-8s%d\n" failed $failed
-printf "%-8s%d\n" broken $broken
-printf "%-8s%d\n" total $total
+printf '%-8s%d\n' fixed $fixed
+printf '%-8s%d\n' success $success
+printf '%-8s%d\n' failed $failed
+printf '%-8s%d\n' broken $broken
+printf '%-8s%d\n' total $total
