@@ -31,23 +31,16 @@ readonly VERSION="1.1"
 #
 # Common colors and functions
 #
-readonly green='\e[0;32m'
-readonly yellow='\e[0;33m'
-readonly magenta='\e[0;35m'
-readonly Bold='\e[1m'
-readonly Bred='\e[1;31m'
-readonly Bgreen='\e[1;32m'
-readonly Byellow='\e[1;33m'
-readonly Bblue='\e[1;34m'
-readonly Bmagenta='\e[1;35m'
-readonly reset='\e[0m'
-_message() { [ "$QUIET" = 0 ] && echo -e " ${Bold} . ${reset} ${*}" >&2; }
-_warning() { [ "$QUIET" = 0 ] && echo -e " ${Byellow} w ${reset} ${yellow}${*}${reset}" >&2; }
-_success() { [ "$QUIET" = 0 ] && echo -e " ${Bgreen}(*)${reset} ${green}${*}${reset}" >&2; }
-_error() { echo -e " ${Bred}[x]${reset} ${Bold}Error :${reset} ${*}" >&2; }
-_die() { _error "${@}" && exit 1; }
-_verbose() { [ "$VERBOSE" = 0 ] || echo -e " ${Bmagenta} . ${reset} ${magenta}pass${reset} ${*}" >&2; }
-_verbose_tomb() { [ "$VERBOSE" = 0 ] || echo -e " ${Bmagenta} . ${reset} ${*}" >&2; }
+readonly green='\e[0;32m' yellow='\e[0;33m' magenta='\e[0;35m'
+readonly Bred='\e[1;31m' Bgreen='\e[1;32m' Byellow='\e[1;33m' Bblue='\e[1;34m'
+readonly Bmagenta='\e[1;35m' Bold='\e[1m' reset='\e[0m'
+_message() { [ "$QUIET" = 0 ] && printf '  %b.%b  %s\n' "$Bold" "$reset" "$*" >&2; }
+_warning() { [ "$QUIET" = 0 ] && printf '  %bw%b  %b%s%b\n' "$Byellow" "$reset" "$yellow" "$*" "$reset" >&2; }
+_success() { [ "$QUIET" = 0 ] && printf ' %b(*)%b %b%s%b\n' "$Bgreen" "$reset" "$green" "$*" "$reset" >&2; }
+_verbose() { [ "$VERBOSE" = 0 ] || printf '  %b.%b  %bpass%b %s\n' "$Bmagenta" "$reset" "$magenta" "$reset" "$*" >&2; }
+_verbose_tomb() { [ "$VERBOSE" = 0 ] || printf '  %b.%b  %s\n' "$Bmagenta" "$reset" "$*" >&2; }
+_error() { printf ' %b[x]%b %bError:%b %s\n' "$Bred" "$reset" "$Bold" "$reset" "$*" >&2; }
+_die() { _error "$*" && exit 1; }
 
 # Check program dependencies
 #
