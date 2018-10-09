@@ -45,7 +45,7 @@ if test_have_prereq SYSTEMD; then
     test_expect_success 'Testing timer: password store opening' '
         _pass open --verbose &&
         sleep 40s &&
-        _tomb_unmounted
+        _tomb_unmounted "timer"
         '
 
     test_expect_success 'Testing timer: with wrong time value' '
