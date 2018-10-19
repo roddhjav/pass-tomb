@@ -31,11 +31,11 @@ uninstall:
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/close.bash" \
 		"$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1" \
 
-test:
+tests:
 	make -C tests
 
 lint:
 	shellcheck -s bash -e SC2181,SC2024 $(PROG).bash
 
 
-.PHONY: install uninstall test lint
+.PHONY: install uninstall tests lint

@@ -44,7 +44,7 @@ before_script:
   - rm -rf kcov-$KCOV_VERSION
 
 script:
-  - make test
+  - make tests
 
 notifications:
   email: false
