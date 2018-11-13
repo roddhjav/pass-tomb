@@ -176,24 +176,39 @@ Tomb. Moreover, you can read my guide on how to use [Tomb with GPG keys][pujol.i
 **Requirements**
 * `pass 1.7.0` or greater.
 * `tomb 2.4` or greater.
-* A `systemd` linux distribution is required to use the timer feature.
-
-**From git**
-```sh
-git clone https://github.com/roddhjav/pass-tomb/
-cd pass-tomb
-sudo make install  # Add: PREFIX=/usr/local for OS X
-```
+* A `systemd` based linux distribution is required to use the timer feature.
 
 **ArchLinux**
 
 `pass-tomb` is available in the [Arch User Repository][aur].
 ```sh
-pacaur -S pass-tomb  # or your preferred AUR install method
+yay -S pass-tomb  # or your preferred AUR install method
+```
+
+**Debian**
+
+`pass-tomb` is available in buster and sid repositories with the package-name `pass-extension-tomb` according to the [tracker][debian-tracker]:
+```sh
+apt install pass-extension-tomb
+```
+
+**NixOS**
+```sh
+nix-env -iA nixos.passExtensions.pass-tomb
+```
+
+**OSX**
+> **pass-tomb is based on dm-crypt and therefore it is not compatible with Mac systems.**
+
+**From git**
+```sh
+git clone https://github.com/roddhjav/pass-tomb/
+cd pass-tomb
+sudo make install
 ```
 
 **Stable version**
-```
+```sh
 wget https://github.com/roddhjav/pass-tomb/releases/download/v1.1/pass-tomb-1.1.tar.gz
 tar xzf pass-tomb-1.1.tar.gz
 cd pass-tomb-1.1
@@ -207,10 +222,6 @@ wget https://github.com/roddhjav/pass-tomb/releases/download/v1.1/pass-tomb-1.1.
 gpg --recv-keys 06A26D531D56C42D66805049C5469996F0DF68EC
 gpg --verify pass-tomb-1.1.tar.gz.asc
 ```
-
-**OSX**
-
-> **pass-tomb is based on dm-crypt and therefore it is not compatible with Mac systems.**
 
 
 ## Contribution
@@ -241,3 +252,4 @@ Feedback, contributors, pull requests are all very welcome.
 [aur]: https://aur.archlinux.org/packages/pass-tomb
 [releases]: https://github.com/roddhjav/pass-tomb/releases
 [keybase]: https://keybase.io/roddhjav
+[debian-tracker]: https://tracker.debian.org/pkg/pass-tomb
