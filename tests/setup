@@ -104,8 +104,8 @@ chmod 700 "$GNUPGHOME"
 _pass_populate() {
 	local path=""
 	[[ -z "$1" ]] || path="$1/"
-	pass generate "${path}Tests/user1"
-	pass generate "${path}Tests/user2"
+	pass generate --force "${path}Tests/user1"
+	pass generate --force "${path}Tests/user2"
 }
 
 test_cleanup() {

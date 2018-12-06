@@ -15,6 +15,7 @@ test_expect_success 'Password tomb creation & populate' '
 
 test_expect_success 'Password tomb open & close' '
     _pass open &&
+    _pass_populate &&
     _pass close
     '
 
