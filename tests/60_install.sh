@@ -9,7 +9,7 @@ test_export "password" # Using already generated tomb
 
 if test_have_prereq TRAVIS; then
     test_expect_success 'Testing install.' '
-        sudo make --directory=$EXT_HOME install
+        sudo make --directory=$PROJECT_HOME install
         '
 
     export PASSWORD_STORE_ENABLE_EXTENSIONS=''
@@ -20,7 +20,7 @@ if test_have_prereq TRAVIS; then
         '
 
     test_expect_success 'Testing uninstall.' '
-        sudo make --directory=$EXT_HOME uninstall
+        sudo make --directory=$PROJECT_HOME uninstall
         '
 fi
 
