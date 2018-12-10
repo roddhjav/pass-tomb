@@ -1,0 +1,11 @@
+---
+
+stages:
+  - lint
+
+bash:
+  stage: lint
+  image: koalaman/shellcheck-alpine
+  script:
+    - shellcheck --shell=bash bash tomb.bash open.bash close.bash tests/commons
+        tests/aggregate-coverage
