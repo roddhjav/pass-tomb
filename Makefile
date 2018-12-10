@@ -58,7 +58,7 @@ $(T):
 
 
 lint:
-	shellcheck -s bash $(PROG).bash tests/commons
+	shellcheck -s bash $(PROG).bash open.bash close.bash tests/commons tests/aggregate-coverage
 
 clean:
 	@rm -vrf tests/test-results/ tests/gnupg/random_seed

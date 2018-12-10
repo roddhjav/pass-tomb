@@ -24,7 +24,7 @@
 #   $TEST_HOME	This folder
 #
 
-# shellcheck disable=SC1091,SC2230
+# shellcheck disable=SC1091,SC2016
 
 # Project directories
 TESTS_HOME="$(pwd)"
@@ -44,7 +44,7 @@ if $COVERAGE; then
 	_pass() {
 		"$KCOV" --exclude-line='done <"$TMP",esac done' \
 		        --include-path="$PROJECT_HOME/tomb.bash" \
-		        "$TMP/$(basename $0)" "$PASS" "${@}"
+		        "$TMP/$(basename "$0")" "$PASS" "${@}"
 	}
 else
 	_pass() { "$PASS" "${@}"; }
