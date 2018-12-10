@@ -43,11 +43,25 @@ uninstall:
 		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-open" \
 		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-close"
 
-tests:
-	make -C tests
+
+COVERAGE ?= true
+TMP ?= /tmp/pass-tomb
+PASS_TEST_OPTS ?= --verbose --immediate --chain-lint --root=/tmp/sharness
+T = $(sort $(wildcard tests/*.sh))
+export COVERAGE TMP
+
+tests: $(T)
+	@tests/aggregate-coverage
+
+$(T):
+	@$@ $(PASS_TEST_OPTS)
+
 
 lint:
-	shellcheck -s bash -e SC2181,SC2024 $(PROG).bash
+	shellcheck -s bash $(PROG).bash tests/commons
+
+clean:
+	@rm -vrf tests/test-results/ tests/gnupg/random_seed
 
 
-.PHONY: install uninstall tests lint
+.PHONY: install uninstall tests $(T) lint clean

@@ -2,8 +2,8 @@
 # shellcheck disable=SC2016,SC1091
 
 export test_description="pass-tomb creation"
-
-source ./setup
+cd tests
+source ./commons
 test_cleanup
 
 test_export "password"

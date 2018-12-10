@@ -2,8 +2,8 @@
 # shellcheck disable=SC2016,SC1091
 
 export test_description="pass-tomb without store initialisation."
-
-source ./setup
+cd tests
+source ./commons
 
 test_export "noinit"
 test_expect_success 'Testing password store creation without store initialisation' '

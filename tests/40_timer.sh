@@ -2,8 +2,8 @@
 # shellcheck disable=SC2016,SC1091
 
 export test_description="pass-tomb with timer."
-
-source ./setup
+cd tests
+source ./commons
 
 _tomb_unmounted() {
     local name="$1"

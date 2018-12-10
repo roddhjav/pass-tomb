@@ -2,8 +2,8 @@
 # shellcheck disable=SC2016,SC1091
 
 export test_description="pass-tomb errors handling."
-
-source ./setup
+cd tests
+source ./commons
 
 test_export "invalidkey"
 test_expect_success 'Password tomb creation with invalid key' '

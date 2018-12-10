@@ -2,8 +2,8 @@
 # shellcheck disable=SC2016,SC1091
 
 export test_description="pass-tomb in subfolder."
-
-source ./setup
+cd tests
+source ./commons
 
 test_export "subfolder"
 test_expect_success 'Testing password tomb in subfolder' '
