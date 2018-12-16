@@ -42,7 +42,7 @@ if $COVERAGE; then
 	KCOV="$(command -v kcov)"
 	[[ -e "$KCOV" ]] || _die "Could not find kcov command"
 	_pass() {
-		"$KCOV" --exclude-line='done <"$TMP",esac done' \
+		"$KCOV" --exclude-line='done <,esac done' \
 		        --include-path="$PROJECT_HOME/tomb.bash" \
 		        "$TMP/$(basename "$0")" "$PASS" "${@}"
 	}

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Tomb manager - Password Store Extension (https://www.passwordstore.org/)
-# Copyright (C) 2017 Alexandre PUJOL <alexandre@pujol.io>.
+# Copyright (C) 2008-2012 Git project
+# Copyright (C) 2017-2019 Alexandre PUJOL <alexandre@pujol.io>.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,6 +17,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+# shellcheck disable=SC2094,SC2153
+
 _die() { echo "${@}" && exit 1; }
 if $COVERAGE; then
 	KCOV="$(command -v kcov)"
@@ -24,3 +27,45 @@ if $COVERAGE; then
 	[[ -z "$TRAVIS_JOB_ID" ]] || OPTS=("--coveralls-id=$TRAVIS_JOB_ID")
 	"$KCOV" "${OPTS[@]}" --merge "$TMP/kcov" "${COVERED[@]}"
 fi
+
+failed_tests=
+fixed=0
+success=0
+failed=0
+broken=0
+total=0
+for file in tests/test-results/*.counts; do
+	while read -r type value; do
+		case $type in
+		'')
+			continue ;;
+		fixed)
+			fixed=$((fixed + value)) ;;
+		success)
+			success=$((success + value)) ;;
+		failed)
+			failed=$((failed + value))
+			if test "$value" != 0; then
+				test_name=$(expr "$file" : 'tests/test-results/\(.*\)\.[0-9]*\.counts')
+				failed_tests="$failed_tests $test_name"
+			fi
+			;;
+		broken)
+			broken=$((broken + value)) ;;
+		total)
+			total=$((total + value)) ;;
+		esac
+	done <"$file"
+done
+
+if test -n "$failed_tests"; then
+	printf "\nfailed test(s):%d\n\n" "$failed_tests"
+fi
+
+printf "%-8s%d\n" fixed "$fixed"
+printf "%-8s%d\n" success "$success"
+printf "%-8s%d\n" failed "$failed"
+printf "%-8s%d\n" broken "$broken"
+printf "%-8s%d\n" total "$total"
+
+rm -rf tests/test-results

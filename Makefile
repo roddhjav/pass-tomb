@@ -51,14 +51,14 @@ T = $(sort $(wildcard tests/*.sh))
 export COVERAGE TMP
 
 tests: $(T)
-	@tests/aggregate-coverage
+	@tests/results
 
 $(T):
 	@$@ $(PASS_TEST_OPTS)
 
 
 lint:
-	shellcheck -s bash $(PROG).bash open.bash close.bash tests/commons tests/aggregate-coverage
+	shellcheck -s bash $(PROG).bash open.bash close.bash tests/commons tests/results
 
 clean:
 	@rm -vrf tests/test-results/ tests/gnupg/random_seed
