@@ -41,12 +41,6 @@ if test_have_prereq SYSTEMD; then
         _tomb_unmounted "password"
         '
 
-    test_export "timer" # Using already generated tomb
-    test_expect_success 'Testing timer: password store opening' '
-        _pass open --verbose &&
-        sleep 40s &&
-        _tomb_unmounted "timer"
-        '
 
     test_expect_success 'Testing timer: with wrong time value' '
         _pass open --timer=nan --verbose

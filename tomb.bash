@@ -92,7 +92,7 @@ _timer() {
 	local ret ii delay="$1" path="$2"
 	_tmp_create
 	sudo systemd-run --system --on-active="$delay" --nice='-19' \
-		--description="pass-close timer" --unit="pass-close-$RANDOM" \
+		--description="pass-close timer" \
 		--setenv="PASSWORD_STORE_TOMB_FILE=$TOMB_FILE" \
 		--setenv="PASSWORD_STORE_EXTENSIONS_DIR=$PASSWORD_STORE_EXTENSIONS_DIR" \
 		--setenv="PASSWORD_STORE_ENABLE_EXTENSIONS=$PASSWORD_STORE_ENABLE_EXTENSIONS" \

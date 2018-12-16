@@ -59,6 +59,7 @@ source ./sharness
 
 # Check for auxiliary programs
 [[ -z "$TRAVIS_JOB_ID" ]] || test_set_prereq TRAVIS
+command -v systemd-run > /dev/null && test_set_prereq SYSTEMD
 
 
 #  Prepare pass config vars
