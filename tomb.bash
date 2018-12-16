@@ -343,5 +343,6 @@ while true; do case $1 in
 	--) shift; break ;;
 esac done
 
+[[ -z "$TIMER" ]] || command -v systemd-run &> /dev/null || _die "systemd-run is not present."
 [[ $err -ne 0 ]] && cmd_tomb_usage && exit 1
 [[ "$COMMAND" == "tomb" ]] && cmd_tomb "$id_path" "$@"
