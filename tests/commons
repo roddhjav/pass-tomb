@@ -39,10 +39,11 @@ PASS="$(command -v pass)"; TOMB="$(command -v tomb)"; GPG="$(command -v gpg)"
 [[ -e "$GPG" ]] || _die "Could not find gpg command"
 
 if $COVERAGE; then
+	IGNORES='esac done,done <,_warning "$ret",_die "Unable to initialise the password store."'
 	KCOV="$(command -v kcov)"
 	[[ -e "$KCOV" ]] || _die "Could not find kcov command"
 	_pass() {
-		"$KCOV" --exclude-line='done <,esac done' \
+		"$KCOV" --exclude-line="$IGNORES" \
 		        --include-path="$PROJECT_HOME/tomb.bash" \
 		        "$TMP/$(basename "$0")" "$PASS" "${@}"
 	}

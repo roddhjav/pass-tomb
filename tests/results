@@ -17,7 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# shellcheck disable=SC2094,SC2153
+# shellcheck disable=SC2094,SC2153,SC2016
 
 _die() { echo "${@}" && exit 1; }
 if $COVERAGE; then
@@ -25,7 +25,9 @@ if $COVERAGE; then
 	[[ -e "$KCOV" ]] || _die "Could not find kcov command"
 	mapfile -t COVERED < <(find "$TMP"/*.sh -maxdepth 0 -type d)
 	[[ -z "$TRAVIS_JOB_ID" ]] || OPTS=("--coveralls-id=$TRAVIS_JOB_ID")
-	"$KCOV" "${OPTS[@]}" --merge "$TMP/kcov" "${COVERED[@]}"
+	IGNORES='esac done,done <,_warning "$ret",_die "Unable to initialise the password store."'
+	"$KCOV" --exclude-line="$IGNORES" \
+	        "${OPTS[@]}" --merge "$TMP/kcov" "${COVERED[@]}"
 fi
 
 failed_tests=
