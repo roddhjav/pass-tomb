@@ -23,9 +23,6 @@ readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password.tomb}"
 readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.tomb.key}"
 readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
 
-readonly _UID="$(id -u "$USER")"
-readonly _GID="$(id -g "$USER")"
-
 readonly VERSION="1.1"
 
 #
@@ -132,10 +129,12 @@ _tmp_create() {
 # Set ownership when mounting a tomb
 # $1: Tomb path
 _set_ownership() {
-	local path="$1"
 	_verbose "Setting user permissions on ${path}"
-	sudo chown -R "${_UID}:${_GID}" "${path}" || _die "Unable to set ownership permission on ${path}."
-	sudo chmod 0711 "${path}" || _die "Unable to set permissions on ${path}."
+	local _uid _gid path="$1"
+	_uid="$(id -u "$USER")"
+	_gid="$(id -g "$USER")"
+	sudo chown -R "$_uid:$_gid" "$path" || _die "Unable to set ownership permission on $path."
+	sudo chmod 0711 "$path" || _die "Unable to set permissions on $path."
 }
 
 cmd_tomb_version() {
