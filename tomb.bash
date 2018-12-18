@@ -78,7 +78,7 @@ _tomb() {
 	while read -r ii; do
 		_verbose_tomb "$ii"
 	done <"$TMP"
-	[[ $ret == 0 ]] || _die "Unable to ${cmd} the password tomb."
+	[[ $ret == 0 ]] || _die "Unable to $cmd the password tomb."
 }
 
 # Systemd timer to close the passwod store.
@@ -99,7 +99,7 @@ _timer() {
 		_verbose "$ii"
 	done <"$TMP"
 	if [[ $ret == 0 ]]; then
-		echo "$delay" > "${PREFIX}/${path}/.timer"
+		echo "$delay" > "$PREFIX/$path/.timer"
 		_verbose "Timer successfully created"
 		echo 0
 	else
@@ -120,7 +120,7 @@ _tmp_create() {
 	[[ -r "$tfile" ]] && _die "Someone is messing up with us trying to hijack temporary files."
 
 	touch "$tfile"
-	[[ $? == 0 ]] || _die "Fatal error creating temporary file: ${tfile}."
+	[[ $? == 0 ]] || _die "Fatal error creating temporary file: $tfile."
 
 	TMP="$tfile"
 	return 0
@@ -129,10 +129,10 @@ _tmp_create() {
 # Set ownership when mounting a tomb
 # $1: Tomb path
 _set_ownership() {
-	_verbose "Setting user permissions on ${path}"
 	local _uid _gid path="$1"
 	_uid="$(id -u "$USER")"
 	_gid="$(id -g "$USER")"
+	_verbose "Setting user permissions on $path"
 	sudo chown -R "$_uid:$_gid" "$path" || _die "Unable to set ownership permission on $path."
 	sudo chmod 0711 "$path" || _die "Unable to set permissions on $path."
 }
@@ -187,22 +187,22 @@ cmd_open() {
 	# Open the passwod tomb
 	_tmp_create
 	_verbose "Opening the password tomb $TOMB_FILE using the key $TOMB_KEY"
-	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "${PREFIX}/${path}"
-	_set_ownership "${PREFIX}/${path}"
+	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -g "$PREFIX/$path"
+	_set_ownership "$PREFIX/$path"
 
 	# Read, initialise and start the timer
 	local timed=1
 	if [[ -z "$TIMER" ]]; then
-		if [[ -e "${PREFIX}/${path}/.timer" ]]; then
-			TIMER="$(cat "${PREFIX}/${path}/.timer")"
-			[[ -z "$TIMER" ]] || timed="$(_timer "$TIMER" "${path}")"
+		if [[ -e "$PREFIX/$path/.timer" ]]; then
+			TIMER="$(cat "$PREFIX/$path/.timer")"
+			[[ -z "$TIMER" ]] || timed="$(_timer "$TIMER" "$path")"
 		fi
 	else
-		timed="$(_timer "$TIMER" "${path}")"
+		timed="$(_timer "$TIMER" "$path")"
 	fi
 
 	# Success!
-	_success "Your password tomb has been opened in ${PREFIX}/."
+	_success "Your password tomb has been opened in $PREFIX/."
 	_message "You can now use pass as usual."
 	if [[ $timed == 0 ]]; then
 		_message "This password store will be closed in $TIMER"
@@ -229,7 +229,7 @@ cmd_close() {
 	_tomb close "$_tomb_name"
 
 	_success "Your password tomb has been closed."
-	_message "Your passwords remain present in ${_tomb_file}."
+	_message "Your passwords remain present in $_tomb_file."
 	return 0
 }
 
@@ -247,9 +247,9 @@ cmd_tomb() {
 	if ! is_valid_recipients "${RECIPIENTS[@]}"; then
 		_die "You set an invalid GPG ID."
 	elif [[ -e "$TOMB_KEY" ]]; then
-		_die "The tomb key ${TOMB_KEY} already exists. I won't overwrite it."
+		_die "The tomb key $TOMB_KEY already exists. I won't overwrite it."
 	elif [[ -e "$TOMB_FILE" ]]; then
-		_die "The password tomb ${TOMB_FILE} already exists. I won't overwrite it."
+		_die "The password tomb $TOMB_FILE already exists. I won't overwrite it."
 	elif [[ "$TOMB_SIZE" -lt 10 ]]; then
 		_die "A password tomb cannot be smaller than 10 MB."
 	fi
@@ -274,15 +274,15 @@ cmd_tomb() {
 	_tomb dig "$TOMB_FILE" -s "$TOMB_SIZE"
 	_tomb forge "$TOMB_KEY" -gr "$recipients_arg" "${unsafe[@]}"
 	_tomb lock "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg"
-	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg" "${PREFIX}/${path}"
-	_set_ownership "${PREFIX}/${path}"
+	_tomb open "$TOMB_FILE" -k "$TOMB_KEY" -gr "$recipients_arg" "$PREFIX/$path"
+	_set_ownership "$PREFIX/$path"
 
 	# Use the same recipients to initialise the password store
 	local ret path_cmd=()
 	if [[ $NOINIT -eq 0 ]]; then
 		[[ -z "$path" ]] || path_cmd=("--path=${path}")
 		ret="$(cmd_init "${RECIPIENTS[@]}" "${path_cmd[@]}")"
-		if [[ ! -e "${PREFIX}/${path}/.gpg-id" ]]; then
+		if [[ ! -e "$PREFIX/$path/.gpg-id" ]]; then
 			_warning "$ret"
 			_die "Unable to initialise the password store."
 		fi
@@ -290,13 +290,13 @@ cmd_tomb() {
 
 	# Initialise the timer
 	local timed=1
-	[[ -z "$TIMER" ]] || timed="$(_timer "$TIMER" "${path}")"
+	[[ -z "$TIMER" ]] || timed="$(_timer "$TIMER" "$path")"
 
 	# Success!
-	_success "Your password tomb has been created and opened in ${PREFIX}."
+	_success "Your password tomb has been created and opened in $PREFIX."
 	[[ -z "$ret" ]] || _success "$ret"
-	_message "Your tomb is: ${TOMB_FILE}"
-	_message "Your tomb key is: ${TOMB_KEY}"
+	_message "Your tomb is: $TOMB_FILE"
+	_message "Your tomb key is: $TOMB_KEY"
 	if [[ -z "$ret" ]]; then
 		_message "You need to initialise the store with 'pass init gpg-id...'."
 	else
