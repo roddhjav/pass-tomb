@@ -63,7 +63,7 @@ source ./sharness
 command -v systemd-run > /dev/null && test_set_prereq SYSTEMD
 
 
-#  Prepare pass config vars
+# Prepare pass config vars
 unset PASSWORD_STORE_DIR
 unset PASSWORD_STORE_KEY
 unset PASSWORD_STORE_GIT
@@ -86,10 +86,6 @@ unset EDITOR
 export PASSWORD_STORE_ENABLE_EXTENSIONS=true
 export PASSWORD_STORE_EXTENSIONS_DIR="$PROJECT_HOME"
 export PASSWORD_STORE_TOMB="$TOMB"
-
-
-# Systemd config
-export SYSTEMD_UNIT_PATH="$PROJECT_HOME/timer"
 
 
 # GnuPG config
