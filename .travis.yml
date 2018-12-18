@@ -21,7 +21,6 @@ addons:
       - dcfldd
       - gettext
       - ca-certificates
-      - shellcheck
       - libcurl4-openssl-dev
       - libelf-dev
       - libdw-dev

@@ -7,5 +7,4 @@ bash:
   stage: lint
   image: koalaman/shellcheck-alpine
   script:
-    - shellcheck --shell=bash tomb.bash open.bash close.bash tests/results
-        tests/aggregate-coverage
+    - shellcheck --shell=bash tomb.bash open.bash close.bash tests/commons tests/results
