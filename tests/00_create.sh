@@ -6,7 +6,7 @@ cd tests
 source ./commons
 test_cleanup
 
-test_export "password"
+test_export password
 test_expect_success 'Password tomb creation & populate' '
     _pass tomb $KEY1 --verbose --unsafe &&
     _pass_populate &&

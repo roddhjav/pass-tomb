@@ -5,7 +5,7 @@ export test_description="pass-tomb without store initialisation."
 cd tests
 source ./commons
 
-test_export "noinit"
+test_export noinit
 test_expect_success 'Testing password store creation without store initialisation' '
     _pass tomb $KEY1 --no-init --verbose --unsafe &&
     _pass init $KEY2 &&

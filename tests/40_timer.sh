@@ -13,14 +13,14 @@ _tomb_unmounted() {
 
 if test_have_prereq SYSTEMD; then
 
-    test_export "timer"
+    test_export timer
     test_expect_success 'Testing timer: password store creation' '
         _pass tomb $KEY1 --timer=20s --verbose --unsafe &&
         [[ -e $PASSWORD_STORE_DIR/.timer ]] &&
         [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "20s" ]]
         '
 
-    test_export "password" # Using already generated tomb
+    test_export password  # Using already generated tomb
     test_expect_success 'Testing timer: password store opening with given time' '
         _pass open --timer=20s --verbose &&
         [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "20s" ]]
