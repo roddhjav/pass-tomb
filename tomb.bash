@@ -86,14 +86,14 @@ _tomb() {
 # $2: Path in the password store to save the delay (may be empty)
 # return 0 on success, 1 otherwise
 _timer() {
-	local ret ii delay="$1" path="$2"
+	local ret ii _tomb_name delay="$1" path="$2"
 	_tmp_create
-	sudo systemd-run --system --on-active="$delay" --nice='-19' \
-		--description="pass-close timer" \
-		--setenv="PASSWORD_STORE_TOMB_FILE=$TOMB_FILE" \
-		--setenv="PASSWORD_STORE_EXTENSIONS_DIR=$PASSWORD_STORE_EXTENSIONS_DIR" \
-		--setenv="PASSWORD_STORE_ENABLE_EXTENSIONS=$PASSWORD_STORE_ENABLE_EXTENSIONS" \
-		pass close --verbose &> "$TMP"
+	_tomb_name="${TOMB_FILE##*/}"
+	_tomb_name="${_tomb_name%.*}"
+	sudo systemd-run --system --on-active="$delay" \
+	                 --description="pass-close timer" \
+	                 --unit="pass-close@$_tomb_name.service" \
+	                 &> "$TMP"
 	ret=$?
 	while read -r ii; do
 		_verbose "$ii"
@@ -219,7 +219,6 @@ cmd_close() {
 
 	# Sanity checks
 	check_sneaky_paths "$_tomb_file"
-	[[ -e "$_tomb_file" ]] || _die "There is no password tomb to close."
 	_tomb_name="${_tomb_file##*/}"
 	_tomb_name="${_tomb_name%.*}"
 	[[ -z "$_tomb_name" ]] && _die "There is no password tomb."

@@ -11,39 +11,42 @@ _tomb_unmounted() {
     return $?
 }
 
+# Ensure the tomb is closed before to continue
+_waitfor() {
+    local name="$1"
+    while ! _tomb_unmounted "$name"; do
+        sleep 5
+    done
+}
+
 if test_have_prereq SYSTEMD; then
 
     test_export timer
     test_expect_success 'Testing timer: password store creation' '
         _pass tomb $KEY1 --timer=20s --verbose --unsafe &&
         [[ -e $PASSWORD_STORE_DIR/.timer ]] &&
-        [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "20s" ]]
+        [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "20s" ]] &&
+        systemctl is-active pass-close@timer.timer
         '
 
     test_export password  # Using already generated tomb
     test_expect_success 'Testing timer: password store opening with given time' '
         _pass open --timer=20s --verbose &&
-        [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "20s" ]]
-        '
-
-    test_export "shared" # Using already generated tomb
-    test_expect_success 'Testing timer: ensure password store is open long enough' '
-        _pass open --timer=20s --verbose &&
-        [[ -e $PASSWORD_STORE_DIR/.timer ]] &&
         [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "20s" ]] &&
-        sleep 10s &&
-        test_must_fail _tomb_unmounted "shared"
+        systemctl is-active pass-close@password.timer
         '
 
-    sleep 30s
-    test_expect_success 'Testing timer: ensure all password store are closed' '
-        _tomb_unmounted "timer" &&
-        _tomb_unmounted "password"
+    _waitfor timer
+    test_export timer  # Using already generated tomb
+    test_expect_success 'Testing timer: password store re-opening' '
+        _pass open --verbose &&
+        systemctl is-active pass-close@timer.timer
         '
 
-
+    _waitfor timer
     test_expect_success 'Testing timer: with wrong time value' '
-        _pass open --timer=nan --verbose
+        _pass open --timer=nan --verbose &&
+        test_must_fail systemctl is-active pass-close@timer.timer
         '
 fi
 

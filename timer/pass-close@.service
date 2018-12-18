@@ -1,0 +1,7 @@
+[Unit]
+Description=pass-close %i
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+ExecStart=/usr/bin/pass close --verbose %i

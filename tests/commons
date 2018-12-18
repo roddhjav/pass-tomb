@@ -87,6 +87,10 @@ export PASSWORD_STORE_EXTENSIONS_DIR="$PROJECT_HOME"
 export PASSWORD_STORE_TOMB="$TOMB"
 
 
+# Systemd config
+export SYSTEMD_UNIT_PATH="$PROJECT_HOME/timer"
+
+
 # GnuPG config
 unset GPG_AGENT_INFO
 export GNUPGHOME="$TESTS_HOME/gnupg/"
