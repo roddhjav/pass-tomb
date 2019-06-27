@@ -3,6 +3,9 @@
     <a href="https://travis-ci.org/roddhjav/pass-tomb">
         <img src="https://img.shields.io/travis/roddhjav/pass-tomb/master.svg?style=flat-square"
              alt="Build Status" /></a>
+    <a href="https://gitlab.com/roddhjav/pass-tomb/pipelines">
+        <img src="https://gitlab.com/roddhjav/pass-tomb/badges/master/pipeline.svg?style=flat-square"
+             alt="Pipeline Status" /></a>
     <a href="https://coveralls.io/github/roddhjav/pass-tomb">
         <img src="https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg?style=flat-square"
              alt="Code Coverage" /></a>
