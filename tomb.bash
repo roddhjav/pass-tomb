@@ -261,7 +261,7 @@ cmd_tomb() {
 	if [[ $UNSAFE -ne 0 ]]; then
 		_warning "Using unsafe mode to speed up tomb generation."
 		_warning "Only use it for testing purposes."
-		local unsafe=(--unsafe --use-urandom)
+		local unsafe=(--unsafe)
 	fi
 
 	# Sharing support
