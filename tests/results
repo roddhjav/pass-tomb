@@ -28,6 +28,8 @@ if $COVERAGE; then
 	IGNORES='esac done,done <,_warning "$ret",_die "Unable to initialise the password store."'
 	"$KCOV" --exclude-line="$IGNORES" \
 	        "${OPTS[@]}" --merge "$TMP/kcov" "${COVERED[@]}"
+	covered="$(jq -r '.percent_covered' "$TMP/kcov/kcov-merged/coverage.json")"
+	printf "%s: %s\n" coverage "$covered"
 fi
 
 failed_tests=

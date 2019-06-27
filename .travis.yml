@@ -25,6 +25,7 @@ addons:
       - libelf-dev
       - libdw-dev
       - cmake
+      - jq
 
 before_script:
   - wget https://git.zx2c4.com/password-store/snapshot/password-store-$PASS_VERSION.tar.xz
