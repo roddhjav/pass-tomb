@@ -5,16 +5,10 @@ export test_description="pass-tomb with timer."
 cd tests
 source ./commons
 
-_tomb_unmounted() {
-    local name="$1"
-    test -z "$(mount -l | grep "/dev/mapper/tomb.$name")"
-    return $?
-}
 
 # Ensure the tomb is closed before to continue
-_waitfor() {
-    local name="$1"
-    while ! _tomb_unmounted "$name"; do
+test_waitfor() {
+    while systemctl is-active "pass-close@$1.timer"; do
         sleep 5
     done
 }
@@ -41,15 +35,7 @@ if test_have_prereq SYSTEMD; then
         systemctl status pass-close@password.timer
         '
 
-    _waitfor timer
-    test_export timer  # Using already generated tomb
-    test_expect_success 'Testing timer: password store re-opening' '
-        _pass open --verbose &&
-        systemctl is-active pass-close@timer.timer &&
-        systemctl status pass-close@timer.timer
-        '
-
-    _waitfor timer
+    test_waitfor timer
     test_expect_success 'Testing timer: with wrong time value' '
         _pass open --timer=nan --verbose &&
         test_must_fail systemctl is-active pass-close@timer.timer
