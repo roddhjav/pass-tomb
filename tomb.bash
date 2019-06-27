@@ -38,6 +38,7 @@ _verbose() { [ "$VERBOSE" = 0 ] || printf '  %b.%b  %bpass%b %s\n' "$Bmagenta" "
 _verbose_tomb() { [ "$VERBOSE" = 0 ] || printf '  %b.%b  %s\n' "$Bmagenta" "$reset" "$*" >&2; }
 _error() { printf ' %b[x]%b %bError:%b %s\n' "$Bred" "$reset" "$Bold" "$reset" "$*" >&2; }
 _die() { _error "$*" && exit 1; }
+_in() { [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && return 0 || return 1; }
 
 # Check program dependencies
 #
@@ -50,19 +51,24 @@ _ensure_dependencies() {
 is_valid_recipients() {
 	typeset -a recipients
 	IFS=" " read -r -a recipients <<< "$@"
+	trusted='m f u w s'
 
 	# All the keys ID must be valid (the public keys must be present in the database)
 	for gpg_id in "${recipients[@]}"; do
-		gpg --list-keys "$gpg_id" &> /dev/null
+		trust="$(gpg --with-colons --batch --list-keys "$gpg_id" 2> /dev/null | \
+				    awk 'BEGIN { FS=":" } /^pub/ { print $2; exit}')"
 		if [[ $? != 0 ]]; then
 			_warning "${gpg_id} is not a valid key ID."
+			return 1
+		elif ! _in "$trusted" "$trust"; then
+			_warning "The key ${gpg_id} is not trusted enough"
 			return 1
 		fi
 	done
 
 	# At least one private key must be present
 	for gpg_id in "${recipients[@]}"; do
-		gpg --list-secret-keys "$gpg_id" &> /dev/null
+		gpg --with-colons --batch --list-secret-keys "$gpg_id" &> /dev/null
 		if [[ $? = 0 ]]; then
 			return 0
 		fi
