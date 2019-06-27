@@ -140,7 +140,6 @@ _set_ownership() {
 	_gid="$(id -g "$USER")"
 	_verbose "Setting user permissions on $path"
 	sudo chown -R "$_uid:$_gid" "$path" || _die "Unable to set ownership permission on $path."
-	sudo chmod 0711 "$path" || _die "Unable to set permissions on $path."
 }
 
 cmd_tomb_version() {
