@@ -174,6 +174,10 @@ tomb advanced feature like *steganography* and *private cloud storage*. The
 [tomb website][tomb] provide a good presentation of the features available with
 Tomb. Moreover, you can read my guide on how to use [Tomb with GPG keys][pujol.io-tomb].
 
+pass-tomb is not compatible with Android, but it should not be an issue for you.
+If you consider it is safe to put your password-store on Android then, it
+probably mean you attacker model does not require the need of pass-tomb.
+
 ## Installation
 
 **Requirements**
@@ -233,7 +237,7 @@ Feedback, contributors, pull requests are all very welcome.
 
 ## License
 
-    Copyright (C) 2017  Alexandre PUJOL
+    Copyright (C) 2017-2019  Alexandre PUJOL
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

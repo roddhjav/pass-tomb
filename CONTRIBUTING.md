@@ -1,4 +1,4 @@
-<h1 align="center">Contribution</h1>
+# Contribution
 
 You want to contribute to `pass tomb`, **thank a lot for this.** You will find
 in this page all the useful information needed to contribute.
