@@ -133,9 +133,8 @@ $ pass open --timer=10min
 
 In order to use pass-tomb with your existing password repository you can:
 1. Move your password repository: `mv ~/.password-store ~/.password-store-backup`
-2. Create a new password tomb: `pass tomb <gpgid>`
-3. Open the password tomb: `pass open`
-4. Move all the content of your password repository in the new password tomb:
+2. Create and open a new password tomb: `pass tomb <gpgid>`
+3. Move all the content of your password repository in the new password tomb:
    ```
    mv ~/.password-store-backup/ ~/.password-store`
    ```
