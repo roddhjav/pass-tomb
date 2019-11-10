@@ -1,32 +1,18 @@
-<h1 align="center">pass tomb</h1>
-<p align="center">
-    <a href="https://travis-ci.org/roddhjav/pass-tomb">
-        <img src="https://img.shields.io/travis/roddhjav/pass-tomb/master.svg?style=flat-square"
-             alt="Build Status" /></a>
-    <a href="https://gitlab.com/roddhjav/pass-tomb/pipelines">
-        <img src="https://gitlab.com/roddhjav/pass-tomb/badges/master/pipeline.svg?style=flat-square"
-             alt="Pipeline Status" /></a>
-    <a href="https://coveralls.io/github/roddhjav/pass-tomb">
-        <img src="https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg?style=flat-square"
-             alt="Code Coverage" /></a>
-    <a href="https://www.codacy.com/app/roddhjav/pass-tomb">
-        <img src="https://img.shields.io/codacy/grade/1c58ea63487a4b82874b05220d500c60/master.svg?style=flat-square"
-             alt="Code Quality" /></a>
-    <a href="https://github.com/roddhjav/pass-tomb/releases/latest">
-        <img src="https://img.shields.io/github/release/roddhjav/pass-tomb.svg?maxAge=600&style=flat-square"
-             alt="Last Release" /></a>
-</p>
-<p align="center">
-A <a href="https://www.passwordstore.org/">pass</a> extension that helps to
-keep the whole tree of password encrypted inside a
-<a href="https://www.dyne.org/software/tomb/">tomb</a>.
-</p>
+[<img src="https://gitlab.com/uploads/-/system/project/avatar/3157196/logo.png" align="right" height="110"/>][github-link]
+
+# pass tomb
+
+[![][travis]][travis-link] [![][gitlab]][gitlab-link] [![][coverage]][coverage-link] [![][quality]][quality-link] [![
+][release]][release-link]
+
+**A [pass] extension that helps to keep the whole tree of password encrypted inside a [Tomb]**
+
 
 ## Description
 
 Due to the structure of `pass`, file- and directory names are not encrypted in
 the password store. `pass-tomb` provides a convenient solution to put your
-password store in a [tomb][github-tomb] and then keep your password tree
+password store in a [Tomb][github-tomb] and then keep your password tree
 encrypted when you are not using it.
 
 It uses the same GPG key to encrypt passwords and tomb, therefore you don't need
@@ -170,7 +156,7 @@ alias pass2='PASSWORD_STORE_TOMB_FILE=<tomb_path> PASSWORD_STORE_TOMB_KEY=<key_p
 ## Advanced use
 Using `tomb` to store your password repository, you can take advantage of the
 tomb advanced feature like *steganography* and *private cloud storage*. The
-[tomb website][tomb] provide a good presentation of the features available with
+[tomb website][Tomb] provide a good presentation of the features available with
 Tomb. Moreover, you can read my guide on how to use [Tomb with GPG keys][pujol.io-tomb].
 
 pass-tomb is not compatible with Android, but it should not be an issue for you.
@@ -251,7 +237,20 @@ Feedback, contributors, pull requests are all very welcome.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-[tomb]: https://www.dyne.org/software/tomb/
+[github-link]: https://github.com/roddhjav/pass-tomb
+[travis]: https://img.shields.io/travis/roddhjav/pass-tomb/master.svg?style=flat-square
+[travis-link]: https://travis-ci.org/roddhjav/pass-tomb
+[gitlab]: https://gitlab.com/roddhjav/pass-tomb/badges/master/pipeline.svg?style=flat-square
+[gitlab-link]: https://gitlab.com/roddhjav/pass-tomb/pipelines
+[coverage]: https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg?style=flat-square
+[coverage-link]: https://coveralls.io/github/roddhjav/pass-tomb
+[quality]: https://img.shields.io/codacy/grade/1c58ea63487a4b82874b05220d500c60/master.svg?style=flat-square
+[quality-link]: https://www.codacy.com/app/roddhjav/pass-tomb
+[release]: https://img.shields.io/github/release/roddhjav/pass-tomb.svg?maxAge=600&style=flat-square
+[release-link]: https://github.com/roddhjav/pass-tomb/releases/latest
+
+[pass]: https://www.passwordstore.org/
+[Tomb]: https://www.dyne.org/software/tomb/
 [github-tomb]: https://github.com/dyne/Tomb
 [pujol.io-tomb]: https://pujol.io/blog/tomb-with-gpg-keys/
 [keys]: https://pujol.io/keys
