@@ -29,7 +29,7 @@ readonly VERSION="1.2"
 # Common colors and functions
 #
 readonly green='\e[0;32m' yellow='\e[0;33m' magenta='\e[0;35m'
-readonly Bred='\e[1;31m' Bgreen='\e[1;32m' Byellow='\e[1;33m' Bblue='\e[1;34m'
+readonly Bred='\e[1;31m' Bgreen='\e[1;32m' Byellow='\e[1;33m'
 readonly Bmagenta='\e[1;35m' Bold='\e[1m' reset='\e[0m'
 _message() { [ "$QUIET" = 0 ] && printf '  %b.%b  %s\n' "$Bold" "$reset" "$*" >&2; }
 _warning() { [ "$QUIET" = 0 ] && printf '  %bw%b  %b%s%b\n' "$Byellow" "$reset" "$yellow" "$*" "$reset" >&2; }
