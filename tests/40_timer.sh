@@ -22,7 +22,7 @@ if test_have_prereq SYSTEMD; then
 
     test_export timer
     test_expect_success 'Testing timer: password store creation' '
-        _pass tomb $KEY1 --timer=10s --verbose --unsafe &&
+        _pass tomb $KEY1 --timer=10s --verbose --unsafe --force &&
         [[ -e $PASSWORD_STORE_DIR/.timer ]] &&
         [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "10s" ]] &&
         systemctl is-active pass-close@timer.timer &&
@@ -31,7 +31,7 @@ if test_have_prereq SYSTEMD; then
 
     test_export password  # Using already generated tomb
     test_expect_success 'Testing timer: password store opening with given time' '
-        _pass open --timer=10s --verbose &&
+        _pass open --timer=10s --verbose --force &&
         [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "10s" ]] &&
         systemctl is-active pass-close@password.timer &&
         systemctl status pass-close@password.timer
@@ -39,7 +39,7 @@ if test_have_prereq SYSTEMD; then
 
     test_waitfor timer
     test_expect_success 'Testing timer: with wrong time value' '
-        _pass open --timer=nan --verbose &&
+        _pass open --timer=nan --verbose --force &&
         test_must_fail systemctl is-active pass-close@timer.timer
         '
 fi

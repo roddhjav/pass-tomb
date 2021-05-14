@@ -100,6 +100,8 @@ export KEY_PUBLIC="6E2AA5413833357EF9CA5F16D1F2750C5B995BE4"
 export KEY_INVALID="8BEB79760D3D8748267E27F5416BFF9987DB13AF"
 chmod 700 "$GNUPGHOME"
 
+# Disable swap for the test duration
+sudo swapoff -a
 
 # Test helpers
 
