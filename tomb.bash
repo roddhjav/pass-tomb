@@ -47,6 +47,13 @@ _ensure_dependencies() {
 	command -v "$TOMB" &> /dev/null || _die "Tomb is not present."
 }
 
+# Get the trust level of a GPG public key.
+_get_publictrust() {
+	local gpg_id="$1"
+	gpg --with-colons --batch --list-keys "$gpg_id" 2> /dev/null \
+		| awk 'BEGIN { FS=":" } /^pub/ { print $2; exit}'
+}
+
 # $@ is the list of all the recipient used to encrypt a tomb key
 is_valid_recipients() {
 	typeset -a recipients
@@ -55,8 +62,7 @@ is_valid_recipients() {
 
 	# All the keys ID must be valid (the public keys must be present in the database)
 	for gpg_id in "${recipients[@]}"; do
-		trust="$(gpg --with-colons --batch --list-keys "$gpg_id" 2> /dev/null | \
-				    awk 'BEGIN { FS=":" } /^pub/ { print $2; exit}')"
+		trust="$(_get_publictrust "$gpg_id")"
 		if [[ $? != 0 ]]; then
 			_warning "${gpg_id} is not a valid key ID."
 			return 1
