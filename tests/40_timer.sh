@@ -15,7 +15,7 @@ test_waitfor() {
 
 if test_have_prereq SYSTEMD; then
     # Install the pass-close service
-    sudo install -dm0644 "$PROJECT_HOME/timer/pass-close@.service" /usr/lib/systemd/system/pass-close@.service
+    sudo install -Dm0644 "$PROJECT_HOME/timer/pass-close@.service" /usr/lib/systemd/system/pass-close@.service
     sudo install -Dm0755 "$PROJECT_HOME/close.bash" /usr/lib/password-store/extensions/close.bash
     sudo install -Dm0755 "$PROJECT_HOME/tomb.bash" /usr/lib/password-store/extensions/tomb.bash
     sudo systemctl daemon-reload
@@ -25,22 +25,31 @@ if test_have_prereq SYSTEMD; then
         _pass tomb $KEY1 --timer=10s --verbose --unsafe --force &&
         [[ -e $PASSWORD_STORE_DIR/.timer ]] &&
         [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "10s" ]] &&
-        systemctl is-active pass-close@timer.timer &&
-        systemctl status pass-close@timer.timer
+        systemctl is-active pass-close@$testname.timer &&
+        systemctl status pass-close@$testname.timer
         '
 
-    test_export password  # Using already generated tomb
+    test_export .password  # Using already generated tomb
     test_expect_success 'Testing timer: password store opening with given time' '
         _pass open --timer=10s --verbose --force &&
         [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "10s" ]] &&
-        systemctl is-active pass-close@password.timer &&
-        systemctl status pass-close@password.timer
+        systemctl is-active pass-close@$testname.timer &&
+        systemctl status pass-close@$testname.timer
+        '
+
+    test_waitfor .password
+    test_expect_success 'Testing timer: consistant timer' '
+        _pass open --verbose --force &&
+       [[ "$(cat $PASSWORD_STORE_DIR/.timer)" == "10s" ]] &&
+        systemctl is-active pass-close@$testname.timer &&
+        systemctl status pass-close@$testname.timer
         '
 
     test_waitfor timer
+    test_export timer  # Using already generated tomb
     test_expect_success 'Testing timer: with wrong time value' '
         _pass open --timer=nan --verbose --force &&
-        test_must_fail systemctl is-active pass-close@timer.timer
+        test_must_fail systemctl is-active pass-close@$testname.timer
         '
 fi
 
