@@ -101,7 +101,7 @@ _timer() {
 	local ret ii _tomb_name delay="$1" path="$2"
 	_tmp_create
 	_tomb_name="${TOMB_FILE##*/}"
-	_tomb_name="${_tomb_name%.*}"
+	_tomb_name="${_tomb_name%.tomb}"
 	sudo systemd-run --system --on-active="$delay" \
 	                 --description="pass-close timer" \
 	                 --unit="pass-close@$_tomb_name.service" \
@@ -231,7 +231,7 @@ cmd_close() {
 	# Sanity checks
 	check_sneaky_paths "$_tomb_file"
 	_tomb_name="${_tomb_file##*/}"
-	_tomb_name="${_tomb_name%.*}"
+	_tomb_name="${_tomb_name%.tomb}"
 	[[ -z "$_tomb_name" ]] && _die "There is no password tomb."
 
 	_tmp_create
