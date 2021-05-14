@@ -15,8 +15,10 @@ test_waitfor() {
 
 if test_have_prereq SYSTEMD; then
     # Install the pass-close service
-    sudo install -m 0644 "$PROJECT_HOME/timer/pass-close@.service" \
-        /etc/systemd/system/pass-close@.service
+    sudo install -dm0644 "$PROJECT_HOME/timer/pass-close@.service" /usr/lib/systemd/system/pass-close@.service
+    sudo install -Dm0755 "$PROJECT_HOME/close.bash" /usr/lib/password-store/extensions/close.bash
+    sudo install -Dm0755 "$PROJECT_HOME/tomb.bash" /usr/lib/password-store/extensions/tomb.bash
+    sudo systemctl daemon-reload
 
     test_export timer
     test_expect_success 'Testing timer: password store creation' '
