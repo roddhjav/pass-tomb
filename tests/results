@@ -30,6 +30,7 @@ if $COVERAGE; then
 	        "${OPTS[@]}" --merge "$TMP/kcov" "${COVERED[@]}"
 	covered="$(jq -r '.percent_covered' "$TMP/kcov/kcov-merged/coverage.json")"
 	printf "%s: %s\n" coverage "$covered"
+	cp -rf "$TMP/kcov/" "$PWD"
 fi
 
 failed_tests=

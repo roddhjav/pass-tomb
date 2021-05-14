@@ -5,7 +5,7 @@ export test_description="pass-tomb errors handling."
 cd tests
 source ./commons
 
-test_export "invalidkey"
+test_export errors
 test_expect_success 'Password tomb creation with invalid key' '
     test_must_fail _pass tomb $KEY_INVALID --debug --unsafe
     '
@@ -21,8 +21,8 @@ test_expect_success 'Testing wrong tomb parameters' '
     '
 
 test_expect_success 'Testing store creation with a public key' '
-    test_must_fail _pass tomb $KEY_PUBLIC --verbose --unsafe &&
-    _pass tomb $KEY_PUBLIC $KEY1 --verbose --unsafe
+    test_must_fail _pass tomb $KEY_PUBLIC --verbose --unsafe --force &&
+    _pass tomb $KEY_PUBLIC $KEY1 --verbose --unsafe --force
     '
 
 test_expect_success 'Testing help messages' '
