@@ -29,6 +29,12 @@ if test_have_prereq SYSTEMD; then
         systemctl status pass-close@$testname.timer
         '
 
+    test_expect_success 'Testing timer: show timer status' '
+        _pass timer &&
+        test_waitfor timer &&
+        _pass timer
+        '
+
     test_export .password  # Using already generated tomb
     test_expect_success 'Testing timer: password store opening with given time' '
         _pass open --timer=10s --verbose --force &&
@@ -45,7 +51,6 @@ if test_have_prereq SYSTEMD; then
         systemctl status pass-close@$testname.timer
         '
 
-    test_waitfor timer
     test_export timer  # Using already generated tomb
     test_expect_success 'Testing timer: with wrong time value' '
         _pass open --timer=nan --verbose --force &&

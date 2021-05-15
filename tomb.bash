@@ -170,6 +170,9 @@ cmd_tomb_usage() {
 	    $PROGRAM close [store]
 	        Close a password tomb
 
+	    $PROGRAM timer [store]
+	        Show timer status
+
 	Options:
 	    -n, --no-init  Do not initialise the password store
 	    -t, --timer    Close the store after a given time
@@ -240,6 +243,27 @@ cmd_close() {
 
 	_success "Your password tomb has been closed."
 	_message "Your passwords remain present in $_tomb_file."
+	return 0
+}
+
+# Show timer status
+cmd_timer() {
+	local _tomb_name _tomb_file="$1"
+	[[ -z "$_tomb_file" ]] && _tomb_file="$TOMB_FILE"
+
+	# Sanity checks
+	check_sneaky_paths "$_tomb_file"
+	_tomb_name="${_tomb_file##*/}"
+	_tomb_name="${_tomb_name%.tomb}"
+	[[ -z "$_tomb_name" ]] && _die "There is no password tomb."
+
+	if systemctl is-active "pass-close@$_tomb_name.timer" &> /dev/null; then
+		systemctl status "pass-close@$_tomb_name.timer"
+	else
+		_warning "There is no active timer for $_tomb_file."
+		sudo systemctl status "pass-close@$_tomb_name.service"
+	fi
+
 	return 0
 }
 

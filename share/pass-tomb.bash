@@ -1,6 +1,6 @@
 # pass-tomb completion file for bash
 
-PASSWORD_STORE_EXTENSION_COMMANDS+=(tomb open close)
+PASSWORD_STORE_EXTENSION_COMMANDS+=(tomb open close timer)
 
 _pass_complete_tombs() {
 	local tombs="$(findmnt -rvo SOURCE | grep tomb | cut -d '.' -f 2)"
@@ -29,6 +29,13 @@ __password_store_extension_complete_open() {
 }
 
 __password_store_extension_complete_close() {
+	local args=(-h --help -v --verbose -d --debug -q --quiet -V --version)
+	COMPREPLY+=($(compgen -W "${args[*]}" -- ${cur}))
+	_pass_complete_tombs
+	compopt -o nospace
+}
+
+__password_store_extension_complete_timer() {
 	local args=(-h --help -v --verbose -d --debug -q --quiet -V --version)
 	COMPREPLY+=($(compgen -W "${args[*]}" -- ${cur}))
 	_pass_complete_tombs

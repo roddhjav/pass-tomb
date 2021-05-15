@@ -44,6 +44,9 @@ Usage:
     pass close [store]
         Close a password tomb
 
+    pass timer [store]
+        Show timer status
+
 Options:
     -n, --no-init  Do not initialise the password store
     -t, --timer    Close the store after a given time
