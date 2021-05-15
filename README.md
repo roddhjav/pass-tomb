@@ -30,7 +30,7 @@ close your store after a given time.
 ## Usage
 
 ```
-pass tomb 1.2 - A pass extension that helps to keep the whole tree of
+pass tomb 1.3 - A pass extension that helps to keep the whole tree of
                 password encrypted inside a tomb.
 
 Usage:
@@ -203,18 +203,18 @@ sudo make install
 
 **Stable version**
 ```sh
-wget https://github.com/roddhjav/pass-tomb/releases/download/v1.2/pass-tomb-1.2.tar.gz
-tar xzf pass-tomb-1.2.tar.gz
-cd pass-tomb-1.2
+wget https://github.com/roddhjav/pass-tomb/releases/download/v1.3/pass-tomb-1.3.tar.gz
+tar xzf pass-tomb-1.3.tar.gz
+cd pass-tomb-1.3
 sudo make install
 ```
 
 [Releases][releases] and commits are signed using [`06A26D531D56C42D66805049C5469996F0DF68EC`][keys].
 You should check the key's fingerprint and verify the signature:
 ```sh
-wget https://github.com/roddhjav/pass-tomb/releases/download/v1.2/pass-tomb-1.2.tar.gz.asc
+wget https://github.com/roddhjav/pass-tomb/releases/download/v1.3/pass-tomb-1.3.tar.gz.asc
 gpg --recv-keys 06A26D531D56C42D66805049C5469996F0DF68EC
-gpg --verify pass-tomb-1.2.tar.gz.asc
+gpg --verify pass-tomb-1.3.tar.gz.asc
 ```
 
 
