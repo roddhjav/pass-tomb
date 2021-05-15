@@ -12,7 +12,7 @@ if test_have_prereq TRAVIS; then
 
     export PASSWORD_STORE_ENABLE_EXTENSIONS=''
     export PASSWORD_STORE_EXTENSIONS_DIR=''
-    test_export password  # Using already generated tomb
+    test_export .password  # Using already generated tomb
     test_expect_success 'Testing installated extension.' '
         _pass open &&
         _pass close
