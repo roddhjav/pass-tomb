@@ -24,6 +24,7 @@ install:
 	@install -Dm0644 share/pass-$(PROG).zsh "$(DESTDIR)$(ZSHCOMPDIR)/_pass-$(PROG)"
 	@install -Dm0644 share/pass-open.zsh "$(DESTDIR)$(ZSHCOMPDIR)/_pass-open"
 	@install -Dm0644 share/pass-close.zsh "$(DESTDIR)$(ZSHCOMPDIR)/_pass-close"
+	@install -Dm0644 share/pass-timer.zsh "$(DESTDIR)$(ZSHCOMPDIR)/_pass-timer"
 	@echo "pass-$(PROG) is installed succesfully"
 
 uninstall:
@@ -37,7 +38,8 @@ uninstall:
 		"$(DESTDIR)$(BASHCOMPDIR)/pass-$(PROG)" \
 		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-$(PROG)" \
 		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-open" \
-		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-close"
+		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-close" \
+		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-timer"
 
 
 COVERAGE ?= true
