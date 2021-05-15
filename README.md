@@ -179,7 +179,6 @@ yay -S pass-tomb  # or your preferred AUR install method
 
 **Debian**
 
-`pass-tomb` is available in buster and sid repositories with the package-name `pass-extension-tomb` according to the [tracker][debian-tracker]:
 ```sh
 apt install pass-extension-tomb
 ```
@@ -239,7 +238,7 @@ Feedback, contributors, pull requests are all very welcome.
 
 [github-link]: https://github.com/roddhjav/pass-tomb
 [travis]: https://img.shields.io/travis/roddhjav/pass-tomb/master.svg?style=flat-square
-[travis-link]: https://travis-ci.org/roddhjav/pass-tomb
+[travis-link]: https://travis-ci.com/roddhjav/pass-tomb
 [gitlab]: https://gitlab.com/roddhjav/pass-tomb/badges/master/pipeline.svg?style=flat-square
 [gitlab-link]: https://gitlab.com/roddhjav/pass-tomb/pipelines
 [coverage]: https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg?style=flat-square
@@ -257,4 +256,3 @@ Feedback, contributors, pull requests are all very welcome.
 [aur]: https://aur.archlinux.org/packages/pass-tomb
 [releases]: https://github.com/roddhjav/pass-tomb/releases
 [keybase]: https://keybase.io/roddhjav
-[debian-tracker]: https://tracker.debian.org/pkg/pass-tomb
