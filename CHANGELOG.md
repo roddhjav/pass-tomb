@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keep-changelog].
 
+## [1.3] - 2021-05-15
+
+### Added
+* Added a 'pass timer' command to show the current timer status.
+
+### Changed
+* Improved timer tests.
+* Improved GPG trust level detection.
+
+### Fixed
+* Ensure timer setting are persistent.  [#31](https://github.com/roddhjav/pass-tomb/issues/31)
+* Only remove .tomb extension from tomb file. [#28](https://github.com/roddhjav/pass-tomb/issues/28) [#33](https://github.com/roddhjav/pass-tomb/issues/33)
+* Linter fix.
+
+
 ## [1.2] - 2019-06-29
 ### Added
 * Ensure the GPG keys used are trusted before tomb creation.
