@@ -11,34 +11,27 @@ ZSHCOMPDIR ?= $(PREFIX)/share/zsh/site-functions
 
 all:
 	@echo "pass-$(PROG) is a shell script and does not need compilation, it can be simply executed."
-	@echo ""
 	@echo "To install it try \"make install\" instead."
-	@echo
 
 install:
-	@install -d "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/" "$(DESTDIR)$(MANDIR)/man1" \
-				  "$(DESTDIR)$(BASHCOMPDIR)" "$(DESTDIR)$(ZSHCOMPDIR)" \
-				  "$(DESTDIR)$(LIBDIR)/systemd/system/"
-	@install -m 0755 $(PROG).bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash"
-	@install -m 0755 open.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/open.bash"
-	@install -m 0755 close.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/close.bash"
-	@install -m 0644 pass-$(PROG).1 "$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1"
-	@install -m 0644 timer/pass-close@.service "$(DESTDIR)$(LIBDIR)/systemd/system/pass-close@.service"
-	@install -m 0644 "completion/pass-$(PROG).bash" "$(DESTDIR)$(BASHCOMPDIR)/pass-$(PROG)"
-	@install -m 0644 "completion/pass-$(PROG).zsh" "$(DESTDIR)$(ZSHCOMPDIR)/_pass-$(PROG)"
-	@install -m 0644 "completion/pass-open.zsh" "$(DESTDIR)$(ZSHCOMPDIR)/_pass-open"
-	@install -m 0644 "completion/pass-close.zsh" "$(DESTDIR)$(ZSHCOMPDIR)/_pass-close"
-	@echo
+	@install -Dm0755 $(PROG).bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash"
+	@install -Dm0755 open.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/open.bash"
+	@install -Dm0755 close.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/close.bash"
+	@install -Dm0644 pass-close@.service "$(DESTDIR)$(LIBDIR)/systemd/system/pass-close@.service"
+	@install -Dm0644 share/pass-$(PROG).1 "$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1"
+	@install -Dm0644 share/pass-$(PROG).bash "$(DESTDIR)$(BASHCOMPDIR)/pass-$(PROG)"
+	@install -Dm0644 share/pass-$(PROG).zsh "$(DESTDIR)$(ZSHCOMPDIR)/_pass-$(PROG)"
+	@install -Dm0644 share/pass-open.zsh "$(DESTDIR)$(ZSHCOMPDIR)/_pass-open"
+	@install -Dm0644 share/pass-close.zsh "$(DESTDIR)$(ZSHCOMPDIR)/_pass-close"
 	@echo "pass-$(PROG) is installed succesfully"
-	@echo
 
 uninstall:
 	@rm -vrf \
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/$(PROG).bash" \
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/open.bash" \
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/close.bash" \
-		"$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1" \
 		"$(DESTDIR)$(LIBDIR)/systemd/system/pass-close@.service" \
+		"$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1" \
 		"$(DESTDIR)$(BASHCOMPDIR)/pass-$(PROG)" \
 		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-$(PROG)" \
 		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-open" \
