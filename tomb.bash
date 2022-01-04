@@ -102,7 +102,7 @@ _timer() {
 	_tmp_create
 	_tomb_name="${TOMB_FILE##*/}"
 	_tomb_name="${_tomb_name%.tomb}"
-	sudo systemd-run --system --on-active="$delay" \
+	sudo systemd-run --user --on-active="$delay" \
 	                 --description="pass-close timer" \
 	                 --unit="pass-close@$_tomb_name.service" \
 	                 &> "$TMP"
@@ -376,6 +376,6 @@ while true; do case $1 in
 	--) shift; break ;;
 esac done
 
-[[ -z "$TIMER" ]] || command -v systemd-run &> /dev/null || _die "systemd-run is not present."
+[[ -z "$TIMER" ]] || command -v systemd-run --user &> /dev/null || _die "systemd-run is not present."
 [[ $err -ne 0 ]] && cmd_tomb_usage && exit 1
 [[ "$COMMAND" == "tomb" ]] && cmd_tomb "$id_path" "$@"
