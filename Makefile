@@ -18,7 +18,7 @@ install:
 	@install -Dm0755 open.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/open.bash"
 	@install -Dm0755 close.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/close.bash"
 	@install -Dm0755 timer.bash "$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/timer.bash"
-	@install -Dm0644 pass-close@.service "$(DESTDIR)$(LIBDIR)/systemd/system/pass-close@.service"
+	@install -Dm0644 pass-close@.service "$(DESTDIR)$(LIBDIR)/systemd/user/pass-close@.service"
 	@install -Dm0644 share/pass-$(PROG).1 "$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1"
 	@install -Dm0644 share/pass-$(PROG).bash "$(DESTDIR)$(BASHCOMPDIR)/pass-$(PROG)"
 	@install -Dm0644 share/pass-$(PROG).zsh "$(DESTDIR)$(ZSHCOMPDIR)/_pass-$(PROG)"
@@ -33,7 +33,7 @@ uninstall:
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/open.bash" \
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/close.bash" \
 		"$(DESTDIR)$(SYSTEM_EXTENSION_DIR)/timer.bash" \
-		"$(DESTDIR)$(LIBDIR)/systemd/system/pass-close@.service" \
+		"$(DESTDIR)$(LIBDIR)/systemd/user/pass-close@.service" \
 		"$(DESTDIR)$(MANDIR)/man1/pass-$(PROG).1" \
 		"$(DESTDIR)$(BASHCOMPDIR)/pass-$(PROG)" \
 		"$(DESTDIR)$(ZSHCOMPDIR)/_pass-$(PROG)" \

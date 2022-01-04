@@ -257,11 +257,11 @@ cmd_timer() {
 	_tomb_name="${_tomb_name%.tomb}"
 	[[ -z "$_tomb_name" ]] && _die "There is no password tomb."
 
-	if systemctl is-active "pass-close@$_tomb_name.timer" &> /dev/null; then
-		systemctl status "pass-close@$_tomb_name.timer"
+	if systemctl --user is-active "pass-close@$_tomb_name.timer" &> /dev/null; then
+		systemctl --user status "pass-close@$_tomb_name.timer"
 	else
 		_warning "There is no active timer for $_tomb_file."
-		sudo systemctl status "pass-close@$_tomb_name.service"
+		systemctl --user status "pass-close@$_tomb_name.service"
 	fi
 
 	return 0
