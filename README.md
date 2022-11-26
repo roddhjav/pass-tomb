@@ -5,7 +5,7 @@
 [![][travis]][travis-link] [![][gitlab]][gitlab-link] [![][coverage]][coverage-link] [![][quality]][quality-link] [![
 ][release]][release-link]
 
-**A [pass] extension that helps to keep the whole tree of password encrypted inside a [Tomb]**
+**A [pass] extension that helps you keep the whole tree of passwords encrypted inside a [Tomb].**
 
 
 ## Description
