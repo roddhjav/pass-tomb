@@ -21,9 +21,9 @@
 readonly TOMB="${PASSWORD_STORE_TOMB:-tomb}"
 readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password.tomb}"
 readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.tomb.key}"
-readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
+readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-30}"
 
-readonly VERSION="1.3"
+readonly VERSION="1.3.1"
 
 #
 # Common colors and functions
@@ -284,8 +284,8 @@ cmd_tomb() {
 		_die "The tomb key $TOMB_KEY already exists. I won't overwrite it."
 	elif [[ -e "$TOMB_FILE" ]]; then
 		_die "The password tomb $TOMB_FILE already exists. I won't overwrite it."
-	elif [[ "$TOMB_SIZE" -lt 10 ]]; then
-		_die "A password tomb cannot be smaller than 10 MB."
+	elif [[ "$TOMB_SIZE" -lt 30 ]]; then
+		_die "A password tomb cannot be smaller than 30 MB."
 	fi
 	if [[ $UNSAFE -ne 0 ]]; then
 		_warning "Using unsafe mode to speed up tomb generation."
