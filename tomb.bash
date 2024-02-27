@@ -3,8 +3,6 @@
 # Copyright (C) 2017-2024 Alexandre PUJOL <alexandre@pujol.io>.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# shellcheck disable=SC2181,SC2024
-
 readonly TOMB="${PASSWORD_STORE_TOMB:-tomb}"
 readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password.tomb}"
 readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.tomb.key}"
@@ -49,8 +47,7 @@ is_valid_recipients() {
 
 	# All the keys ID must be valid (the public keys must be present in the database)
 	for gpg_id in "${recipients[@]}"; do
-		trust="$(_get_publictrust "$gpg_id")"
-		if [[ $? != 0 ]]; then
+		if ! trust="$(_get_publictrust "$gpg_id")"; then
 			_warning "${gpg_id} is not a valid key ID."
 			return 1
 		elif ! _in "$trusted" "$trust"; then
@@ -61,8 +58,7 @@ is_valid_recipients() {
 
 	# At least one private key must be present
 	for gpg_id in "${recipients[@]}"; do
-		gpg --with-colons --batch --list-secret-keys "$gpg_id" &> /dev/null
-		if [[ $? = 0 ]]; then
+		if gpg --with-colons --batch --list-secret-keys "$gpg_id" &> /dev/null; then
 			return 0
 		fi
 	done
@@ -115,11 +111,14 @@ _tmp_create() {
 	tfile="$(mktemp -u "$SECURE_TMPDIR/XXXXXXXXXXXXXXXXXXXX")" # Temporary file
 
 	umask 066
-	[[ $? == 0 ]] || _die "Fatal error setting permission umask for temporary files."
+	if ! umask 066; then
+		_die "Fatal error setting permission umask for temporary files."
+	fi
 	[[ -r "$tfile" ]] && _die "Someone is messing up with us trying to hijack temporary files."
 
-	touch "$tfile"
-	[[ $? == 0 ]] || _die "Fatal error creating temporary file: $tfile."
+	if ! touch "$tfile"; then
+		_die "Fatal error creating temporary file: $tfile."
+	fi
 
 	TMP="$tfile"
 	return 0
