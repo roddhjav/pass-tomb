@@ -1,5 +1,6 @@
 [Unit]
 Description=pass-close %i
+Documentation=https://github.com/roddhjav/pass-tomb
 
 [Service]
 Type=oneshot
