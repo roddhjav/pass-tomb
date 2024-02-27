@@ -2,7 +2,7 @@
 
 # pass tomb
 
-[![][travis]][travis-link] [![][gitlab]][gitlab-link] [![][coverage]][coverage-link] [![][quality]][quality-link] [![
+[![][workflow]][action] [![][gitlab]][gitlab-link] [![][coverage]][coverage-link] [![][quality]][quality-link] [![
 ][release]][release-link]
 
 **A [pass] extension that helps you keep the whole tree of passwords encrypted inside a [Tomb].**
@@ -133,7 +133,7 @@ In order to use pass-tomb with your existing password repository you can:
 * `PASSWORD_STORE_TOMB`: path to `tomb` executable
 * `PASSWORD_STORE_TOMB_FILE`: path to the password tomb (default: `~/.password.tomb`)
 * `PASSWORD_STORE_TOMB_KEY`: path to the password tomb key file (default: `~/.password.key.tomb`)
-* `PASSWORD_STORE_TOMB_SIZE`: password tomb size in MB (default: `10`)
+* `PASSWORD_STORE_TOMB_SIZE`: password tomb size in MB (default: `30`)
 
 ## Multiple password tombs
 It is possible to create multiple pass tomb and open them separately. You only
@@ -166,7 +166,7 @@ pass-tomb is not compatible with Android, but it should not be an issue for you.
 If you consider it is safe to put your password-store on Android then, it
 probably mean you attacker model does not require the need of pass-tomb.
 
-## Installation
+## Installation [<img src="https://repology.org/badge/vertical-allrepos/pass-tomb.svg" align="right">][repology-link]
 
 **Requirements**
 * `pass 1.7.0` or greater.
@@ -240,8 +240,8 @@ Feedback, contributors, pull requests are all very welcome.
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [github-link]: https://github.com/roddhjav/pass-tomb
-[travis]: https://img.shields.io/travis/roddhjav/pass-tomb/master.svg?style=flat-square
-[travis-link]: https://travis-ci.com/roddhjav/pass-tomb
+[workflow]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Froddhjav%2Fpass-tomb%2Fbadge%3Fref%3Dmaster&style=flat-square
+[action]: https://actions-badge.atrox.dev/roddhjav/pass-tomb/goto?ref=master
 [gitlab]: https://gitlab.com/roddhjav/pass-tomb/badges/master/pipeline.svg?style=flat-square
 [gitlab-link]: https://gitlab.com/roddhjav/pass-tomb/pipelines
 [coverage]: https://img.shields.io/coveralls/roddhjav/pass-tomb/master.svg?style=flat-square
@@ -250,6 +250,7 @@ Feedback, contributors, pull requests are all very welcome.
 [quality-link]: https://www.codacy.com/app/roddhjav/pass-tomb
 [release]: https://img.shields.io/github/release/roddhjav/pass-tomb.svg?maxAge=600&style=flat-square
 [release-link]: https://github.com/roddhjav/pass-tomb/releases/latest
+[repology-link]: https://repology.org/project/pass-tomb/versions
 
 [pass]: https://www.passwordstore.org/
 [Tomb]: https://www.dyne.org/software/tomb/
