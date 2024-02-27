@@ -3,6 +3,8 @@
 # Copyright (C) 2017-2024 Alexandre PUJOL <alexandre@pujol.io>.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+set -e -o pipefail
+
 readonly TOMB="${PASSWORD_STORE_TOMB:-tomb}"
 readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password.tomb}"
 readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.tomb.key}"
