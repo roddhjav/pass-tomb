@@ -31,20 +31,20 @@ _in() { [[ $1 =~ (^|[[:space:]])$2($|[[:space:]]) ]] && return 0 || return 1; }
 #
 # pass tomb depends on tomb
 _ensure_dependencies() {
-	command -v "$TOMB" &> /dev/null || _die "Tomb is not present."
+	command -v "$TOMB" &>/dev/null || _die "Tomb is not present."
 }
 
 # Get the trust level of a GPG public key.
 _get_publictrust() {
 	local gpg_id="$1"
-	gpg --with-colons --batch --list-keys "$gpg_id" 2> /dev/null \
-		| awk 'BEGIN { FS=":" } /^pub/ { print $2; exit}'
+	gpg --with-colons --batch --list-keys "$gpg_id" 2>/dev/null |
+		awk 'BEGIN { FS=":" } /^pub/ { print $2; exit}'
 }
 
 # $@ is the list of all the recipient used to encrypt a tomb key
 is_valid_recipients() {
 	typeset -a recipients
-	IFS=" " read -r -a recipients <<< "$@"
+	IFS=" " read -r -a recipients <<<"$@"
 	trusted='m f u w s'
 
 	# All the keys ID must be valid (the public keys must be present in the database)
@@ -60,7 +60,7 @@ is_valid_recipients() {
 
 	# At least one private key must be present
 	for gpg_id in "${recipients[@]}"; do
-		if gpg --with-colons --batch --list-secret-keys "$gpg_id" &> /dev/null; then
+		if gpg --with-colons --batch --list-secret-keys "$gpg_id" &>/dev/null; then
 			return 0
 		fi
 	done
@@ -69,8 +69,9 @@ is_valid_recipients() {
 
 _tomb() {
 	local ii ret
-	local cmd="$1"; shift
-	"$TOMB" "$cmd" "$@" "$FORCE" "$DEBUG" &> "$TMP"
+	local cmd="$1"
+	shift
+	"$TOMB" "$cmd" "$@" "$FORCE" "$DEBUG" &>"$TMP"
 	ret=$?
 	while read -r ii; do
 		_verbose_tomb "$ii"
@@ -88,15 +89,15 @@ _timer() {
 	_tomb_name="${TOMB_FILE##*/}"
 	_tomb_name="${_tomb_name%.tomb}"
 	sudo systemd-run --system --on-active="$delay" \
-	                 --description="pass-close timer" \
-	                 --unit="pass-close@$_tomb_name.service" \
-	                 | tee "$TMP"
+		--description="pass-close timer" \
+		--unit="pass-close@$_tomb_name.service" |
+		tee "$TMP"
 	ret=$?
 	while read -r ii; do
 		_verbose "$ii"
 	done <"$TMP"
 	if [[ $ret == 0 ]]; then
-		echo "$delay" > "$PREFIX/$path/.timer"
+		echo "$delay" >"$PREFIX/$path/.timer"
 		_verbose "Timer successfully created"
 		echo 0
 	else
@@ -109,7 +110,7 @@ _timer() {
 # Provide a random filename in shared memory
 _tmp_create() {
 	local tfile
-	tmpdir	# Defines $SECURE_TMPDIR
+	tmpdir                                                     # Defines $SECURE_TMPDIR
 	tfile="$(mktemp -u "$SECURE_TMPDIR/XXXXXXXXXXXXXXXXXXXX")" # Temporary file
 
 	umask 066
@@ -138,8 +139,8 @@ _set_ownership() {
 
 cmd_tomb_version() {
 	cat <<-_EOF
-	$PROGRAM tomb $VERSION - A pass extension that helps to keep the whole tree of
-	                password encrypted inside a tomb.
+		$PROGRAM tomb $VERSION - A pass extension that helps to keep the whole tree of
+		                password encrypted inside a tomb.
 	_EOF
 }
 
@@ -147,39 +148,40 @@ cmd_tomb_usage() {
 	cmd_tomb_version
 	echo
 	cat <<-_EOF
-	Usage:
-	    $PROGRAM tomb [-n] [-t time] [-f] [-p subfolder] gpg-id...
-	        Create and initialise a new password tomb
-	        Use gpg-id for encryption of both tomb and passwords
+		Usage:
+		    $PROGRAM tomb [-n] [-t time] [-f] [-p subfolder] gpg-id...
+		        Create and initialise a new password tomb
+		        Use gpg-id for encryption of both tomb and passwords
 
-	    $PROGRAM open [subfolder] [-t time] [-f]
-	        Open a password tomb
+		    $PROGRAM open [subfolder] [-t time] [-f]
+		        Open a password tomb
 
-	    $PROGRAM close [store]
-	        Close a password tomb
+		    $PROGRAM close [store]
+		        Close a password tomb
 
-	    $PROGRAM timer [store]
-	        Show timer status
+		    $PROGRAM timer [store]
+		        Show timer status
 
-	Options:
-	    -n, --no-init  Do not initialise the password store
-	    -t, --timer    Close the store after a given time
-	    -p, --path     Create the store for that specific subfolder
-	    -f, --force    Force operation (i.e. even if swap is active)
-	    -q, --quiet    Be quiet
-	    -v, --verbose  Be verbose
-	    -d, --debug    Print tomb debug messages
-	        --unsafe   Speed up tomb creation (for testing only)
-	    -V, --version  Show version information.
-	    -h, --help     Print this help message and exit.
+		Options:
+		    -n, --no-init  Do not initialise the password store
+		    -t, --timer    Close the store after a given time
+		    -p, --path     Create the store for that specific subfolder
+		    -f, --force    Force operation (i.e. even if swap is active)
+		    -q, --quiet    Be quiet
+		    -v, --verbose  Be verbose
+		    -d, --debug    Print tomb debug messages
+		        --unsafe   Speed up tomb creation (for testing only)
+		    -V, --version  Show version information.
+		    -h, --help     Print this help message and exit.
 
-	More information may be found in the pass-tomb(1) man page.
+		More information may be found in the pass-tomb(1) man page.
 	_EOF
 }
 
 # Open a password tomb
 cmd_open() {
-	local path="$1"; shift;
+	local path="$1"
+	shift
 
 	# Sanity checks
 	check_sneaky_paths "$path" "$TOMB_FILE" "$TOMB_KEY"
@@ -245,7 +247,7 @@ cmd_timer() {
 	_tomb_name="${_tomb_name%.tomb}"
 	[[ -z "$_tomb_name" ]] && _die "There is no password tomb."
 
-	if systemctl is-active "pass-close@$_tomb_name.timer" &> /dev/null; then
+	if systemctl is-active "pass-close@$_tomb_name.timer" &>/dev/null; then
 		systemctl status "pass-close@$_tomb_name.timer"
 	else
 		_warning "There is no active timer for $_tomb_file."
@@ -259,10 +261,11 @@ cmd_timer() {
 # $1: path subfolder
 # $@: gpg-ids
 cmd_tomb() {
-	local path="$1"; shift;
+	local path="$1"
+	shift
 	typeset -a RECIPIENTS
 	[[ -z "$*" ]] && _die "$PROGRAM $COMMAND [-n] [-t time] [-p subfolder] gpg-id..."
-	IFS=" " read -r -a RECIPIENTS <<< "$@"
+	IFS=" " read -r -a RECIPIENTS <<<"$@"
 
 	# Sanity checks
 	check_sneaky_paths "$path" "$TOMB_FILE" "$TOMB_KEY"
@@ -349,19 +352,57 @@ opts="$($GETOPT -o $small_arg -l $long_arg -n "$PROGRAM $COMMAND" -- "$@")"
 err=$?
 eval set -- "$opts"
 while true; do case $1 in
-	-q|--quiet) QUIET=1; VERBOSE=0; DEBUG=""; shift ;;
-	-v|--verbose) VERBOSE=1; shift ;;
-	-d|--debug) DEBUG="-D"; VERBOSE=1; shift ;;
-	-f|--force) FORCE="--force"; shift ;;
-	-h|--help) shift; cmd_tomb_usage; exit 0 ;;
-	-V|--version) shift; cmd_tomb_version; exit 0 ;;
-	-p|--path) id_path="$2"; shift 2 ;;
-	-t|--timer) TIMER="$2"; shift 2 ;;
-	-n|--no-init) NOINIT=1; shift ;;
-	--unsafe) UNSAFE=1; shift ;;
-	--) shift; break ;;
-esac done
+	-q | --quiet)
+		QUIET=1
+		VERBOSE=0
+		DEBUG=""
+		shift
+		;;
+	-v | --verbose)
+		VERBOSE=1
+		shift
+		;;
+	-d | --debug)
+		DEBUG="-D"
+		VERBOSE=1
+		shift
+		;;
+	-f | --force)
+		FORCE="--force"
+		shift
+		;;
+	-h | --help)
+		shift
+		cmd_tomb_usage
+		exit 0
+		;;
+	-V | --version)
+		shift
+		cmd_tomb_version
+		exit 0
+		;;
+	-p | --path)
+		id_path="$2"
+		shift 2
+		;;
+	-t | --timer)
+		TIMER="$2"
+		shift 2
+		;;
+	-n | --no-init)
+		NOINIT=1
+		shift
+		;;
+	--unsafe)
+		UNSAFE=1
+		shift
+		;;
+	--)
+		shift
+		break
+		;;
+	esac done
 
-[[ -z "$TIMER" ]] || command -v systemd-run &> /dev/null || _die "systemd-run is not present."
+[[ -z "$TIMER" ]] || command -v systemd-run &>/dev/null || _die "systemd-run is not present."
 [[ $err -ne 0 ]] && cmd_tomb_usage && exit 1
 [[ "$COMMAND" == "tomb" ]] && cmd_tomb "$id_path" "$@"
