@@ -90,7 +90,7 @@ _timer() {
 	sudo systemd-run --system --on-active="$delay" \
 	                 --description="pass-close timer" \
 	                 --unit="pass-close@$_tomb_name.service" \
-	                 &> "$TMP"
+	                 | tee "$TMP"
 	ret=$?
 	while read -r ii; do
 		_verbose "$ii"
