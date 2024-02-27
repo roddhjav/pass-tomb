@@ -43,6 +43,7 @@ fi
 # sharness config
 export SHARNESS_TEST_DIRECTORY="$TESTS_HOME"
 export SHARNESS_TEST_SRCDIR="$PROJECT_HOME"
+source ./lib-sharness/functions.sh
 source ./sharness
 
 
