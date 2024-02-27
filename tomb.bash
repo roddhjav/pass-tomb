@@ -21,7 +21,7 @@
 readonly TOMB="${PASSWORD_STORE_TOMB:-tomb}"
 readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password.tomb}"
 readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.tomb.key}"
-readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-10}"
+readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-30}"
 
 readonly VERSION="1.3"
 
