@@ -3,12 +3,12 @@ name: Ubuntu
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-22.04
     steps:
 
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Build dependencies 
         run: |
@@ -16,7 +16,7 @@ jobs:
           sudo apt-get install -y \
             pass tomb kcov
 
-      - name: Tests preparation
+      - name: Disable swap
         run: |
           sudo swapoff -a
 
