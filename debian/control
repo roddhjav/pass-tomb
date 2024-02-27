@@ -1,0 +1,24 @@
+Source: pass-tomb
+Section: misc
+Priority: optional
+Maintainer: Alexandre Pujol <alexandre@pujol.io>
+Build-Depends:
+ debhelper-compat (= 12),
+Homepage: https://github.com/roddhjav/pass-tomb
+Vcs-Browser: https://github.com/roddhjav/pass-tomb
+Vcs-Git: https://github.com/roddhjav/pass-tomb.git
+Standards-Version: 4.6.0.1
+Rules-Requires-Root: no
+
+Package: pass-extension-tomb
+Architecture: all
+Depends:
+ pass,
+ tomb,
+ ${misc:Depends},
+Description: lightweight directory-based password manager (tomb extension)
+ Stores, retrieves, generates, and synchronizes passwords securely using
+ gpg and git.
+ .
+ This package provides an extension for the password store that allows one to
+ use tomb to keep the password tree encrypted when it is not used.
