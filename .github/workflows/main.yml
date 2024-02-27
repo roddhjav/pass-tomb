@@ -1,0 +1,25 @@
+name: Ubuntu
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Install Build dependencies 
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y \
+            pass tomb kcov
+
+      - name: Tests preparation
+        run: |
+          sudo swapoff -a
+
+      - name: Tests
+        run: |
+          make tests
