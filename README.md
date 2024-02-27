@@ -10,19 +10,14 @@
 
 ## Description
 
-Due to the structure of `pass`, file- and directory names are not encrypted in
-the password store. `pass-tomb` provides a convenient solution to put your
-password store in a [Tomb][github-tomb] and then keep your password tree
-encrypted when you are not using it.
+Due to the structure of `pass`, file- and directory names are not encrypted in the password store. `pass-tomb` provides a convenient solution to put your password store in a [Tomb][github-tomb] and then keep your password tree encrypted when you are not using it.
 
-It uses the same GPG key to encrypt passwords and tomb, therefore you don't need
-to manage more key or secret. Moreover, you can ask pass-tomb to automatically
-close your store after a given time.
+It uses the same GPG key to encrypt passwords and tomb, therefore you don't need to manage more key or secret. Moreover, you can ask pass-tomb to automatically close your store after a given time.
 
 **The new workflow is the following:**
 * Create a password tomb with `pass tomb`
  - Create a new tomb and open it in `~/.password-store`
- - Initialise the password store with the same GPG key
+ - Initialize the password store with the same GPG key
 * Use tomb as usual
 * When finished, close the password tomb: `pass close`
 * To use pass again, you need to open the password tomb: `pass open`
@@ -136,9 +131,8 @@ In order to use pass-tomb with your existing password repository you can:
 * `PASSWORD_STORE_TOMB_SIZE`: password tomb size in MB (default: `30`)
 
 ## Multiple password tombs
-It is possible to create multiple pass tomb and open them separately. You only
-need to set the tomb file, key and the password store directory manually using
-the environment variables:
+
+It is possible to create multiple pass tomb and open them separately. You only need to set the tomb file, key and the password store directory manually using the environment variables:
 
 **Create a tomb**
 ```sh
@@ -157,21 +151,17 @@ alias pass2='PASSWORD_STORE_TOMB_FILE=<tomb_path> PASSWORD_STORE_TOMB_KEY=<key_p
 ```
 
 ## Advanced use
-Using `tomb` to store your password repository, you can take advantage of the
-tomb advanced feature like *steganography* and *private cloud storage*. The
-[tomb website][Tomb] provide a good presentation of the features available with
-Tomb. Moreover, you can read my guide on how to use [Tomb with GPG keys][pujol.io-tomb].
 
-pass-tomb is not compatible with Android, but it should not be an issue for you.
-If you consider it is safe to put your password-store on Android then, it
-probably mean you attacker model does not require the need of pass-tomb.
+Using `tomb` to store your password repository, you can take advantage of the tomb advanced feature like *steganography* and *private cloud storage*. The [tomb website][Tomb] provide a good presentation of the features available with Tomb. Moreover, you can read my guide on how to use [Tomb with GPG keys][pujol.io-tomb].
+
+pass-tomb is not compatible with Android, but it should not be an issue for you. If you consider it is safe to put your password-store on Android then, it probably means you attacker model does not require the need of pass-tomb.
 
 ## Installation [<img src="https://repology.org/badge/vertical-allrepos/pass-tomb.svg" align="right">][repology-link]
 
 **Requirements**
 * `pass 1.7.0` or greater.
 * `tomb 2.4` or greater.
-* A `systemd` based linux distribution is required to use the timer feature.
+* A `systemd` based Linux distribution is required to use the timer feature.
 
 **ArchLinux**
 
@@ -209,35 +199,16 @@ cd pass-tomb-1.3
 sudo make install
 ```
 
-[Releases][releases] and commits are signed using [`06A26D531D56C42D66805049C5469996F0DF68EC`][keys].
-You should check the key's fingerprint and verify the signature:
+[Releases][releases] and commits are signed using [`06A26D531D56C42D66805049C5469996F0DF68EC`][keys]. You should check the key's fingerprint and verify the signature:
 ```sh
 wget https://github.com/roddhjav/pass-tomb/releases/download/v1.3/pass-tomb-1.3.tar.gz.asc
 gpg --recv-keys 06A26D531D56C42D66805049C5469996F0DF68EC
 gpg --verify pass-tomb-1.3.tar.gz.asc
 ```
 
-
 ## Contribution
+
 Feedback, contributors, pull requests are all very welcome.
-
-
-## License
-
-    Copyright (C) 2017-2019  Alexandre PUJOL
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [github-link]: https://github.com/roddhjav/pass-tomb
 [workflow]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Froddhjav%2Fpass-tomb%2Fbadge%3Fref%3Dmaster&style=flat-square
