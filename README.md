@@ -18,7 +18,7 @@ It uses the same GPG key to encrypt passwords and tomb, therefore you don't need
 * Create a password tomb with `pass tomb`
  - Create a new tomb and open it in `~/.password-store`
  - Initialize the password store with the same GPG key
-* Use tomb as usual
+* Use pass as usual
 * When finished, close the password tomb: `pass close`
 * To use pass again, you need to open the password tomb: `pass open`
 
