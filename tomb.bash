@@ -5,10 +5,10 @@
 
 set -e -o pipefail
 
-readonly TOMB="${PASSWORD_STORE_TOMB:-tomb}"
-readonly TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password.tomb}"
-readonly TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.tomb.key}"
-readonly TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-30}"
+TOMB="${PASSWORD_STORE_TOMB:-tomb}"
+TOMB_FILE="${PASSWORD_STORE_TOMB_FILE:-$HOME/.password.tomb}"
+TOMB_KEY="${PASSWORD_STORE_TOMB_KEY:-$HOME/.password.tomb.key}"
+TOMB_SIZE="${PASSWORD_STORE_TOMB_SIZE:-30}"
 
 readonly VERSION="1.3"
 
@@ -149,14 +149,14 @@ cmd_tomb_usage() {
 	echo
 	cat <<-_EOF
 		Usage:
-		    $PROGRAM tomb [-n] [-t time] [-f] [-p subfolder] gpg-id...
+		    $PROGRAM tomb [-n] [-t time] [-f] [-p subfolder] [-s size] gpg-id...
 		        Create and initialise a new password tomb
 		        Use gpg-id for encryption of both tomb and passwords
 
-		    $PROGRAM open [subfolder] [-t time] [-f]
+		    $PROGRAM open [subfolder] [-t time] [-k key] [--file tomb] [-f]
 		        Open a password tomb
 
-		    $PROGRAM close [store]
+		    $PROGRAM close [--file tomb] [store]
 		        Close a password tomb
 
 		    $PROGRAM timer [store]
@@ -166,6 +166,9 @@ cmd_tomb_usage() {
 		    -n, --no-init  Do not initialise the password store
 		    -t, --timer    Close the store after a given time
 		    -p, --path     Create the store for that specific subfolder
+                    -k, --key      Specify the tomb key to open the store
+                    --file         Specify the tomb file to open 
+                    -s, --size     Specify the tomb size
 		    -f, --force    Force operation (i.e. even if swap is active)
 		    -q, --quiet    Be quiet
 		    -v, --verbose  Be verbose
@@ -346,8 +349,8 @@ NOINIT=0
 TIMER=""
 
 # Getopt options
-small_arg="vdhVp:qnt:f"
-long_arg="verbose,debug,help,version,path:,unsafe,quiet,no-init,timer:,force"
+small_arg="vdhVp:k:qnt:f"
+long_arg="verbose,debug,help,version,path:,key:,file:,unsafe,quiet,no-init,timer:,force"
 opts="$($GETOPT -o $small_arg -l $long_arg -n "$PROGRAM $COMMAND" -- "$@")"
 err=$?
 eval set -- "$opts"
@@ -387,6 +390,18 @@ while true; do case $1 in
 		;;
 	-t | --timer)
 		TIMER="$2"
+		shift 2
+		;;
+	-k | --key)
+		TOMB_KEY="$2"
+		shift 2
+		;;
+	--file)
+		TOMB_FILE="$2"
+		shift 2
+		;;
+	-s | --size)
+		TOMB_SIZE="$2"
 		shift 2
 		;;
 	-n | --no-init)

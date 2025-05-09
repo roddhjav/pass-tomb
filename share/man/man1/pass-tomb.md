@@ -104,6 +104,18 @@ Show timer status.
 
 :   Create the store for that specific subfolder
 
+**`-k`, `--key`**
+
+:   Specify the tomb key to open the store
+
+**`--file`**
+
+:   Specify the tomb file to open 
+
+**`-s`, `--size`**
+
+:   Specify the tomb size
+
 **`-f`, `--force`**
 
 :   Force the tomb operations (i.e. even if swap is active)
