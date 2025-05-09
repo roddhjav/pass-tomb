@@ -31,7 +31,7 @@ It uses the same GPG key to encrypt passwords and tomb, therefore you don't need
 
 # COMMAND
 
-## **pass tomb** [ *--no-init*, *-n* ] [ *--timer=time*, *-t time* ] [ *--path=subfolder*, *-p subfolder* ] [*--force*, *-f*] *gpg-id...*
+## **pass tomb** [ *--no-init*, *-n* ] [ *--timer=time*, *-t time* ] [ *--path=subfolder*, *-p subfolder* ] [*--force*, *-f*] [*--size=size*, *-s size*] *gpg-id...*
 
 Create and initialize a new password tomb. This command must be run first, before a password store can be used.
 
@@ -43,6 +43,9 @@ Create and initialize a new password tomb. This command must be run first, befor
 `--path=subfolder`, `-p subfolder`
 
 :   Specific password tomb using *gpg-id* or a set of gpg-ids is assigned for that specific subfolder of the password store.
+
+
+`--=subfolder`, `-p subfolder`
 
 `--no-init`, `-n`
 
@@ -56,8 +59,12 @@ Create and initialize a new password tomb. This command must be run first, befor
 
 :   Force the password store to be mounted or created even if a plain text swap is present. Make sure you know what you are doing if you force an operation.
 
+`--size`, `-s`
 
-## **pass open** [ *--timer=time*, *-t time* ] [*--force*, *-f*] [*subfolder*]
+:   Specify the tomb size in MB.
+
+
+## **pass open** [ *--timer=time*, *-t time* ] [*--force*, *-f*] [*--key=key*, *-k key*] [*subfolder*]
 
 Open a password tomb. If a *.timer* file is present in the store, a systemd timer will be initialized.
 
@@ -72,6 +79,14 @@ Open a password tomb. If a *.timer* file is present in the store, a systemd time
 `--force`, `-f`
 
 :   Force the password store to be mounted or created even if a plain text swap is present. Make sure you know what you are doing if you force an operation.
+
+`--key`, `-k`
+
+:   Specify the path to the password tomb key.
+
+`--file`
+
+:   Specify the path to the password tomb. 
 
 
 ## **pass close** [*store*]
@@ -103,6 +118,18 @@ Show timer status.
 **`-p`, `--path`**
 
 :   Create the store for that specific subfolder
+
+**`-k`, `--key`**
+
+:   Specify the tomb key to open the store
+
+**`--file`**
+
+:   Specify the tomb file to open 
+
+**`-s`, `--size`**
+
+:   Specify the tomb size in MB
 
 **`-f`, `--force`**
 
