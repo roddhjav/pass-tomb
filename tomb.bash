@@ -350,7 +350,7 @@ TIMER=""
 
 # Getopt options
 small_arg="vdhVp:k:s:qnt:f"
-long_arg="verbose,debug,help,version,path:,key:,file:,unsafe,quiet,no-init,timer:,force"
+long_arg="verbose,debug,help,version,path:,key:,file:,size:,unsafe,quiet,no-init,timer:,force"
 opts="$($GETOPT -o $small_arg -l $long_arg -n "$PROGRAM $COMMAND" -- "$@")"
 err=$?
 eval set -- "$opts"
