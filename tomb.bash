@@ -149,11 +149,11 @@ cmd_tomb_usage() {
 	echo
 	cat <<-_EOF
 		Usage:
-		    $PROGRAM tomb [-n] [-t time] [-f] [-p subfolder] [-s size] gpg-id...
+		    $PROGRAM tomb [-n] [-T time] [-f] [-p subfolder] [-s size] gpg-id...
 		        Create and initialise a new password tomb
 		        Use gpg-id for encryption of both tomb and passwords
 
-		    $PROGRAM open [subfolder] [-t time] [-k key] [--file tomb] [-f]
+		    $PROGRAM open [subfolder] [-t tomb] [-k key] [-T time] [-f]
 		        Open a password tomb
 
 		    $PROGRAM close [store]
@@ -164,11 +164,11 @@ cmd_tomb_usage() {
 
 		Options:
 		    -n, --no-init  Do not initialise the password store
-		    -t, --timer    Close the store after a given time
+		    -T, --timer    Close the store after a given time
 		    -p, --path     Create the store for that specific subfolder
-                    -k, --key      Specify the path to the password tomb key
-                    --file         Specify the path to the password tomb
-                    -s, --size     Specify the tomb size in MB
+		    -k, --key      Specify the path to the password tomb key
+		    -t, --tomb     Specify the path to the password tomb
+		    -s, --size     Specify the tomb size in MB
 		    -f, --force    Force operation (i.e. even if swap is active)
 		    -q, --quiet    Be quiet
 		    -v, --verbose  Be verbose
@@ -349,8 +349,8 @@ NOINIT=0
 TIMER=""
 
 # Getopt options
-small_arg="vdhVp:k:s:qnt:f"
-long_arg="verbose,debug,help,version,path:,key:,file:,size:,unsafe,quiet,no-init,timer:,force"
+small_arg="vdhVp:t:k:s:qnT:f"
+long_arg="verbose,debug,help,version,path:,tomb:,key:,size:,unsafe,quiet,no-init,timer:,force"
 opts="$($GETOPT -o $small_arg -l $long_arg -n "$PROGRAM $COMMAND" -- "$@")"
 err=$?
 eval set -- "$opts"
@@ -388,20 +388,20 @@ while true; do case $1 in
 		id_path="$2"
 		shift 2
 		;;
-	-t | --timer)
-		TIMER="$2"
+	-t | --tomb)
+		TOMB_FILE="$2"
 		shift 2
 		;;
 	-k | --key)
 		TOMB_KEY="$2"
 		shift 2
 		;;
-	--file)
-		TOMB_FILE="$2"
-		shift 2
-		;;
 	-s | --size)
 		TOMB_SIZE="$2"
+		shift 2
+		;;
+	-T | --timer)
+		TIMER="$2"
 		shift 2
 		;;
 	-n | --no-init)
