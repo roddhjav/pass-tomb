@@ -29,11 +29,11 @@ pass tomb 1.3 - A pass extension that helps to keep the whole tree of
                 password encrypted inside a tomb.
 
 Usage:
-    pass tomb [-n] [-t time] [-f] [-p subfolder] [-s size] gpg-id...
+    pass tomb [-n] [-T time] [-f] [-p subfolder] [-s size] gpg-id...
         Create and initialise a new password tomb
         Use gpg-id for encryption of both tomb and passwords
 
-    pass open [subfolder] [-t time] [-k key] [--file tomb] [-f]
+    pass open [subfolder] [-t tomb] [-k key] [-T time] [-f]
         Open a password tomb
 
     pass close [store]
@@ -44,10 +44,10 @@ Usage:
 
 Options:
     -n, --no-init  Do not initialise the password store
-    -t, --timer    Close the store after a given time
+    -T, --timer    Close the store after a given time
     -p, --path     Create the store for that specific subfolder
     -k, --key      Specify the path to the password tomb key
-    --file         Specify the tomb file to open 
+    -t, --tomb     Specify the path to the password tomb
     -s, --size     Specify the tomb size in MB
     -f, --force    Force operation (i.e. even if swap is active)
     -q, --quiet    Be quiet

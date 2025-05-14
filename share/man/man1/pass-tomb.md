@@ -31,7 +31,7 @@ It uses the same GPG key to encrypt passwords and tomb, therefore you don't need
 
 # COMMAND
 
-## **pass tomb** [ *--no-init*, *-n* ] [ *--timer=time*, *-t time* ] [ *--path=subfolder*, *-p subfolder* ] [*--force*, *-f*] [*--size=size*, *-s size*] *gpg-id...*
+## **pass tomb** [ *--no-init*, *-n* ] [ *--timer=time*, *-T time* ] [ *--path=subfolder*, *-p subfolder* ] [*--force*, *-f*] [*--size=size*, *-s size*] *gpg-id...*
 
 Create and initialize a new password tomb. This command must be run first, before a password store can be used.
 
@@ -51,7 +51,7 @@ Create and initialize a new password tomb. This command must be run first, befor
 
 :   Do not initialize the password store. By default, pass-tomb initializes the password store with the same key(s) it generated the tomb. The purpose of this option is to let the user free to initialize the password store with a different key or set of keys.
 
-`--timer=time`, `-t time`
+`--timer=time`, `-T time`
 
 :   Close the password store automatically systemd timer after a given time. This time will be saved in the *.timer* file present in the store.
 
@@ -64,7 +64,7 @@ Create and initialize a new password tomb. This command must be run first, befor
 :   Specify the tomb size in MB.
 
 
-## **pass open** [ *--timer=time*, *-t time* ] [*--force*, *-f*] [*--key=key*, *-k key*] [*subfolder*]
+## **pass open** [*--tomb=tomb*, *-t tomb*] [*--key=key*, *-k key*] [ *--timer=time*, *-T time* ] [*--force*, *-f*] [*subfolder*]
 
 Open a password tomb. If a *.timer* file is present in the store, a systemd timer will be initialized.
 
@@ -72,7 +72,7 @@ Open a password tomb. If a *.timer* file is present in the store, a systemd time
 
 :   The password store will be opened in the subfolder.
 
-`--timer=time`, `-t time`
+`--timer=time`, `-T time`
 
 :   Close the store automatically closed using a systemd timer after a given time. If a '.time' file was already present in the store, this time will be updated. Multiple timer can be used in the same time.
 
@@ -80,13 +80,13 @@ Open a password tomb. If a *.timer* file is present in the store, a systemd time
 
 :   Force the password store to be mounted or created even if a plain text swap is present. Make sure you know what you are doing if you force an operation.
 
+`--tomb`, `-t`
+
+:   Specify the path to the password tomb. 
+
 `--key`, `-k`
 
 :   Specify the path to the password tomb key.
-
-`--file`
-
-:   Specify the path to the password tomb. 
 
 
 ## **pass close** [*store*]
@@ -111,7 +111,7 @@ Show timer status.
 
 :   Do not initialize the password store
 
-**`-t`, `--timer`**
+**`-T`, `--timer`**
 
 :   Close the store after a given time
 
@@ -119,13 +119,14 @@ Show timer status.
 
 :   Create the store for that specific subfolder
 
+**`-t`, `--tomb`**
+
+:   Specify the tomb file to open 
+
 **`-k`, `--key`**
 
 :   Specify the tomb key to open the store
 
-**`--file`**
-
-:   Specify the tomb file to open 
 
 **`-s`, `--size`**
 
