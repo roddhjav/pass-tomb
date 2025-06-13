@@ -179,6 +179,11 @@ yay -S pass-tomb  # or your preferred AUR install method
 apt install pass-extension-tomb
 ```
 
+**Guix**
+```sh
+guix install pass-tomb
+```
+
 **NixOS**
 ```sh
 nix-env -iA nixos.passExtensions.pass-tomb
