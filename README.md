@@ -123,7 +123,7 @@ In order to use pass-tomb with your existing password repository you can:
 2. Create and open a new password tomb: `pass tomb <gpgid>`
 3. Move all the content of your password repository in the new password tomb:
    ```
-   mv ~/.password-store-backup/ ~/.password-store`
+   mv ~/.password-store-backup/ ~/.password-store
    ```
 
 ## Environment Variables
